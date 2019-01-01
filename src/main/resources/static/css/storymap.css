@@ -1,0 +1,237 @@
+
+.backlog_div{
+    border-right: lightgrey 1px dashed;
+    min-width: 130px;
+    font-size: 12px;
+    padding: 10px;
+    display: inline-block;
+    vertical-align: top;
+    margin:0;
+}
+.person_card{
+    cursor: pointer;
+    width: 30px;
+    height: 30px;
+}
+.next_person_card{
+    margin-left: 5px;
+}
+.add_person_card{
+    cursor: pointer;
+    width: 30px;
+    height: 30px;
+    border: none;
+}
+.add_person_card:hover{
+    width: 28px;
+    height: 28px;
+    border: lightgray solid 1px;
+}
+.add_backlog{
+    width:100px;
+    height:100px;
+    border: none;
+    cursor: pointer;
+}
+.add_backlog:hover{
+    width:98px;
+    height: 98px;
+    border: lightgray solid 1px;
+}
+
+.activity_card{
+    cursor: pointer;
+    margin-top:10px;
+    position:relative;
+    border:rgb(156,201,224) 1px solid;
+    width: 120px;
+    height: 75px;
+    background-color: rgb(182,216,231);
+}
+.activity_textDiv{
+    padding: 3px;
+}
+.activity_estimation{
+    position: absolute;
+    bottom: 1px;
+    margin-left: 3px;
+    color: rgb(86,168,198)
+}
+.activity_card_operation{
+    background-color: rgba(0,0,0,0.1);
+    width: 100%;
+    height: 21px;
+    position: absolute;
+    bottom: 0;
+}
+
+.task_card{
+    display: inline-block;
+    cursor: pointer;
+    margin-top:10px;
+    margin-left: 5px;
+    position:relative;
+    border: rgb(228,207,69) 2px solid;
+    width: 120px;
+    height: 75px;
+    background-color: rgb(241,227,112);
+}
+.task_estimation{
+    position: absolute;
+    bottom: 1px;
+    margin-left: 3px;
+    color: rgb(183,168,57);
+}
+
+.add_left_icon{
+    position:absolute;
+    left: 3px;
+    top:3px;
+    width:15px;
+    height:15px;
+}
+.add_left_icon:hover{
+    width:17px;
+    height:17px;
+}
+.remove_icon{
+    position:absolute;
+    right: 24px;
+    top:3px;
+    width:15px;
+    height:15px;
+}
+.remove_icon:hover{
+    width:17px;
+    height:17px;
+}
+.add_right_icon{
+    position:absolute;
+    right: 3px;
+    top:3px;
+    width:15px;
+    height:15px;
+}
+.add_right_icon:hover{
+    width:17px;
+    height:17px;
+}
+.add_up_icon{
+    position:absolute;
+    right: 47px;
+    top:3px;
+    width:15px;
+    height:15px;
+}
+.add_up_icon:hover{
+    width:17px;
+    height:17px;
+}
+
+
+.release_div{
+    border-top: lightgrey 1px dashed;
+    vertical-align: top;
+    min-width: 130px;
+}
+.story_card{
+    cursor: pointer;
+    /*display: inline-block;*/
+    margin-top:10px;
+    position:relative;
+    border:rgb(206,206,206) 1px solid;
+    width: 120px;
+    height: 75px;
+    background-color: white;
+    vertical-align: top;
+}
+.story_list{
+    display: inline-block;
+    margin-left: 5px;
+    vertical-align: top;
+}
+.story_plus_card{
+    display: inline-block;
+    margin-top:10px;
+    margin-left: 5px;
+    width: 122px;
+    height: 77px;
+    vertical-align: top;
+}
+.add_story{
+    width:70px;
+    height:70px;
+    border: none;
+    cursor: pointer;
+}
+.add_story:hover{
+    width:68px;
+    height: 68px;
+    border: lightgray solid 1px;
+}
+.next_story{
+    margin-top:10px;
+}
+.story_state{
+    width:45px;
+    height: 18px;
+    text-align:center;
+    position: absolute;
+    bottom: -0.5px;
+    margin-left:5px;
+    display: inline-block;
+}
+.ready{
+    background-color: rgb(238,120,98);
+}
+.doing{
+    background-color: rgb(75,169,220);
+}
+.todo{
+    background-color: rgb(153,153,153);
+}
+.done{
+    background-color: rgb(92,184,82);
+}
+.story_estimation{
+    position: absolute;
+    bottom: 1px;
+    right:1px;
+    margin-right:3px;
+    color: rgb(219,219,219);
+    display: inline-block;
+}
+
+
+.modal_right{
+    width:30%;
+    display: inline-block;
+    border-left: lightgray 1px solid;
+    padding-left: 15px;
+    margin-left: 7%;
+    /*vertical-align: middle;*/
+}
+.modal_content{
+    display: inline-block;
+    width:50%;
+    margin-left: 5%;
+    vertical-align: top;
+    min-height:100px;
+    position: relative;
+}
+.saveActivity{
+    display: inline-block;
+    cursor: pointer;
+    color: green;
+    font-size: 22px;
+    right:25px;
+    position: absolute;
+}
+.cancelModifyAct{
+    display: inline-block;
+    cursor: pointer;
+    color: red;
+    font-size: 22px;
+    right:1px;
+    position: absolute;
+}
