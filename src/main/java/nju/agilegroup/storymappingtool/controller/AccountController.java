@@ -27,4 +27,15 @@ public class AccountController {
         HttpSession session = request.getSession();
         return accountService.login(session, account);
     }
+
+    @RequestMapping(value = "/logout")
+    public ResultInfo<Object> logout(HttpServletRequest request) {
+        HttpSession session = request.getSession();
+        return accountService.logout(session);
+    }
+
+    @RequestMapping(value = "/signUp")
+    public ResultInfo<Object> signUp(@RequestBody AccountInfo account) {
+        return accountService.signUp(account);
+    }
 }

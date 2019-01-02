@@ -66,4 +66,21 @@ public class AccountTest {
         JSONObject object2 = (JSONObject) JSONValue.parse(resultJson2);
         Assert.assertFalse((Boolean) object2.get("success"));
     }
+
+    @Test
+    public void testSignUp() throws Exception {
+        Map<String, Object> map1 = new HashMap<>();
+        map1.put("name", "agilegroup");
+        map1.put("email", "1483809252@qq.com");
+        map1.put("password", "njuagile123");
+        MvcResult result1 = mockMvc.perform(post("http://localhost:8090/signUp")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(JSONObject.toJSONString(map1)))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        String resultJson1 = result1.getResponse().getContentAsString();
+        JSONObject object1 = (JSONObject) JSONValue.parse(resultJson1);
+        Assert.assertFalse((Boolean) object1.get("success"));
+    }
 }

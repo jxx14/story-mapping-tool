@@ -8,4 +8,6 @@ import java.util.List;
 public interface AccountDAO  extends JpaRepository<User, Integer> {
 
     List<User> findAllByEmailAndPassword(String email, String password);
+
+    List<User> findAllByEmail(String email);
 }
