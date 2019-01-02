@@ -12,6 +12,8 @@
     cursor: pointer;
     width: 30px;
     height: 30px;
+    position:relative;
+    display: inline-block;
 }
 .next_person_card{
     margin-left: 5px;
@@ -26,6 +28,26 @@
     width: 28px;
     height: 28px;
     border: lightgray solid 1px;
+}
+.person_card_operation{
+    /*z-index: 10;*/
+    /*background-color: rgba(0,0,0,0.1);*/
+    width: 12px;
+    height: 12px;
+    /*text-align: center;*/
+    /*vertical-align: middle;*/
+    position: absolute;
+    right:0;
+    bottom:0;
+}
+.remove_person_icon{
+    /*margin-top: 6px;*/
+    width:10px;
+    height:10px;
+}
+.remove_person_icon:hover{
+    width:12px;
+    height:12px;
 }
 .add_backlog{
     width:100px;
@@ -153,9 +175,9 @@
 .story_plus_card{
     display: inline-block;
     margin-top:10px;
-    margin-left: 5px;
-    width: 122px;
-    height: 77px;
+    /*margin-left: 5px;*/
+    width: 120px;
+    height: 75px;
     vertical-align: top;
 }
 .add_story{
@@ -209,17 +231,19 @@
     border-left: lightgray 1px solid;
     padding-left: 15px;
     margin-left: 7%;
+    margin-top: 50px;
     /*vertical-align: middle;*/
 }
 .modal_content{
     display: inline-block;
     width:50%;
     margin-left: 5%;
+    margin-top: 30px;
     vertical-align: top;
-    min-height:100px;
+    min-height:300px;
     position: relative;
 }
-.saveActivity{
+.txtArea_saveIcon{
     display: inline-block;
     cursor: pointer;
     color: green;
@@ -227,11 +251,23 @@
     right:25px;
     position: absolute;
 }
-.cancelModifyAct{
+.txtArea_cancelModifyAct{
     display: inline-block;
     cursor: pointer;
     color: red;
     font-size: 22px;
     right:1px;
     position: absolute;
+}
+.modal_person_div{
+    display: inline-block;
+    margin-left: 15px;
+}
+
+
+.modal_role_img{
+    width:30px;
+    height: 30px;
+    margin-left: 5px;
+    margin-top: 5px;
 }
