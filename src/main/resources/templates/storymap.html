@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>用户故事地图</title>
+
+    <link rel="stylesheet" th:href="@{css/font-awesome.css}"/>
+    <link rel="stylesheet" th:href="@{css/bootstrap.min.css}"/>
+    <link rel="stylesheet" th:href="@{css/storymap.css}"/>
+    <script th:src="@{js/jquery-3.2.1.min.js}"></script>
+    <script th:src="@{js/bootstrap.min.js}"></script>
+    <script th:src="@{js/storymap.js}"></script>
+</head>
+
+<body style="background-color: rgb(250,250,250)">
+    <div style="overflow:auto;white-space: nowrap;height: 100%;">
+        <div>
+            <div class="backlog_div">
+                <div>
+                    <div style="display: inline-block;" class="person_panel">
+                        <div class="person_card" data-name="TeamMember" title="TeamMember">
+                            <img th:src="@{portraits/1.png}" width="30" height="30" class="person_img"/>
+                            <div class="person_card_operation" style="display: none;">
+                                <img th:src="@{icons/trash.png}" class="remove_person_icon removePerson"/>
+                            </div>
+                        </div>
+                    </div>
+                    <img class="add_person_card" th:src="@{icons/add_large.png}" />
+                </div>
+
+                <div class="activity_card" data-aid="0">
+                    <div class="activity_textDiv">text</div>
+                    <div class="activity_estimation"></div>
+                    <div class="activity_card_operation" style="display: none;">
+                    <img th:src="@{icons/left-arrow.png}" class="add_left_icon addActivityLeft"/>
+                    <img th:src="@{icons/trash.png}" class="remove_icon removeActivity"/>
+                    <img th:src="@{icons/right-arrow.png}" class="add_right_icon addActivityRight"/>
+                    </div>
+                </div>
+
+                <div style="margin-left: -5px;">
+                    <div class="task_card" data-tid="0">
+                        <div class="activity_textDiv">text</div>
+                        <div class="task_estimation"></div>
+                        <div class="activity_card_operation" style="display: none;">
+                            <img th:src="@{icons/left-arrow.png}" class="add_left_icon addTaskLeft"/>
+                            <img th:src="@{icons/trash.png}" class="remove_icon removeTask" style="display: none;"/>
+                            <img th:src="@{icons/right-arrow.png}" class="add_right_icon addTaskRight"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="backlog_div" style="width:141px;height: 206px;">
+                <div style="margin-top: 50px;text-align: center;">
+                    <img class="add_backlog" th:src="@{icons/add_large.png}" /></div>
+            </div>
+        </div>
+
+
+        <div>——Release 1</div>
+        <div class="release_div">
+            <div class="backlog_div">
+                <div class="story_panel"  data-aid="0" style="margin-left: -5px;">
+                    <div class="story_list" data-tid="0">
+                        <div class="story_card">
+                            <div class="activity_textDiv">text</div>
+                            <div class="story_state ready">Ready</div>
+                            <div class="story_estimation">23</div>
+                            <div class="activity_card_operation" style="display: none;">
+                                <img th:src="@{icons/up-arrow.png}" class="add_up_icon addStoryUp"/>
+                                <img th:src="@{icons/trash.png}" class="remove_icon removeStory"/>
+                                <img th:src="@{icons/down-arrow.png}" class="add_right_icon addStoryDown"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="backlog_div">
+                <div class="story_panel"  style="margin-left: -5px;">
+                    <div class="story_plus_card">
+                        <!--<div style="margin-top: 2px;margin-left: 25px;">-->
+                            <!--<img class="add_story" th:src="@{icons/add_large.png}" /></div>-->
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div><i class="fa fa-plus"></i>Release</div>
+    </div>
+
+    <div class="modal fade" tabindex="-1" role="dialog" id="addPersonModal" data-aid="0">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">添加角色卡片</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="personNameInput" class="col-sm-2 control-label">角色名称</label>
+                        <div class="col-sm-10" style="margin-top: 7px;">
+                            <input type="text" class="form-control" id="personNameInput" placeholder="角色1">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">角色头像</label>
+                        <div class="col-sm-10" id="portraitsDiv">
+                            <input type="radio" name="roleOption" value="1" style="margin-left: 10px;"/><img th:src="@{portraits/1.png}" class="modal_role_img"/>
+                            <input type="radio" name="roleOption" value="2" style="margin-left: 10px;"/><img th:src="@{portraits/2.png}" class="modal_role_img"/>
+                            <input type="radio" name="roleOption" value="3" style="margin-left: 10px;"/><img th:src="@{portraits/3.png}" class="modal_role_img"/>
+                            <input type="radio" name="roleOption" value="4" style="margin-left: 10px;"/><img th:src="@{portraits/4.png}" class="modal_role_img"/>
+                            <input type="radio" name="roleOption" value="5" style="margin-left: 10px;"/><img th:src="@{portraits/5.png}" class="modal_role_img"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                    <button type="button" class="btn btn-primary" id="modal_addRole_button">添加</button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+
+    <div class="modal fade bs-example-modal-lg" id="activityModal" tabindex="-1" role="dialog" aria-labelledby="activityModalLabel" data-aid="">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="activityModalLabel">User Activity Card</h4>
+                </div>
+                <div class="modal-body" style="padding: 30px 10px 20px 15px;">
+                    <div class="modal_person_panel">
+                        <div class="modal_person_div">
+                            <img th:src="@{portraits/1.png}" width="20" height="20"/>
+                            <span style="margin-left: 5px;">TeamLeader</span>
+                        </div>
+                        <div class="modal_person_div">
+                            <img th:src="@{portraits/1.png}" width="20" height="20"/>
+                            <span style="margin-left: 5px;">TeamMember</span>
+                        </div>
+                    </div>
+                    <div class="modal_content">
+                        XXXX
+                        <!--<textarea type="text" class="form-control" rows="13">XXXX</textarea>-->
+                        <!--<div class="saveActivity"><i class="fa fa-check"></i></div>-->
+                        <!--<div class="cancelModifyAct"><i class="fa fa-close"></i></div>-->
+                    </div>
+                    <div class="modal_right">
+                        <p>create by XXX</p>
+                        <p>create 3 days ago</p>
+                    </div>
+                </div>
+                <div class="modal-footer" style="margin-top: 30px;">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="taskModal" tabindex="-1" role="dialog" aria-labelledby="taskModalLabel" data-tid="">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="taskModalLabel">User Task Card</h4>
+                </div>
+                <div class="modal-body" style="padding: 30px 10px 20px 15px;">
+                    <div class="modal_content">
+                        XXXX
+                        <!--<textarea type="text" class="form-control" rows="13">XXXX</textarea>-->
+                        <!--<div class="saveActivity"><i class="fa fa-check"></i></div>-->
+                        <!--<div class="cancelModifyAct"><i class="fa fa-close"></i></div>-->
+                    </div>
+                    <div class="modal_right">
+                        <p>create by XXX</p>
+                        <p>create 3 days ago</p>
+                    </div>
+                </div>
+                <div class="modal-footer" style="margin-top: 30px;">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+<script>
+
+</script>
+</html>
