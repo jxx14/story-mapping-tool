@@ -46,4 +46,16 @@ public class AccountServiceImpl implements AccountService {
         session.invalidate();
         return new ResultInfo<>(true, "成功登出", null);
     }
+
+    @Override
+    public ResultInfo<Object> signUp(AccountInfo account) {
+        String email = account.getEmail();
+        List<User> users = accountDAO.findAllByEmail(email);
+        if (!users.isEmpty()) {
+            return new ResultInfo<>(false, "该邮箱已经被注册过", null);
+        }
+
+        accountDAO.save(account.toUser());
+        return new ResultInfo<>(true, "成功注册账号", null);
+    }
 }

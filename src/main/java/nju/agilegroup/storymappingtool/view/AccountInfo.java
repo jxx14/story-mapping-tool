@@ -1,5 +1,7 @@
 package nju.agilegroup.storymappingtool.view;
 
+import nju.agilegroup.storymappingtool.model.User;
+
 public class AccountInfo {
 
     private String name;
@@ -13,6 +15,10 @@ public class AccountInfo {
         this.name = name;
         this.email = email;
         this.password = password;
+    }
+
+    public User toUser() {
+        return new User(0, name, email, password);
     }
 
     public String getName() {
