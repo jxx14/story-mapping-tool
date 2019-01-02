@@ -40,4 +40,10 @@ public class AccountServiceImpl implements AccountService {
             return new ResultInfo<>(false, "账户名和密码不匹配", null);
         }
     }
+
+    @Override
+    public ResultInfo<Object> logout(HttpSession session) {
+        session.invalidate();
+        return new ResultInfo<>(true, "成功登出", null);
+    }
 }

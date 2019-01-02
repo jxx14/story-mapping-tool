@@ -9,4 +9,6 @@ import javax.servlet.http.HttpSession;
 public interface AccountService {
 
     ResultInfo<Object> login(HttpSession session, AccountInfo account);
+
+    ResultInfo<Object> logout(HttpSession session);
 }
