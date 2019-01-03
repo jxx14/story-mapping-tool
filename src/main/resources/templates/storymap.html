@@ -21,7 +21,7 @@
             <div class="backlog_div">
                 <div>
                     <div style="display: inline-block;" class="person_panel">
-                        <div class="person_card" data-name="TeamMember" title="TeamMember">
+                        <div class="person_card" data-name="TeamMember" title="TeamMember" data-pid="0">
                             <img th:src="@{portraits/1.png}" width="30" height="30" class="person_img"/>
                             <div class="person_card_operation" style="display: none;">
                                 <img th:src="@{icons/trash.png}" class="remove_person_icon removePerson"/>
@@ -106,7 +106,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title">添加角色卡片</h4>
+                    <h4 class="modal-title">add Role Card</h4>
                 </div>
                 <div class="modal-body">
                     <div>
@@ -129,6 +129,45 @@
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
                     <button type="button" class="btn btn-primary" id="modal_addRole_button">添加</button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+
+    <div class="modal fade" tabindex="-1" role="dialog" id="modifyPersonModal" data-pid="0">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">Modify Role Card</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="modal_content" style="min-height: 150px;margin-top: 10px;">
+                        <div>
+                            <label class="control-label" style="margin-top: 5px;width: 20%;margin-left: 5%;display: inline-block;">角色名称</label>
+                            <div style="width:70%;display: inline-block;">
+                                <input type="text" class="form-control" id="personNameInput_m">
+                            </div>
+                        </div>
+                        <div style="margin-top: 25px;">
+                            <label class="control-label" style="margin-top: 5px;width: 20%;margin-left: 5%;display: inline-block;">角色头像</label>
+                            <div style="width:70%;display: inline-block;">
+                                <input type="radio" name="roleOption2" value="1" style="margin-left: 10px;"/><img th:src="@{portraits/1.png}" class="modal_role_img"/>
+                                <input type="radio" name="roleOption2" value="2" style="margin-left: 10px;"/><img th:src="@{portraits/2.png}" class="modal_role_img"/>
+                                <input type="radio" name="roleOption2" value="3" style="margin-left: 10px;"/><img th:src="@{portraits/3.png}" class="modal_role_img"/>
+                                <input type="radio" name="roleOption2" value="4" style="margin-left: 10px;"/><img th:src="@{portraits/4.png}" class="modal_role_img"/>
+                                <input type="radio" name="roleOption2" value="5" style="margin-left: 10px;"/><img th:src="@{portraits/5.png}" class="modal_role_img"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal_right">
+                        <p>create by XXX</p>
+                        <p>create 3 days ago</p>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" id="modal_modifyRole_button">save changes</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">close</button>
                 </div>
             </div><!-- /.modal-content -->
         </div><!-- /.modal-dialog -->

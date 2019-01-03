@@ -2,6 +2,7 @@ var aindex = 1;
 var tindex = 1;
 var sindex = 1;
 var rindex = 1;
+var pindex = 1;
 var edit_activity = false;
 var edit_task = false;
 
@@ -33,6 +34,7 @@ $(function(){
     personCardBind();
     addPerson();
     removePersonCard();
+    modifyPersonCard();
     activityCardBind();
     addActivityCard();
     removeActivityCard();
@@ -72,12 +74,14 @@ function addPerson() {
         var personName = $('#personNameInput').val();
         var imgpath = $('input[name="roleOption"]:checked').val();
 
-        $('.activity_card[data-aid='+aid+']').parent().find('.person_panel').append('<div class="person_card" data-name="'+personName+'" title="'+personName+'">\n' +
+        $('.activity_card[data-aid='+aid+']').parent().find('.person_panel').append('<div class="person_card" data-name="'+personName
+            +'" title="'+personName+'" data-pid="'+pindex+'">\n' +
             '                            <img src="../portraits/'+imgpath+'.png" width="30" height="30" class="person_img"/>\n' +
             '                            <div class="person_card_operation" style="display: none;">\n' +
             '                                <img src="../icons/trash.png" class="remove_person_icon removePerson"/>\n' +
             '                            </div>\n' +
             '                        </div>');
+        pindex+=1;
         $('#addPersonModal').modal('hide');
     });
 }
@@ -88,6 +92,33 @@ function removePersonCard() {
 
     });
 }
+
+function modifyPersonCard() {
+    $('body').on("dblclick",'.person_card',function () {
+        var imgpath = $(this).find('.person_img').attr('src');
+        var opval = parseInt(imgpath.split('/')[1].substring(0));
+        var pname = $(this).attr('data-name');
+        var pid = $(this).attr('data-pid');
+
+        $('#modifyPersonModal').attr('data-pid',pid);
+        $('#personNameInput_m').val(pname);
+        $('input[name="roleOption2"]').eq(opval-1).attr("checked",'checked');
+        $('#modifyPersonModal').modal('show');
+    });
+
+    $('#modal_modifyRole_button').click(function () {
+        var pid = $('#modifyPersonModal').attr('data-pid');
+        var personName = $('#personNameInput_m').val();
+        var imgpath = $('input[name="roleOption2"]:checked').val();
+
+        var pcard = $('.person_card[data-pid='+pid+']');
+        $(pcard).attr('data-name',personName);
+        $(pcard).attr('title', personName);
+        $(pcard).find('.person_img').attr('src','../portraits/'+imgpath+'.png');
+        $('#modifyPersonModal').modal('hide');
+    });
+}
+
 
 function createBacklogDiv() {
     var bdiv = '<div class="backlog_div">\n' +
