@@ -1,5 +1,7 @@
 var aindex = 1;
 var tindex = 1;
+var sindex = 1;
+var rindex = 1;
 var edit_activity = false;
 var edit_task = false;
 
@@ -43,6 +45,10 @@ $(function(){
     addFirstStoryCard();
     removeStoryCard();
     addNextStoryCard();
+    modifyStoryCard();
+
+    addReleaseDiv();
+    removeReleaseDiv();
 });
 
 function personCardBind() {
@@ -358,16 +364,17 @@ function storyCardBind() {
 }
 
 function createStoryCard() {
-    var s = '<div class="story_card">\n' +
+    var s = '<div class="story_card" data-sid="'+sindex+'">\n' +
         '                            <div class="activity_textDiv">text</div>\n' +
-        '                            <div class="story_state todo">todo</div>\n' +
-        '                            <div class="story_estimation">23</div>\n' +
+        '                            <div class="story_state todo">Todo</div>\n' +
+        '                            <div class="story_estimation"></div>\n' +
         '                            <div class="activity_card_operation" style="display: none;">' +
         '                            <img src="../icons/up-arrow.png" class="add_up_icon addStoryUp"/>' +
         '                            <img src=" ../icons/trash.png" class="remove_icon removeStory"/>\n' +
         '                            <img src="../icons/down-arrow.png" class="add_right_icon addStoryDown"/>\n' +
         '                        </div>' +
         '                        </div>';
+    sindex+=1;
     return s;
 }
 
@@ -399,5 +406,108 @@ function addNextStoryCard() {
 
     $('body').on("click",'.addStoryUp',function () {
         $(this).parent().parent().before(createStoryCard());
+    });
+}
+
+function modifyStoryCard() {
+    $('body').on("dblclick",'.story_card',function () {
+        var sid = $(this).attr('data-sid');
+        var estimation = $(this).find('.story_estimation').html();
+        var state = $(this).find('.story_state').html();
+        var content = $(this).find('.activity_textDiv').html();
+
+        $('#storyModal').attr('data-sid',sid);
+        $('#story_estimation').val(estimation);
+        $('#story_state_select').val(state);
+        $('#story_content').html(content);
+
+        $('#storyModal').modal('show');
+    });
+
+    $('#saveStory_button').click(function () {
+        var sid = $('#storyModal').attr('data-sid');
+        var estimation = $('#story_estimation').val();
+        var state = $('#story_state_select').val();
+        var content = $('#story_content').val();
+
+        var scard = $('.story_card[data-sid='+sid+']');
+        $(scard).find('.story_estimation').html(estimation);
+        $(scard).find('.story_state').html(state);
+        $(scard).find('.story_state').attr('class','story_state '+state.toLowerCase());
+        $(scard).find('.activity_textDiv').html(content);
+
+        var tid = $(scard).parent().attr('data-tid');
+        var aid = $(scard).parent().parent().attr('data-aid');
+        var t_estimation = 0;
+        var a_estimation = 0;
+        var sList = $('.story_list[data-tid='+tid+']').find('.story_card');
+        for(var i = 0;i<sList.length;i++){
+            t_estimation+=parseInt(sList.eq(i).find('.story_estimation').html());
+        }
+        sList = $('.story_panel[data-aid='+aid+']').find('.story_card');
+        for(var i = 0;i<sList.length;i++){
+            a_estimation+=parseInt(sList.eq(i).find('.story_estimation').html());
+        }
+        $('.task_card[data-tid='+tid+']').find('.task_estimation').html(t_estimation);
+        $('.activity_card[data-aid='+aid+']').find('.activity_estimation').html(a_estimation);
+
+        $('#storyModal').modal('hide');
+    });
+}
+
+
+function addReleaseDiv() {
+    $('body').on("click",'.add_release_icon',function () {
+        $(this).parent().before('<div style="margin-top: 15px;" class="release_label" data-rid="'+rindex+'"><span>——Release '+(rindex+1) +
+            '            </span><div style="display: inline-block;width: 20px;height: 20px;">\n' +
+            '                <img src="../icons/trash.png" class="remove_release"/>\n' +
+            '            </div>\n' +
+            '        </div><div class="release_div" data-rid="'+rindex+'"></div>');
+
+        var s = '';
+        var aList = $('.activity_card');
+        for(var i = 0;i<aList.length;i++){
+            var aid = aList.eq(i).attr('data-aid');
+            s+='<div class="backlog_div">\n' +
+                '                <div class="story_panel"  data-aid="'+aid+'" style="margin-left: -5px;">';
+            var tList = aList.eq(i).parent().find('.task_card');
+            for(var j = 0;j<tList.length;j++){
+                var tid = tList.eq(j).attr('data-tid');
+                s+='<div class="story_list" data-tid="'+tid+'"><div class="story_plus_card">\n' +
+                    '                    <div style="margin-top: 2px;text-align: center;">\n' +
+                    '                        <img class="add_story" src="../icons/add_large.png" /></div>\n' +
+                    '                </div></div>';
+            }
+            s+='</div></div>';
+        }
+        s+='<div class="backlog_div">\n' +
+            '                <div class="story_panel"  style="margin-left: -5px;">\n' +
+            '                    <div class="story_plus_card">\n' +
+            '                    </div>\n' +
+            '                </div>\n' +
+            '            </div>';
+
+        $('.release_div[data-rid='+rindex+']').html(s);
+        rindex+=1;
+        $('.remove_release').show();
+    });
+}
+
+function removeReleaseDiv() {
+    $('body').on("click",'.remove_release',function () {
+        var rid = $(this).parent().parent().attr('data-rid');
+        $(this).parent().parent().remove();
+        $('.release_div[data-rid='+rid+']').remove();
+
+        var rList = $('.release_div');
+        rindex = rList.length;
+        for(var i = 0;i<rindex;i++){
+            var rid_tmp_old = rList.eq(i).attr('data-rid');
+            rList.eq(i).attr('data-rid',i);
+            $('.release_label[data-rid='+rid_tmp_old+']').find('span').text('——Release '+(i+1));
+        }
+        if(rindex==1){
+            $('.remove_release').hide();
+        }
     });
 }

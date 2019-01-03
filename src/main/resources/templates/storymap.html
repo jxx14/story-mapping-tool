@@ -61,15 +61,19 @@
         </div>
 
 
-        <div>——Release 1</div>
-        <div class="release_div">
+        <div style="margin-top: 15px;" data-rid="0" class="release_label"><span>——Release 1</span>
+            <div style="display: inline-block;width: 20px;height: 20px;">
+                <img th:src="@{icons/trash.png}" class="remove_release" style="display: none;"/>
+            </div>
+        </div>
+        <div class="release_div" data-rid="0">
             <div class="backlog_div">
                 <div class="story_panel"  data-aid="0" style="margin-left: -5px;">
                     <div class="story_list" data-tid="0">
-                        <div class="story_card">
+                        <div class="story_card" data-sid="0">
                             <div class="activity_textDiv">text</div>
                             <div class="story_state ready">Ready</div>
-                            <div class="story_estimation">23</div>
+                            <div class="story_estimation"></div>
                             <div class="activity_card_operation" style="display: none;">
                                 <img th:src="@{icons/up-arrow.png}" class="add_up_icon addStoryUp"/>
                                 <img th:src="@{icons/trash.png}" class="remove_icon removeStory"/>
@@ -89,7 +93,12 @@
                 </div>
             </div>
         </div>
-        <div><i class="fa fa-plus"></i>Release</div>
+        <div>
+            <div class="add_release_icon">
+                <i class="fa fa-plus" style="font-size: 16px;"></i>
+                <span style="margin-left: 2px;">Release</span>
+            </div>
+        </div>
     </div>
 
     <div class="modal fade" tabindex="-1" role="dialog" id="addPersonModal" data-aid="0">
@@ -100,15 +109,15 @@
                     <h4 class="modal-title">添加角色卡片</h4>
                 </div>
                 <div class="modal-body">
-                    <div class="form-group">
-                        <label for="personNameInput" class="col-sm-2 control-label">角色名称</label>
-                        <div class="col-sm-10" style="margin-top: 7px;">
+                    <div>
+                        <label class="control-label" style="margin-top: 5px;width: 20%;margin-left: 5%;display: inline-block;">角色名称</label>
+                        <div style="width:70%;display: inline-block;">
                             <input type="text" class="form-control" id="personNameInput" placeholder="角色1">
                         </div>
                     </div>
-                    <div class="form-group">
-                        <label class="col-sm-2 control-label">角色头像</label>
-                        <div class="col-sm-10" id="portraitsDiv">
+                    <div style="margin-top: 25px;">
+                        <label class="control-label" style="margin-top: 5px;width: 20%;margin-left: 5%;display: inline-block;">角色头像</label>
+                        <div id="portraitsDiv" style="width:70%;display: inline-block;">
                             <input type="radio" name="roleOption" value="1" style="margin-left: 10px;"/><img th:src="@{portraits/1.png}" class="modal_role_img"/>
                             <input type="radio" name="roleOption" value="2" style="margin-left: 10px;"/><img th:src="@{portraits/2.png}" class="modal_role_img"/>
                             <input type="radio" name="roleOption" value="3" style="margin-left: 10px;"/><img th:src="@{portraits/3.png}" class="modal_role_img"/>
@@ -181,6 +190,43 @@
                     </div>
                 </div>
                 <div class="modal-footer" style="margin-top: 30px;">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade bs-example-modal-lg" id="storyModal" tabindex="-1" role="dialog" aria-labelledby="storyModalLabel" data-sid="">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="storyModalLabel">Story Card</h4>
+                </div>
+                <div class="modal-body" style="padding: 30px 10px 20px 15px;">
+                    <div class="modal_content" style="min-height: 150px;margin-top: 10px;">
+                        <div><label style="min-width: 20%;">Estimation</label>
+                            <input type="number" class="form-control" id="story_estimation" placeholder="" style="width: 90%;"/></div>
+                        <div style="margin-top: 20px;">
+                            <label style="min-width: 20%;">state</label>
+                            <select class="form-control" style="width: 90%;" id="story_state_select">
+                                <option value="Ready">Ready</option>
+                                <option value="Doing">Doing</option>
+                                <option value="Todo">Todo</option>
+                                <option value="Done">Done</option>
+                            </select></div>
+                        <div style="margin-top: 20px;">
+                            <label style="min-width: 20%;">content</label>
+                            <textarea class="form-control" id="story_content" style="width: 90%;"></textarea>
+                        </div>
+                    </div>
+                    <div class="modal_right">
+                        <p>create by XXX</p>
+                        <p>create 3 days ago</p>
+                    </div>
+                </div>
+                <div class="modal-footer" style="margin-top: 30px;">
+                    <button type="button" class="btn btn-primary" id="saveStory_button">Save Changes</button>
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                 </div>
             </div>
