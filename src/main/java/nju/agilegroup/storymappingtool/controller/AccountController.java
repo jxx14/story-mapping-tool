@@ -4,10 +4,7 @@ import nju.agilegroup.storymappingtool.service.AccountService;
 import nju.agilegroup.storymappingtool.view.AccountInfo;
 import nju.agilegroup.storymappingtool.view.ResultInfo;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -36,6 +33,7 @@ public class AccountController {
 
     @RequestMapping(value = "/signUp")
     public ResultInfo<Object> signUp(@RequestBody AccountInfo account) {
+        System.out.println(account.getEmail());
         return accountService.signUp(account);
     }
 }
