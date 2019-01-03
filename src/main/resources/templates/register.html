@@ -5,48 +5,55 @@
     <meta name="renderer" content="webkit">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>登录</title>
+    <title>注册</title>
     <link rel="stylesheet" th:href="@{css/global.css}"/>
     <link rel="stylesheet" th:href="@{css/bootstrap.min.css}"/>
-    <link rel="stylesheet" th:href="@{css/login.css}">
+    <link rel="stylesheet" th:href="@{css/register.css}">
 </head>
 <body>
-<div class="container login-container" id="loginInfo">
+<div class="container register-container">
     <h4 class="text-center title">story map tool</h4>
-    <div class="input-container">
+
+
+    <div class="input-container"  id="registerInfo">
         <div class="input-group-lg text-center">
-            <img th:src="@{icons/user.svg}" class="icon">
+            <img th:src="@{icons/email.svg}" class="icon">
             <input type="text" id="email" class="input" placeholder="请输入您的邮箱">
         </div>
         <div class="input-group-lg text-center">
-            <img th:src="@{icons/lock.svg}"  class="icon">
+            <img th:src="@{icons/user.svg}" class="icon">
+            <input type="text" id="name" class="input" placeholder="请输入您的用户名">
+        </div>
+        <div class="input-group-lg text-center">
+            <img th:src="@{icons/lock.svg}" class="icon">
             <input type="password" id="pwd" class="input" placeholder="请输入您的密码">
         </div>
 
-        <button class="input btn btn-primary" id="login">登录</button>
+        <button class="input btn btn-primary" id="register">注册</button>
 
         <script th:src="@{js/jquery-3.2.1.min.js}"></script>
         <script th:src="@{js/bootstrap.min.js}"></script>
         <script th:src="@{js/account.js}"></script>
         <script th:src="@{js/util.js}"></script>
     </div>
-</div>
 
-<script>
-    function submitLogin() {
-        var email = $('#email').val();
-        var pwd = $('#pwd').val();
 
-        if (!(!email || email === ""||!pwd || pwd === "")) {
+    <script>
 
-            $.ajax({
-                    url: '/login',
+        function submitRegister() {
+            var name = $('#name').val();
+            var pwd = $('#pwd').val();
+            var email = $('#email').val();
+            if (!(!name || name === ""||!pwd || pwd === ""||!email || email === "")) {
+
+                $.ajax({
+                    url: '/signUp',
                     type: 'post',
                     contentType: 'application/json',
-                    data: JSON.stringify({ "email": email, "password": pwd }),
+                    data: JSON.stringify({ "email": email, "password": pwd ,"name":name}),
                     success: function (result) {
                         if (result.success) {
-                            document.location.href= 'storymap';
+                            document.location.href= 'login';
                         } else {
                             showTip($('#tip'), result.message, 'white');
                         }
@@ -56,20 +63,22 @@
                     }
                 })
 
+            }
+            // else {
+            //     alert("输入信息不符合规范")
+            // }
+
         }
-        // else {
-        //     alert("输入信息不符合规范")
-        // }
-
-    }
 
 
-    $('#loginInfo').click(function () {
-        submitLogin();
-    })
+        $('#registerInfo').click(function () {
+            submitRegister();
+        })
 
-</script>
+    </script>
 
 
+
+</div>
 </body>
 </html>

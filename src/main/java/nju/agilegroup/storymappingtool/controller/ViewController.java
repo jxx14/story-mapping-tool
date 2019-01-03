@@ -16,4 +16,9 @@ public class ViewController {
     public String getLoginView(){
         return "login";
     }
+
+    @RequestMapping(value = "/register")
+    public String getRegisterView(){
+        return "register";
+    }
 }
