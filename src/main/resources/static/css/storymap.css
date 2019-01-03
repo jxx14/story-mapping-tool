@@ -155,6 +155,7 @@
     border-top: lightgrey 1px dashed;
     vertical-align: top;
     min-width: 130px;
+    margin-top: 10px;
 }
 .story_card{
     cursor: pointer;
@@ -222,6 +223,22 @@
     margin-right:3px;
     color: rgb(219,219,219);
     display: inline-block;
+}
+.add_release_icon{
+    margin-top: 15px;
+    margin-left: 10px;
+    cursor: pointer;
+    display: inline-block;
+}
+.remove_release{
+    cursor: pointer;
+    width:18px;
+    height:18px;
+    margin-left: 7px;
+}
+.remove_release:hover{
+    width:20px;
+    height:20px;
 }
 
 
