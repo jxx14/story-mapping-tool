@@ -24,23 +24,26 @@ public class StoryMap {
     @Column(name = "create_at")
     private Timestamp createAt;
 
-    // 后续进行外键关联，可以方便查询
-    @Column(name = "creator_id")
-    private int creator;
-
     @Column(name = "release_num")
     private int release;
+
+    @OneToOne(optional = false, fetch = FetchType.LAZY)
+    @JoinColumn(name = "creator_id", unique = true)
+    private User user;
+
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @JoinColumn(name = "team_id")
+    private Team teamm;
 
     public StoryMap(){
 
     }
 
-    public StoryMap(int id, String name, String description, Timestamp createAt, int creator, int release){
+    public StoryMap(int id, String name, String description, Timestamp createAt, int release){
         this.id = id;
         this.name = name;
         this.description = description;
         this.createAt = createAt;
-        this.creator = creator;
         this.release = release;
     }
 
@@ -77,11 +80,27 @@ public class StoryMap {
         this.createAt = createAt;
     }
 
-    public int getCreator() {
-        return creator;
+    public int getRelease() {
+        return release;
     }
 
-    public void setCreator(int creator) {
-        this.creator = creator;
+    public void setRelease(int release) {
+        this.release = release;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public Team getTeamm() {
+        return teamm;
+    }
+
+    public void setTeamm(Team teamm) {
+        this.teamm = teamm;
     }
 }

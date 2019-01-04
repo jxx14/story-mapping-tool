@@ -3,9 +3,11 @@ package nju.agilegroup.storymappingtool.dao;
 
 import nju.agilegroup.storymappingtool.model.StoryMap;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 
 public interface MapDAO extends JpaRepository<StoryMap, Integer>{
-    List<StoryMap> findByCreator(int userId);
+    @Query(value = "select * from storymap s where s.team_id = ?1", nativeQuery = true)
+    List<StoryMap> findByTeam(int teamId);
 }
