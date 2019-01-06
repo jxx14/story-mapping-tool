@@ -36,7 +36,7 @@ public class MapController {
     /**
      * 创建一个故事地图
      * 参数为通过POST方法上传的json，哪些值要填标记在了类的注释中
-     * 我还没实现……
+     * 失败时返回的是false
      * @param request
      * @param map
      * @return

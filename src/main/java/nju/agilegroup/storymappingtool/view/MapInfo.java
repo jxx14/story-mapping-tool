@@ -18,12 +18,14 @@ public class MapInfo {
     private String teamName;
     //必填
     private int team;
+    //不填
+    private String creatAt;
 
 
     public MapInfo() {
     }
 
-    public MapInfo(int id, String name, String description, String creatorName, int creator, int release, String teamName, int team) {
+    public MapInfo(int id, String name, String description, String creatorName, int creator, int release, String teamName, int team, String creatAt) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -32,6 +34,7 @@ public class MapInfo {
         this.release = release;
         this.teamName = teamName;
         this.team = team;
+        this.creatAt = creatAt;
     }
 
     public int getId() {
@@ -96,5 +99,13 @@ public class MapInfo {
 
     public void setTeam(int team) {
         this.team = team;
+    }
+
+    public String getCreatAt() {
+        return creatAt;
+    }
+
+    public void setCreatAt(String creatAt) {
+        this.creatAt = creatAt;
     }
 }
