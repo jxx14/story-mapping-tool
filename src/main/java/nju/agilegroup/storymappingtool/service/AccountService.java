@@ -13,4 +13,7 @@ public interface AccountService {
     ResultInfo<Object> logout(HttpSession session);
 
     ResultInfo<Object> signUp(AccountInfo account);
+
+    //参数id，查看团队成员
+    ResultInfo<Object> getTeamMembers(HttpSession session, int id);
 }

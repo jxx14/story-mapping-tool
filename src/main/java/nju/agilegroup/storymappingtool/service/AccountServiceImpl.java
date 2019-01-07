@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -57,5 +58,22 @@ public class AccountServiceImpl implements AccountService {
 
         accountDAO.save(account.toUser());
         return new ResultInfo<>(true, "成功注册账号", null);
+    }
+
+    @Override
+    public ResultInfo<Object> getTeamMembers(HttpSession session, int id) {
+        List<User> users = accountDAO.getTeamMember(id);
+        for (User user : users) {
+            System.out.println(user.toString());
+        }
+        List<AccountInfo> ifs = new ArrayList<>();
+
+        for (User user : users) {
+            AccountInfo info = new AccountInfo();
+            info.setName(user.getName());
+            info.setEmail(user.getEmail());
+            ifs.add(info);
+        }
+        return new ResultInfo<>(true, "success", ifs);
     }
 }

@@ -11,11 +11,10 @@ public interface TeamService {
     //参数id，查看团队信息
     ResultInfo<Object> getTeamInfo(HttpSession session, int id);
 
-    //参数id，查看团队所拥有的storyMap
-    ResultInfo<List<StoryMap>> getTeamStoryMaps(HttpSession session, int id);
+//    //参数id，查看团队所拥有的storyMap
+//    ResultInfo<List<StoryMap>> getTeamStoryMaps(HttpSession session, int id);
 
-    //参数id，查看团队成员
-    ResultInfo<List<User>> getTeamMembers(HttpSession session, int id);
+
 
     //参数团队信息，增加团队
     ResultInfo<Object> addTeam(HttpSession session, TeamInfo teamInfo);

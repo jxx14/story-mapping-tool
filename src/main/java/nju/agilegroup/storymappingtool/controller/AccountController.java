@@ -36,4 +36,5 @@ public class AccountController {
         System.out.println(account.getEmail());
         return accountService.signUp(account);
     }
+
 }

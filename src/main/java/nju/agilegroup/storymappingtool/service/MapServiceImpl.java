@@ -65,7 +65,7 @@ public class MapServiceImpl implements MapService{
         map.setName(mapInfo.getName());
         map.setDescription(mapInfo.getDescription());
         map.setRelease(mapInfo.getRelease());
-        map.setTeamm(team);
+        map.setTeam(team);
         map.setUser(user);
         map.setCreateAt(new Timestamp(System.currentTimeMillis()));
 
@@ -91,8 +91,8 @@ public class MapServiceImpl implements MapService{
         info.setCreatorName(map.getUser().getName());
         info.setDescription(map.getDescription());
         info.setRelease(map.getRelease());
-        info.setTeam(map.getTeamm().getId());
-        info.setTeamName(map.getTeamm().getName());
+        info.setTeam(map.getTeam().getId());
+        info.setTeamName(map.getTeam().getName());
         info.setCreatAt(createTime);
         return info;
     }
