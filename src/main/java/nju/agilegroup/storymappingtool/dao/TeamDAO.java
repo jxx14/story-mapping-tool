@@ -14,12 +14,10 @@ public interface TeamDAO extends JpaRepository<Team, Integer> {
 
     Team getTeamById(int id);//根据团队id查团队信息
 
-    //查看所有团队成员
-    @Query(value = "SELECT * FROM  user u WHERE u.team_id =?1",nativeQuery = true)
-    List<User> getTeamMember (int team_id);
-
-    //查看团队的所有storymap
-    @Query(value = "SELECT * FROM  storymap s WHERE s.team_id =?1",nativeQuery = true)
-    List<StoryMap> getStoryMaps (int team_id);
+//
+//
+//    //查看团队的所有storymap
+//    @Query(value = "SELECT * FROM  storymap s WHERE s.team_id =?1",nativeQuery = true)
+//    List<StoryMap> getStoryMaps (int team_id);
 
 }

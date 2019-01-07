@@ -33,7 +33,18 @@ public class AccountController {
 
     @RequestMapping(value = "/signUp")
     public ResultInfo<Object> signUp(@RequestBody AccountInfo account) {
-        System.out.println(account.getEmail());
         return accountService.signUp(account);
     }
+
+    @RequestMapping(value = "/listUserInfo", method = RequestMethod.POST)
+    public ResultInfo<Object>listUserInfo(HttpServletRequest request,@RequestParam int userId) {
+        return accountService.getUserInfo(userId);
+    }
+
+    @RequestMapping(value = "/modifyUserInfo", method = RequestMethod.POST)
+    public ResultInfo<Object> modifyUserInfo(HttpServletRequest request,@RequestBody AccountInfo accountInfo,@RequestParam int userId) {
+        HttpSession session = request.getSession();
+        return accountService.modify(session, accountInfo,userId);
+    }
+
 }

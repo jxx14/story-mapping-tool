@@ -1,6 +1,7 @@
 package nju.agilegroup.storymappingtool.service;
 
 import nju.agilegroup.storymappingtool.dao.AccountDAO;
+import nju.agilegroup.storymappingtool.model.Team;
 import nju.agilegroup.storymappingtool.model.User;
 import nju.agilegroup.storymappingtool.view.AccountInfo;
 import nju.agilegroup.storymappingtool.view.ResultInfo;
@@ -8,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -57,5 +59,39 @@ public class AccountServiceImpl implements AccountService {
 
         accountDAO.save(account.toUser());
         return new ResultInfo<>(true, "成功注册账号", null);
+    }
+
+    @Override
+    public ResultInfo<Object> getUserInfo(int id) {
+        User user = accountDAO.getUserById(id);
+        AccountInfo accountInfo = new AccountInfo();
+        accountInfo.setEmail(user.getEmail());
+        accountInfo.setName(user.getName());
+        return new ResultInfo<>(true,"查看用户信息",accountInfo );
+    }
+
+    @Override
+    public ResultInfo<Object> modify(HttpSession session, AccountInfo account, int id) {
+        User user = accountDAO.getUserById(id);
+        user.setEmail(account.getEmail());
+        user.setName(account.getName());
+        return new ResultInfo<>(true,"修改用户信息", accountDAO.saveAndFlush(user));
+    }
+
+    @Override
+    public ResultInfo<Object> getTeamMembers(HttpSession session, int id) {
+        List<User> users = accountDAO.getTeamMember(id);
+        for (User user : users) {
+            System.out.println(user.toString());
+        }
+        List<AccountInfo> ifs = new ArrayList<>();
+
+        for (User user : users) {
+            AccountInfo info = new AccountInfo();
+            info.setName(user.getName());
+            info.setEmail(user.getEmail());
+            ifs.add(info);
+        }
+        return new ResultInfo<>(true, "success", ifs);
     }
 }
