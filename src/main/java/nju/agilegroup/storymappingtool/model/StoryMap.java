@@ -33,7 +33,7 @@ public class StoryMap {
 
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = "team_id")
-    private Team teamm;
+    private Team team;
 
     public StoryMap(){
 
@@ -96,11 +96,11 @@ public class StoryMap {
         this.user = user;
     }
 
-    public Team getTeamm() {
-        return teamm;
+    public Team getTeam() {
+        return team;
     }
 
-    public void setTeamm(Team teamm) {
-        this.teamm = teamm;
+    public void setTeam(Team team) {
+        this.team = team;
     }
 }

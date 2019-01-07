@@ -19,19 +19,19 @@ public class MapController {
         this.mapService = mapService;
     }
 
-    /**
-     * 获得一个队伍的地图列表
-     * 参数为teamId，目前团队功能还未开放，因此teamId=userId，后续将二者分离，大不了直接清库
-     * 返回一个List<MapInfo>的JSON，具体可以直接访问getMaps?teamId=1（自己在storymap表插入对应Id的数据）
-     * @param request
-     * @param teamId
-     * @return
-     */
-    @RequestMapping(value = "/getMaps", method = RequestMethod.GET)
-    public ResultInfo<Object> getMap(HttpServletRequest request, @RequestParam int teamId){
-        HttpSession session = request.getSession();
-        return mapService.getMap(session, teamId);
-    }
+//    /**
+//     * 获得一个队伍的地图列表
+//     * 参数为teamId，目前团队功能还未开放，因此teamId=userId，后续将二者分离，大不了直接清库
+//     * 返回一个List<MapInfo>的JSON，具体可以直接访问getMaps?teamId=1（自己在storymap表插入对应Id的数据）
+//     * @param request
+//     * @param teamId
+//     * @return
+//     */
+//    @RequestMapping(value = "/getMaps", method = RequestMethod.GET)
+//    public ResultInfo<Object> getMap(HttpServletRequest request, @RequestParam int teamId){
+//        HttpSession session = request.getSession();
+//        return mapService.getMap(session, teamId);
+//    }
 
     /**
      * 创建一个故事地图

@@ -41,8 +41,8 @@ public class MapServiceImpl implements MapService{
             info.setCreatorName(map.getUser().getName());
             info.setDescription(map.getDescription());
             info.setRelease(map.getRelease());
-            info.setTeam(map.getTeamm().getId());
-            info.setTeamName(map.getTeamm().getName());
+            info.setTeam(map.getTeam().getId());
+            info.setTeamName(map.getTeam().getName());
             infos.add(info);
         }
 

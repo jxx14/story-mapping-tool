@@ -15,10 +15,18 @@ public class Team {
     private String name;
 
     @Column(name = "leader_id")
-    private int leader;
+    private int leader_id;
 
     @Column(name = "description")
     private String description;
+
+    public Team(){}
+
+    public Team(String name, int leader_id, String description) {
+        this.name = name;
+        this.leader_id = leader_id;
+        this.description = description;
+    }
 
     public int getId() {
         return id;
@@ -36,12 +44,12 @@ public class Team {
         this.name = name;
     }
 
-    public int getLeader() {
-        return leader;
+    public int getLeader_id() {
+        return leader_id;
     }
 
-    public void setLeader(int leader) {
-        this.leader = leader;
+    public void setLeader(int leader_id) {
+        this.leader_id = leader_id;
     }
 
     public String getDescription() {
@@ -50,5 +58,15 @@ public class Team {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    @Override
+    public String toString() {
+        return "Team{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", leader_id=" + leader_id +
+                ", description='" + description + '\'' +
+                '}';
     }
 }

@@ -18,7 +18,7 @@ public class AccountInfo {
     }
 
     public User toUser() {
-        return new User(0, name, email, password);
+        return new User(name, email, password);
     }
 
     public String getName() {
