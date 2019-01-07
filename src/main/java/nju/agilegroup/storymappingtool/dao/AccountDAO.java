@@ -12,6 +12,8 @@ public interface AccountDAO  extends JpaRepository<User, Integer> {
 
     List<User> findAllByEmail(String email);
 
+    User getUserById(int id);
+
     //查看所有团队成员
     @Query(value = "SELECT * FROM  user u WHERE u.team_id =?1",nativeQuery = true)
     List<User> getTeamMember (int team_id);
