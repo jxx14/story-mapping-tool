@@ -20,6 +20,16 @@
     color: #d9e2ec;
 }
 
+.login-container .link-container {
+    padding: 2.2rem 4rem 0;
+    float: right;
+}
+
+.login-container .link-container a {
+    color: #aaaaaa;
+    margin-left: 1.5rem;
+}
+
 .login-container .input-container {
     margin-top: 2rem;
 }
@@ -43,7 +53,7 @@
 
 .login-container .input-container button {
     position: relative;
-    margin-top: 4rem;
+    margin-top: 3rem;
     width: 80%;
     left: 11%;
     background: #748cfa;
