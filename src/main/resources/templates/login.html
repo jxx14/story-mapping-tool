@@ -81,7 +81,7 @@
                 data: JSON.stringify({ "email": email, "password": pwd }),
                 success: function (result) {
                     if (result.success) {
-                        window.location= 'user';
+                        window.location= '/user';
                     } else {
                         showTip($('#tip'), result.message, 'white');
                     }
