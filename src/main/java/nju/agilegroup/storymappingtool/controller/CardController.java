@@ -65,7 +65,7 @@ public class CardController {
 
     /**
      * 修改一张卡片，需要传入卡片ID
-     * 这里createAt字段会刷新为修改时间，如果觉得没问题可以在界面上显示为最后修改于……因为不改的话可能需要多查一次表
+     * 只需要传入修改部分的字段，其他多余字段无需填写
      * 返回对应卡片类型的CardInfo的json
      * @param request
      * @param cardInfo
