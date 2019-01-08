@@ -29,7 +29,7 @@ public class TeamServiceImpl implements TeamService{
 
     @Override
     public ResultInfo<Object> getTeamInfo(HttpSession session, int id) {
-        return new ResultInfo<>(true,"团队信息",teamDAO.getTeamById(id));
+        return new ResultInfo<>(true,"team information",teamDAO.getTeamById(id));
     }
 
 //    @Override
@@ -41,7 +41,7 @@ public class TeamServiceImpl implements TeamService{
 
     @Override
     public ResultInfo<Object> addTeam(HttpSession session, TeamInfo teamInfo) {
-        return new ResultInfo<>(true,"添加团队",teamDAO.save(teamInfo.toTeam()));
+        return new ResultInfo<>(true,"create team",teamDAO.save(teamInfo.toTeam()));
     }
 
     @Override
@@ -49,6 +49,6 @@ public class TeamServiceImpl implements TeamService{
         Team team = teamDAO.getTeamById(TeamID);
         team.setDescription(teamInfo.getDescription());
         team.setName(teamInfo.getName());
-        return new ResultInfo<>(true,"修改团队", teamDAO.saveAndFlush(team));
+        return new ResultInfo<>(true,"modify team information", teamDAO.saveAndFlush(team));
     }
 }

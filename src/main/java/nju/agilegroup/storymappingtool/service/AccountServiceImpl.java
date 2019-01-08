@@ -27,7 +27,7 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public ResultInfo<Object> login(HttpSession session, AccountInfo account) {
         if (session.getAttribute(USER_KEY) != null) {
-            return new ResultInfo<>(true, "您已经登录，无需再次登录", null);
+            return new ResultInfo<>(true, "You are already logged in,no need to repeat login", null);
         }
 
         String email = account.getEmail();
@@ -37,16 +37,16 @@ public class AccountServiceImpl implements AccountService {
 
         if (isAccountValid) {
             session.setAttribute(USER_KEY, email);
-            return new ResultInfo<>(true, "登录成功", null);
+            return new ResultInfo<>(true, "Login successfully", null);
         } else {
-            return new ResultInfo<>(false, "账户名和密码不匹配", null);
+            return new ResultInfo<>(false, "Account and password do not match", null);
         }
     }
 
     @Override
     public ResultInfo<Object> logout(HttpSession session) {
         session.invalidate();
-        return new ResultInfo<>(true, "成功登出", null);
+        return new ResultInfo<>(true, "Logout successfully", null);
     }
 
     @Override
@@ -54,11 +54,11 @@ public class AccountServiceImpl implements AccountService {
         String email = account.getEmail();
         List<User> users = accountDAO.findAllByEmail(email);
         if (!users.isEmpty()) {
-            return new ResultInfo<>(false, "该邮箱已经被注册过", null);
+            return new ResultInfo<>(false, "The mailbox has been registered", null);
         }
 
         accountDAO.save(account.toUser());
-        return new ResultInfo<>(true, "成功注册账号", null);
+        return new ResultInfo<>(true, "Registered successfully", null);
     }
 
     @Override
@@ -67,7 +67,7 @@ public class AccountServiceImpl implements AccountService {
         AccountInfo accountInfo = new AccountInfo();
         accountInfo.setEmail(user.getEmail());
         accountInfo.setName(user.getName());
-        return new ResultInfo<>(true,"查看用户信息",accountInfo );
+        return new ResultInfo<>(true,"user information",accountInfo );
     }
 
     @Override
@@ -75,7 +75,7 @@ public class AccountServiceImpl implements AccountService {
         User user = accountDAO.getUserById(id);
         user.setEmail(account.getEmail());
         user.setName(account.getName());
-        return new ResultInfo<>(true,"修改用户信息", accountDAO.saveAndFlush(user));
+        return new ResultInfo<>(true,"modify user information", accountDAO.saveAndFlush(user));
     }
 
     @Override
