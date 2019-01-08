@@ -79,6 +79,11 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
+    public ResultInfo<Object> resetPWd(HttpSession session, String password, int id) {
+        return null;
+    }
+
+    @Override
     public ResultInfo<Object> getTeamMembers(HttpSession session, int id) {
         List<User> users = accountDAO.getTeamMember(id);
         for (User user : users) {

@@ -1,5 +1,6 @@
 package nju.agilegroup.storymappingtool.controller;
 
+import nju.agilegroup.storymappingtool.model.User;
 import nju.agilegroup.storymappingtool.service.AccountService;
 import nju.agilegroup.storymappingtool.view.AccountInfo;
 import nju.agilegroup.storymappingtool.view.ResultInfo;
@@ -37,14 +38,22 @@ public class AccountController {
     }
 
     @RequestMapping(value = "/listUserInfo", method = RequestMethod.POST)
-    public ResultInfo<Object>listUserInfo(HttpServletRequest request,@RequestParam int userId) {
+    public ResultInfo<Object> listUserInfo(HttpServletRequest request, @RequestParam int userId) {
         return accountService.getUserInfo(userId);
     }
 
     @RequestMapping(value = "/modifyUserInfo", method = RequestMethod.POST)
-    public ResultInfo<Object> modifyUserInfo(HttpServletRequest request,@RequestBody AccountInfo accountInfo,@RequestParam int userId) {
+    public ResultInfo<Object> modifyUserInfo(HttpServletRequest request, @RequestBody AccountInfo accountInfo, @RequestParam int userId) {
         HttpSession session = request.getSession();
-        return accountService.modify(session, accountInfo,userId);
+        return accountService.modify(session, accountInfo, userId);
+    }
+
+    //未实现
+    @RequestMapping(value = "/resetPwd", method = RequestMethod.POST)
+    public ResultInfo<Object> resetPwd(HttpServletRequest request,@RequestParam int userId) {
+        HttpSession session = request.getSession();
+        String password = request.getParameter("password");
+        return accountService.resetPWd(session,password,userId);
     }
 
 }
