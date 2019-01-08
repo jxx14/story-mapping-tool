@@ -1,6 +1,7 @@
 package nju.agilegroup.storymappingtool.service;
 
 
+import nju.agilegroup.storymappingtool.model.User;
 import nju.agilegroup.storymappingtool.view.AccountInfo;
 import nju.agilegroup.storymappingtool.view.ResultInfo;
 
@@ -18,6 +19,9 @@ public interface AccountService {
 
     ResultInfo<Object> modify(HttpSession session,AccountInfo account,int id);
 
+    ResultInfo<Object> resetPWd(HttpSession session,String password,int id);
+
     //参数id，查看团队成员
     ResultInfo<Object> getTeamMembers(HttpSession session, int id);
+
 }
