@@ -17,6 +17,11 @@ public class RolePK implements Serializable{
 
     }
 
+    public RolePK(int mapId, String name) {
+        this.mapId = mapId;
+        this.name = name;
+    }
+
     public String getName() {
         return name;
     }
@@ -54,7 +59,7 @@ public class RolePK implements Serializable{
             return false;
         }
         RolePK other = (RolePK) obj;
-        if(mapId == other.getMapId() && name.equals(((RolePK) obj).getName())){
+        if(mapId == other.getMapId() && name.equals(other.getName())){
             return true;
         }
         return false;

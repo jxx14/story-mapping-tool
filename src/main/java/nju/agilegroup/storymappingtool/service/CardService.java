@@ -3,6 +3,7 @@ package nju.agilegroup.storymappingtool.service;
 
 import nju.agilegroup.storymappingtool.view.CardInfo;
 import nju.agilegroup.storymappingtool.view.ResultInfo;
+import nju.agilegroup.storymappingtool.view.RoleInfo;
 
 import javax.servlet.http.HttpSession;
 
@@ -27,6 +28,8 @@ public interface CardService {
 
     ResultInfo<Object> deleteStoryCard(HttpSession session, CardInfo cardInfo);
 
-    ResultInfo<Object> createRole(HttpSession session);
+    ResultInfo<Object> getRoles(HttpSession session, int mapId);
+
+    ResultInfo<Object> createRole(HttpSession session, RoleInfo roleInfo);
 
 }
