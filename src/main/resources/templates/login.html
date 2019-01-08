@@ -1,72 +1,97 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="en-US">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <meta name="renderer" content="webkit">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>登录</title>
+    <title>Login</title>
     <link rel="stylesheet" th:href="@{css/global.css}"/>
     <link rel="stylesheet" th:href="@{css/bootstrap.min.css}"/>
+    <link rel="stylesheet" th:href="@{css/bootstrapValidator.min.css}"/>
     <link rel="stylesheet" th:href="@{css/login.css}">
 </head>
 <body>
-<div class="container login-container" id="loginInfo">
-    <h4 class="text-center title">story map tool</h4>
-    <div class="input-container">
+<div class="container login-container">
+    <h4 class="text-center title">User Story Mapping Tool</h4>
+    <form class="input-container" id="loginForm">
         <div class="input-group-lg text-center">
             <img th:src="@{icons/user.svg}" class="icon">
-            <input type="text" id="email" class="input" placeholder="请输入您的邮箱">
+            <input type="text" name="email" class="input" placeholder="Input your Email">
+            <span class="help-block has-error" id="emailCheckMessage"></span>
         </div>
         <div class="input-group-lg text-center">
             <img th:src="@{icons/lock.svg}"  class="icon">
-            <input type="password" id="pwd" class="input" placeholder="请输入您的密码">
+            <input type="password" name="password" class="input" placeholder="Input your password">
+            <span class="help-block has-error" id="pwdCheckMessage"></span>
         </div>
 
-        <button class="input btn btn-primary" id="login">登录</button>
+        <button type="submit" class="input btn btn-primary">Login</button>
 
-        <script th:src="@{js/jquery-3.2.1.min.js}"></script>
-        <script th:src="@{js/bootstrap.min.js}"></script>
-        <script th:src="@{js/account.js}"></script>
-        <script th:src="@{js/util.js}"></script>
-    </div>
+    </form>
 </div>
+<img th:src="@{portraits/background.jpg}" class="background"/>
+<div id="tip"></div>
+
+<script th:src="@{js/jquery-3.2.1.min.js}"></script>
+<script th:src="@{js/bootstrap.min.js}"></script>
+<script th:src="@{js/bootstrapValidator.min.js}"></script>
+<script th:src="@{js/account.js}"></script>
+<script th:src="@{js/util.js}"></script>
 
 <script>
-    function submitLogin() {
-        var email = $('#email').val();
-        var pwd = $('#pwd').val();
 
-        if (!(!email || email === ""||!pwd || pwd === "")) {
+    $(function () {
+        $('#loginForm').bootstrapValidator({
+            fields: {
+                email: {
+                    container: '#emailCheckMessage',
+                    validators: {
+                        notEmpty: {
+                            message: "Email shouldn't be empty"
+
+                        },
+                        emailAddress: {
+                            message: 'Invalid email format'
+                        }
+                    }
+                },
+                password: {
+                    container: '#pwdCheckMessage',
+                    validators: {
+                        notEmpty: {
+                            message: "Password shouldn't be empty"
+                        }
+                    }
+                }
+            }
+        })
+        .on('success.form.bv', function(e) {
+            e.preventDefault();
+
+            const form = $(e.target);
+            const validator = form.data('bootstrapValidator');
+            const email = validator.getFieldElements("email").val();
+            const pwd = validator.getFieldElements("password").val();
 
             $.ajax({
-                    url: '/login',
-                    type: 'post',
-                    contentType: 'application/json',
-                    data: JSON.stringify({ "email": email, "password": pwd }),
-                    success: function (result) {
-                        if (result.success) {
-                            document.location.href= 'storymap';
-                        } else {
-                            showTip($('#tip'), result.message, 'white');
-                        }
-                    },
-                    error: function (message) {
-                        showTip($('#tip'), message, 'white');
+                url: '/login',
+                type: 'post',
+                contentType: 'application/json',
+                data: JSON.stringify({ "email": email, "password": pwd }),
+                success: function (result) {
+                    if (result.success) {
+                        window.location= '/user';
+                    } else {
+                        showTip($('#tip'), result.message, 'white');
                     }
-                })
-
-        }
-        // else {
-        //     alert("输入信息不符合规范")
-        // }
-
-    }
-
-
-    $('#loginInfo').click(function () {
-        submitLogin();
-    })
+                },
+                error: function (message) {
+                    showTip($('#tip'), message, 'white');
+                }
+            })
+        });
+    });
 
 </script>
 
