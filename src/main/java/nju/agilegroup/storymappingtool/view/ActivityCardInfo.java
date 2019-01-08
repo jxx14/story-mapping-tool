@@ -17,6 +17,7 @@ public class ActivityCardInfo {
     private List<RoleInfo> roles;
 
     private List<TaskCardInfo> tasks;
+    private int worktime;
 
     public int getId() {
         return id;
@@ -88,6 +89,14 @@ public class ActivityCardInfo {
 
     public void setTasks(List<TaskCardInfo> tasks) {
         this.tasks = tasks;
+    }
+
+    public int getWorktime() {
+        return worktime;
+    }
+
+    public void setWorktime(int worktime) {
+        this.worktime = worktime;
     }
 
 
