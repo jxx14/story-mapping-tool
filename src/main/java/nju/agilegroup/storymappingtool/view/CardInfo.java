@@ -25,7 +25,7 @@ public class CardInfo {
     private int release;
 
     //创建时输入角色名称的列表即可，activity以外的卡片请将该字段设为roles:[]，否则可能会报错
-    private List<String> roles;
+    private List<Integer> roles;
 
     public int getId() {
         return id;
@@ -99,19 +99,19 @@ public class CardInfo {
         this.position = position;
     }
 
-    public List<String> getRoles() {
-        return roles;
-    }
-
-    public void setRoles(List<String> roles) {
-        this.roles = roles;
-    }
-
     public int getParent() {
         return parent;
     }
 
     public void setParent(int parent) {
         this.parent = parent;
+    }
+
+    public List<Integer> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(List<Integer> roles) {
+        this.roles = roles;
     }
 }
