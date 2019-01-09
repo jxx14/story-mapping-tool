@@ -6,6 +6,11 @@ public class RoleInfo {
     private int mapId;
     private String name;
     private String avatar;
+    // 创建者名称
+    private String creator;
+    // 创建时传入
+    private int creatorId;
+    private String createAt;
 
     public int getMapId() {
         return mapId;
@@ -37,5 +42,29 @@ public class RoleInfo {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public String getCreator() {
+        return creator;
+    }
+
+    public void setCreator(String creator) {
+        this.creator = creator;
+    }
+
+    public String getCreateAt() {
+        return createAt;
+    }
+
+    public void setCreateAt(String createAt) {
+        this.createAt = createAt;
+    }
+
+    public int getCreatorId() {
+        return creatorId;
+    }
+
+    public void setCreatorId(int creatorId) {
+        this.creatorId = creatorId;
     }
 }
