@@ -2,6 +2,7 @@
 .backlog_div{
     border-right: lightgrey 1px dashed;
     min-width: 130px;
+    width:auto;
     font-size: 12px;
     padding: 10px;
     display: inline-block;
@@ -155,7 +156,11 @@
     border-top: lightgrey 1px dashed;
     vertical-align: top;
     min-width: 130px;
+    width:auto;
     margin-top: 10px;
+    /*display: inline-block;*/
+    display: inline-flex;
+    align-items: stretch;
 }
 .story_card{
     cursor: pointer;
@@ -280,11 +285,23 @@
     display: inline-block;
     margin-left: 15px;
 }
-
-
 .modal_role_img{
     width:30px;
     height: 30px;
     margin-left: 5px;
     margin-top: 5px;
+}
+
+
+#back_icon{
+    cursor: pointer;
+    display: inline-block;
+    color: rgba(255,255,255,0.6);
+    font-size: 37px;
+    height: 50px;
+    width:40px;
+    padding-left: 12px;
+}
+#back_icon:hover{
+    color: rgba(255,255,255,1);
 }

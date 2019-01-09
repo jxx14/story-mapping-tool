@@ -11,7 +11,10 @@ var userId = 1;
 
 $(function(){
     init();
-
+    $('#back_icon').click(function () {
+        window.history.go(-1);
+    });
+    
     $('.add_backlog').on("click",function () {
         var tcard = $(this).parent().parent();
         var position = 1;
@@ -117,13 +120,13 @@ function addPerson() {
         $.ajax({
             type: "post",
             url: "/addRoleToActivity?activity="+aid,
-            data:JSON.stringify({"mapId":mapId,"name":personName,"avatar":imgpath}),
+            data:JSON.stringify({"mapId":mapId,"name":personName,"avatar":imgpath,}),
             contentType: "application/json; charset=utf-8",
             async: false,
             success: function (data) {
 
                 $('.activity_card[data-aid='+aid+']').parent().find('.person_panel').append('<div class="person_card" data-name="'+personName
-                    +'" title="'+personName+'" data-pid="'+data['data']['id']+'">\n' +
+                    +'" title="'+personName+'" data-pid="'+data['data']['id']+'" data-creator="'+role['creatorId']+'" data-creatAt="'+role['createAt']+'">\n' +
                     '                            <img src="../portraits/'+imgpath+'.png" width="30" height="30" class="person_img"/>\n' +
                     '                            <div class="person_card_operation" style="display: none;">\n' +
                     '                                <img src="../icons/trash.png" class="remove_person_icon removePerson"/>\n' +
@@ -150,15 +153,15 @@ function removePersonCard() {
         $.ajax({
             type: "post",
             url: "/removeRoleFromActivity?activity="+aid,
-            data:{'id':pid},
+            data:JSON.stringify({'id':pid}),
             contentType: "application/json; charset=utf-8",
             async: false,
             success: function (data) {
                 $(pcard).remove();
             }, error: function (XMLHttpRequest, textStatus, errorThrown) {
-                alert(XMLHttpRequest.status);
-                alert(XMLHttpRequest.readyState);
-                alert(textStatus);
+                // alert(XMLHttpRequest.status);
+                // alert(XMLHttpRequest.readyState);
+                // alert(textStatus);
             }
         });
     });
@@ -189,7 +192,7 @@ function modifyPersonCard() {
         $.ajax({
             type: "post",
             url: "/modifyRole",
-            data:JSON.stringify({"id":pid,"mapId":mapId,"name":personName,"avatar":imgpath}),
+            data:JSON.stringify({"id":pid,"name":personName,"avatar":imgpath}),
             contentType: "application/json; charset=utf-8",
             async: false,
             success: function (data) {
@@ -249,14 +252,14 @@ function addActivityCard() {
         var bnode = this.parentNode.parentNode.parentNode;
 
         var position_R = $(acard).attr('data-position');
-        var position_L = position_R;
+        var position_L = 0;
         if(bnode.previousSibling!=null)
             position_L = bnode.previousSibling.childNodes[1].getAttribute('data-position');
 
         $.ajax({
             type: "post",
             url: "/createActivity",
-            data:JSON.stringify({"mapId":mapId,"name":'text',"creatorId":userId,"position":(position_L+position_R)/2,"roles":[]}),
+            data:JSON.stringify({"mapId":mapId,"name":'text',"creatorId":userId,"position":(position_L+position_R)/2}),
             contentType: "application/json; charset=utf-8",
             async: false,
             success: function (act) {
@@ -306,7 +309,7 @@ function addActivityCard() {
         var acard = $(this).parent().parent();
         var bnode = this.parentNode.parentNode.parentNode;
         var position_L = $(acard).attr('data-position');
-        var position_R = position_L;
+        var position_R = position_L*3;
         if(bnode.nextSibling!=null)
             position_R = bnode.nextSibling.childNodes[1].getAttribute('data-position');
 
@@ -511,14 +514,14 @@ function addTaskCard() {
         var tcard = $(this).parent().parent();
         var tnode = this.parentNode.parentNode;
         var position_R = $(tcard).attr('data-position')
-        var position_L = position_R;
+        var position_L = 0;
         if(tnode.previousSibling!=null)
             position_L = tnode.previousSibling.getAttribute('data-position');
 
         $.ajax({
             type: "post",
             url: "/createTask",
-            data:JSON.stringify({"mapId":mapId,"name":'text',"creatorId":userId,"position":(position_L+position_R)/2,"roles":[],"parent":aid}),
+            data:JSON.stringify({"mapId":mapId,"name":'text',"creatorId":userId,"position":(position_L+position_R)/2,"parent":aid}),
             contentType: "application/json; charset=utf-8",
             async: false,
             success: function (task) {
@@ -541,7 +544,7 @@ function addTaskCard() {
         var tcard = $(this).parent().parent();
         var tnode = this.parentNode.parentNode;
         var position_L = $(tcard).attr('data-position');
-        var position_R = position_L;
+        var position_R = position_L*3;
         if(tnode.nextSibling!=null)
             position_R = tnode.nextSibling.getAttribute('data-position');
 
@@ -666,11 +669,12 @@ function addFirstStoryCard() {
     $('body').on("click",'.add_story',function () {
         var pdiv = $(this).parent().parent().parent();
         var tid = $(pdiv).attr('data-tid');
-        var rid = $(pdiv).parent().parent().attr('data-rid');
+        var rid = $(pdiv).parent().parent().parent().attr('data-rid');
+
         $.ajax({
             type: "post",
             url: "/createStory",
-            data:JSON.stringify({"mapId":mapId,"name":'text',"creatorId":userId,"position":1,"parent":tid,"status":1,"worktime":2,"release":rid,"roles":[]}),
+            data:JSON.stringify({"mapId":mapId,"name":'text',"creatorId":userId,"position":1,"parent":tid,"status":1,"worktime":2,"release":rid}),
             contentType: "application/json; charset=utf-8",
             async: false,
             success: function (data) {
@@ -688,7 +692,6 @@ function removeStoryCard() {
     $('body').on("click",'.removeStory',function () {
         var slist = $(this).parent().parent().parent()
         var num = $(slist).find('.story_card').length;
-        // var tid = $(this).parent().parent().parent().attr('data-tid');
         $(this).parent().parent().remove();
         if(num==1){
             $(slist).html('<div class="story_plus_card">\n' +
@@ -713,7 +716,7 @@ function addNextStoryCard() {
         $.ajax({
             type: "post",
             url: "/createStory",
-            data:JSON.stringify({"mapId":mapId,"name":'text',"creatorId":userId,"position":(pUp+pDown)/2,"parent":tid,"status":1,"worktime":2,"release":rid,"roles":[]}),
+            data:JSON.stringify({"mapId":mapId,"name":'text',"creatorId":userId,"position":(pUp+pDown)/2,"parent":tid,"status":1,"worktime":2,"release":rid}),
             contentType: "application/json; charset=utf-8",
             async: false,
             success: function (data) {
@@ -735,7 +738,7 @@ function addNextStoryCard() {
         var pUp = 0;
         if(snode.previousSibling!=null)
             pUp = snode.previousSibling.getAttribute('data-position');
-
+        console.log((pUp+pDown)/2)
         $.ajax({
             type: "post",
             url: "/createStory",
@@ -902,13 +905,14 @@ function init() {
             var dList = data['data'];
             var rslist = {};
             var bdiv = '';
+            var rdiv = '';
             for(var i = 0;i<dList.length;i++){
                 bdiv += '<div class="backlog_div">';
                 var pList = dList[i]['roles'];
                 var aid = dList[i]['id'];
                 var aposition = dList[i]['position'];
                 var aname = dList[i]['name'];
-                var aestimation = 0;
+                var aestimation = dList[i]['worktime'];
                 var acreator = dList[i]['creator'];
                 var acreatAt = dList[i]['createAt'];
                 var tList = dList[i]['tasks'];
@@ -916,7 +920,7 @@ function init() {
                 var pdiv = '<div><div style="display: inline-block;" class="person_panel">';
                 for(var j = 0;j<pList.length;j++){
                     var role = pList[j];
-                    pdiv+='<div class="person_card" data-name="'+role['name']+'" title="'+role['name']+'" data-pid="'+role['id']+'">\n' +
+                    pdiv+='<div class="person_card" data-name="'+role['name']+'" title="'+role['name']+'" data-pid="'+role['id']+'" data-creator="'+role['creatorId']+'" data-creatAt="'+role['createAt']+'">\n' +
                         '                            <img src="../portraits/'+role['avatar']+'.png" width="30" height="30" class="person_img"/>\n' +
                         '                            <div class="person_card_operation" style="display: none;">\n' +
                         '                                <img src="../icons/trash.png" class="remove_person_icon removePerson"/>\n' +
@@ -937,13 +941,17 @@ function init() {
                     '                    </div>\n' +
                     '                </div>';
 
+                for(var t in rslist){
+                    rslist[t]+= '<div class="backlog_div"><div class="story_panel"  data-aid="'+aid+'" style="margin-left: -5px;">';
+                }
+
                 var tdiv ='<div style="margin-left: -5px;">';
                 for(var k = 0;k<tList.length;k++){
                     var task = tList[k];
                     var tid = task['id'];
                     tdiv+='<div class="task_card" data-tid="'+tid+'" data-position="'+task['position']+'" data-creator="'+task['creator']+'" data-creatAt="'+task['createAt']+'">\n' +
                         '                        <div class="activity_textDiv">'+task['name']+'</div>\n' +
-                        '                        <div class="task_estimation">'+0+'</div>\n' +
+                        '                        <div class="task_estimation">'+task['worktime']+'</div>\n' +
                         '                        <div class="activity_card_operation" style="display: none;">\n' +
                         '                            <img src="../icons/left-arrow.png" class="add_left_icon addTaskLeft"/>\n' +
                         '                            <img src="../icons/trash.png" class="remove_icon removeTask" style="display: none;"/>\n' +
@@ -951,93 +959,90 @@ function init() {
                         '                        </div>\n' +
                         '                    </div>';
 
+                    for(var t in rslist){
+                        rslist[t]+='<div class="story_list" data-tid="'+tid+'">';
+                    }
+
                     var sList = task['storys'];
                     for(var m = 0;m<sList.length;m++){
                         var story = sList[m];
                         var rid = story['release'];
-                        var sid = story['id'];
+                        // var sid = story['id'];
+                        var state = story_states[story['status']];
+
                         if(rslist[rid]==undefined){
-                            rslist[rid] = {};
-                            rslist[rid][aid] = {};
-                            rslist[rid][aid][tid] = {};
-                        }else{
-                            if(rslist[rid][aid]==undefined){
-                                rslist[rid][aid] = {};
-                                rslist[rid][aid][tid] = {};
-                            }else{
-                                if(rslist[rid][aid][tid]==undefined){
-                                    rslist[rid][aid][tid] = {};
-                                }
-                            }
+                            rslist[rid] = '<div style="margin-top: 15px;" data-rid="'+rid+'" class="release_label"><span>——Release '+rid+'</span>\n' +
+                                '            <div style="display: inline-block;width: 20px;height: 20px;">\n' +
+                                '                <img src="../icons/trash.png" class="remove_release" style="display: none;"/>\n' +
+                                '            </div>\n' +
+                                '        </div>\n' +
+                                '        <div class="release_div" data-rid="'+rid+'">'+
+                                '<div class="backlog_div"><div class="story_panel"  data-aid="'+aid+'" style="margin-left: -5px;">'+
+                                '<div class="story_list" data-tid="'+tid+'">';
                         }
-                        rslist[rid][aid][tid][sid] = story;
+
+                        rslist[rid]+='<div class="story_card" data-sid="'+story['id']+'" data-position="'+story['position']+'" data-creator="' +
+                            story['creator']+'" data-creatAt="'+story['createAt']+'">\n' +
+                            '                            <div class="activity_textDiv">'+story['name']+'</div>\n' +
+                            '                            <div class="story_state '+state+'">'+state+'</div>\n' +
+                            '                            <div class="story_estimation">'+story['worktime']+'</div>\n' +
+                            '                            <div class="activity_card_operation" style="display: none;">\n' +
+                            '                                <img src="../icons/up-arrow.png" class="add_up_icon addStoryUp"/>\n' +
+                            '                                <img src="../icons/trash.png" class="remove_icon removeStory"/>\n' +
+                            '                                <img src="../icons/down-arrow.png" class="add_right_icon addStoryDown"/>\n' +
+                            '                            </div>\n' +
+                            '                        </div>';
                     }
+                    for(var t in rslist){
+                        rslist[t]+='</div>';
+                    }
+                }
+                for(var t in rslist){
+                    rslist[t]+='</div></div>';
                 }
                 tdiv+='</div>';
                 bdiv+=tdiv;
                 bdiv+='</div>';
             }
-            $('.add_backlog').parent().parent().before(bdiv);
-
-
-            var rdiv = '';
-            for(var i in rslist){
-                rdiv+='<div style="margin-top: 15px;" data-rid="'+i+'" class="release_label"><span>——Release '+i+'</span>\n' +
-                    '            <div style="display: inline-block;width: 20px;height: 20px;">\n' +
-                    '                <img src="../icons/trash.png" class="remove_release" style="display: none;"/>\n' +
-                    '            </div>\n' +
-                    '        </div>\n' +
-                    '        <div class="release_div" data-rid="'+i+'">';
-                for(var j in rslist[i]){
-                    rdiv+='<div class="backlog_div"><div class="story_panel"  data-aid="'+j+'" style="margin-left: -5px;">';
-                    for(var k in rslist[i][j]){
-                        rdiv+='<div class="story_list" data-tid="'+k+'">';
-                        for(var m in rslist[i][j][k]){
-                            var story = rslist[i][j][k][m];
-                            var state = story_states[story['status']];
-                            rdiv+='<div class="story_card" data-sid="'+story['id']+'" data-position="'+story['position']+'" data-creator="' +
-                                    story['creator']+'" data-creatAt="'+story['createAt']+'">\n' +
-                                '                            <div class="activity_textDiv">'+story['name']+'</div>\n' +
-                                '                            <div class="story_state '+state+'">'+state+'</div>\n' +
-                                '                            <div class="story_estimation">'+story['worktime']+'</div>\n' +
-                                '                            <div class="activity_card_operation" style="display: none;">\n' +
-                                '                                <img src="../icons/up-arrow.png" class="add_up_icon addStoryUp"/>\n' +
-                                '                                <img src="../icons/trash.png" class="remove_icon removeStory"/>\n' +
-                                '                                <img src="../icons/down-arrow.png" class="add_right_icon addStoryDown"/>\n' +
-                                '                            </div>\n' +
-                                '                        </div>';
-                        }
-                        rdiv+='</div>';
-                    }
-                    rdiv+='</div></div>';
-                }
-                rdiv+='</div>';
-                rindex = parseInt(i)+1;
+            for(var t in rslist){
+                rslist[t]+='</div>';
+                rdiv+=rslist[t];
+                rindex = parseInt(t)+1;
             }
+            $('.add_backlog').parent().parent().before(bdiv);
             $('.add_release_icon').parent().before(rdiv);
 
             var actList = $('.activity_card');
             for(var i = 0;i<actList.length;i++){
                 var aid = actList.eq(i).attr('data-aid');
                 var tList = actList.eq(i).parent().find('.task_card');
-                var spanel = $('.story_panel[data-aid='+aid+']');
-                if(spanel.length<=0){
-                    $('.release_div').each(function () {
-                        var s = '<div class="backlog_div"><div class="story_panel" data-aid="'+aid+'" style="margin-left: -5px;"></div></div>';
+
+                $('.release_div').each(function () {
+                    var spanel = $(this).find('.story_panel[data-aid='+aid+']');
+                    if(spanel.length<=0){
                         $(this).append(s);
-                    });
-                }
+                    }
+                });
 
                 for(var j = 0;j<tList.length;j++){
                     var tid = tList.eq(j).attr('data-tid');
-                    var sListdiv = $('.story_list[data-tid='+tid+']');
-                    if(sListdiv.length<=0){
-                        $('.story_panel[data-aid='+aid+']').append('<div class="story_list" data-tid="'+tid+'"><div class="story_plus_card">' +
-                            '                                <div style="margin-top: 2px;text-align: center;">' +
-                            '                                <img class="add_story" src="../icons/add_large.png" /></div>' +
-                            '                                </div>' +
-                            '                                 </div>')
-                    }
+                    $('.release_div').each(function () {
+                        var sListdiv = $(this).find('.story_list[data-tid='+tid+']');
+                        if(sListdiv.length<=0){
+                            $(this).find('.story_panel[data-aid='+aid+']').append('<div class="story_list" data-tid="'+tid+'"><div class="story_plus_card">' +
+                                '                                <div style="margin-top: 2px;text-align: center;">' +
+                                '                                <img class="add_story" src="../icons/add_large.png" /></div>' +
+                                '                                </div>' +
+                                '                                 </div>')
+                        }
+
+                        if($(sListdiv).find('.story_card').length<=0&&$(sListdiv).find('.story_plus_card').length<=0){
+                            $(sListdiv).html('<div class="story_plus_card">' +
+                                '                                <div style="margin-top: 2px;text-align: center;">' +
+                                '                                <img class="add_story" src="../icons/add_large.png" /></div>' +
+                                '                                </div>');
+                        }
+                    });
                 }
             }
 
