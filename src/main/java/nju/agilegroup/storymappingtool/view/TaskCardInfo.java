@@ -16,6 +16,7 @@ public class TaskCardInfo {
     private double position;
 
     private List<StoryCardInfo> storys;
+    private int worktime;
 
     public int getId() {
         return id;
@@ -79,6 +80,14 @@ public class TaskCardInfo {
 
     public void setStorys(List<StoryCardInfo> storys) {
         this.storys = storys;
+    }
+
+    public int getWorktime() {
+        return worktime;
+    }
+
+    public void setWorktime(int worktime) {
+        this.worktime = worktime;
     }
 
     public static class TaskComparator implements Comparator<TaskCard> {

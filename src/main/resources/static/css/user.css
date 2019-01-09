@@ -1,0 +1,65 @@
+.user-container {
+    margin-top: 8rem;
+}
+
+.info-container {
+    margin-top: 3rem;
+    padding: 2rem;
+}
+
+.info-container > img {
+    position: relative;
+    left: 3rem;
+    width: 35%;
+    margin-bottom: 1.5rem;
+}
+
+.item {
+    display: flex;
+    display: -webkit-flex;
+    align-items: flex-start;
+    margin-top: 1rem;
+}
+
+.item img {
+    width: 2rem;
+}
+
+.item span {
+    margin-left: 1rem;
+}
+
+.team-container {
+    margin-top: 3.6rem;
+}
+
+.team-container hr {
+    margin: 0;
+}
+
+.team-container .team-info {
+    position: relative;
+    width: 40%;
+    margin: 2rem 8% 0 0;
+    padding: 1rem;
+    border-color: #dbdad8;
+    border-style: solid;
+    border-width: 1px;
+}
+
+.team-info .map-list {
+    display: inline-block;
+}
+
+.team-info .map-list a {
+    display: block;
+    margin-left: 1rem;
+}
+
+.bar {
+    display: block;
+    width: 12rem;
+    border-width: 0 0 0.4rem 0;
+    border-color: #4fd272;
+    border-style: solid;
+}

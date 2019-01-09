@@ -2,6 +2,7 @@ package nju.agilegroup.storymappingtool.view;
 
 
 public class RoleInfo {
+    private int id;
     private int mapId;
     private String name;
     private String avatar;
@@ -28,5 +29,13 @@ public class RoleInfo {
 
     public void setAvatar(String avatar) {
         this.avatar = avatar;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 }

@@ -65,7 +65,7 @@ public class CardController {
 
     /**
      * 修改一张卡片，需要传入卡片ID
-     * 这里createAt字段会刷新为修改时间，如果觉得没问题可以在界面上显示为最后修改于……因为不改的话可能需要多查一次表
+     * 只需要传入修改部分的字段，其他多余字段无需填写
      * 返回对应卡片类型的CardInfo的json
      * @param request
      * @param cardInfo
@@ -103,7 +103,7 @@ public class CardController {
     }
 
     /**
-     * 创建一个角色
+     * 创建一个role
      * 返回RoleInfo的json
      * @param request
      * @param roleInfo
@@ -113,5 +113,47 @@ public class CardController {
     public ResultInfo<Object> createRole(HttpServletRequest request, @RequestBody RoleInfo roleInfo){
         HttpSession session = request.getSession();
         return cardService.createRole(session, roleInfo);
+    }
+
+    /**
+     * 修改已创建的role
+     * 只需要填写id和要修改的字段
+     * 返回修改后的roleInfo
+     * @param request
+     * @param roleInfo
+     * @return
+     */
+    @RequestMapping(value = "/modifyRole", method = RequestMethod.POST)
+    public ResultInfo<Object> modifyRole(HttpServletRequest request, @RequestBody RoleInfo roleInfo){
+        HttpSession session = request.getSession();
+        return cardService.modifyRole(session, roleInfo);
+    }
+
+    /**
+     * 为一个activity添加role
+     * url输入activityID，body输入roleID
+     * 返回修改后这个activityCardInfo
+     * @param request
+     * @param roleInfo
+     * @return
+     */
+    @RequestMapping(value = "/addRoleToActivity", method = RequestMethod.POST)
+    public ResultInfo<Object> addRoleToActivity(HttpServletRequest request, @RequestParam int activity, @RequestBody RoleInfo roleInfo){
+        HttpSession session = request.getSession();
+        return cardService.addRoleToActivity(session, roleInfo, activity);
+    }
+
+    /**
+     * 为一个activity删除role
+     * url输入activityID，body输入roleID
+     * 返回修改后这个activityCardInfo
+     * @param request
+     * @param roleInfo
+     * @return
+     */
+    @RequestMapping(value = "/removeRoleFromActivity", method = RequestMethod.POST)
+    public ResultInfo<Object> removeRoleFromActivity(HttpServletRequest request, @RequestParam int activity, @RequestBody RoleInfo roleInfo){
+        HttpSession session = request.getSession();
+        return cardService.removeRoleFromActivity(session, roleInfo, activity);
     }
 }

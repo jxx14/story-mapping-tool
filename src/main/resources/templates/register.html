@@ -5,55 +5,119 @@
     <meta name="renderer" content="webkit">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>注册</title>
+    <title>Register</title>
+
     <link rel="stylesheet" th:href="@{css/global.css}"/>
     <link rel="stylesheet" th:href="@{css/bootstrap.min.css}"/>
-    <link rel="stylesheet" th:href="@{css/register.css}">
+    <link rel="stylesheet" th:href="@{css/login.css}">
 </head>
 <body>
-<div class="container register-container">
-    <h4 class="text-center title">story map tool</h4>
+    <div class="container login-container">
+        <h4 class="text-center title">New Account</h4>
+        <form class="input-container" id="registerForm">
+            <div class="input-group-lg text-center">
+                <img th:src="@{icons/user.svg}" class="icon">
+                <input type="text" name="name" class="input" placeholder="Input your name">
+                <span class="help-block has-error" id="nameCheckMessage"></span>
+            </div>
+            <div class="input-group-lg text-center">
+                <img th:src="@{icons/email.svg}" class="icon">
+                <input type="text" name="email" class="input" placeholder="Input your Email">
+                <span class="help-block has-error" id="emailCheckMessage"></span>
+            </div>
+            <div class="input-group-lg text-center">
+                <img th:src="@{icons/lock.svg}"  class="icon">
+                <input type="password" name="password" class="input" placeholder="Input your password">
+                <span class="help-block has-error" id="pwdCheckMessage"></span>
+            </div>
+            <div class="input-group-lg text-center">
+                <img th:src="@{icons/lock.svg}"  class="icon">
+                <input type="password" name="passwordConfirm" class="input" placeholder="Confirm your password">
+                <span class="help-block has-error" id="confirmCheckMessage"></span>
+            </div>
 
-
-    <div class="input-container"  id="registerInfo">
-        <div class="input-group-lg text-center">
-            <img th:src="@{icons/email.svg}" class="icon">
-            <input type="text" id="email" class="input" placeholder="请输入您的邮箱">
-        </div>
-        <div class="input-group-lg text-center">
-            <img th:src="@{icons/user.svg}" class="icon">
-            <input type="text" id="name" class="input" placeholder="请输入您的用户名">
-        </div>
-        <div class="input-group-lg text-center">
-            <img th:src="@{icons/lock.svg}" class="icon">
-            <input type="password" id="pwd" class="input" placeholder="请输入您的密码">
-        </div>
-
-        <button class="input btn btn-primary" id="register">注册</button>
-
-        <script th:src="@{js/jquery-3.2.1.min.js}"></script>
-        <script th:src="@{js/bootstrap.min.js}"></script>
-        <script th:src="@{js/account.js}"></script>
-        <script th:src="@{js/util.js}"></script>
+            <button type="submit" class="input btn btn-primary">Register</button>
+        </form>
     </div>
+    <img th:src="@{portraits/background.jpg}" class="background"/>
+    <div id="tip"></div>
 
+    <script th:src="@{js/jquery-3.2.1.min.js}"></script>
+    <script th:src="@{js/bootstrap.min.js}"></script>
+    <script th:src="@{js/bootstrapValidator.min.js}"></script>
+    <script th:src="@{js/util.js}"></script>
 
     <script>
 
-        function submitRegister() {
-            var name = $('#name').val();
-            var pwd = $('#pwd').val();
-            var email = $('#email').val();
-            if (!(!name || name === ""||!pwd || pwd === ""||!email || email === "")) {
+        $(function () {
+            $('#registerForm').bootstrapValidator({
+                fields: {
+                    name: {
+                        container: '#nameCheckMessage',
+                        validators: {
+                            notEmpty: {
+                                message: "Name shouldn't be empty"
+                            }
+                        }
+                    },
+                    email: {
+                        container: '#emailCheckMessage',
+                        validators: {
+                            notEmpty: {
+                                message: "Email shouldn't be empty"
+
+                            },
+                            emailAddress: {
+                                message: 'Invalid email format'
+                            }
+                        }
+                    },
+                    password: {
+                        container: '#pwdCheckMessage',
+                        validators: {
+                            notEmpty: {
+                                message: "Password shouldn't be empty"
+                            },
+                            identical: {
+                                field: 'passwordConfirm',
+                                message: "Passwords do not match"
+                            }
+                        }
+                    },
+                    passwordConfirm: {
+                        container: '#confirmCheckMessage',
+                        validators: {
+                            notEmpty: {
+                                message: "Password Confirm shouldn't be empty"
+                            },
+                            identical: {
+                                field: 'password',
+                                message: "Passwords do not match"
+                            }
+                        }
+                    }
+                }
+            })
+            .on('success.form.bv', function(e) {
+                e.preventDefault();
+
+                const form = $(e.target);
+                const validator = form.data('bootstrapValidator');
+                const name = validator.getFieldElements("name").val();
+                const email = validator.getFieldElements("email").val();
+                const pwd = validator.getFieldElements("password").val();
 
                 $.ajax({
                     url: '/signUp',
                     type: 'post',
                     contentType: 'application/json',
-                    data: JSON.stringify({ "email": email, "password": pwd ,"name":name}),
+                    data: JSON.stringify({"name": name, "email": email, "password": pwd }),
                     success: function (result) {
                         if (result.success) {
-                            document.location.href= 'login';
+                            showTip($('#tip'), "Register Successfully", 'white');
+                            setTimeout(function () {
+                                window.location= '/login';
+                            }, 2000);
                         } else {
                             showTip($('#tip'), result.message, 'white');
                         }
@@ -62,23 +126,10 @@
                         showTip($('#tip'), message, 'white');
                     }
                 })
-
-            }
-            // else {
-            //     alert("输入信息不符合规范")
-            // }
-
-        }
-
-
-        $('#registerInfo').click(function () {
-            submitRegister();
-        })
+            });
+        });
 
     </script>
 
-
-
-</div>
 </body>
 </html>

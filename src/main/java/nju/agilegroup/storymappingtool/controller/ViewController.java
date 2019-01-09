@@ -12,6 +12,11 @@ public class ViewController {
         return "storymap";
     }
 
+    @RequestMapping(value = "/user")
+    public String getUserView() {
+        return "user";
+    }
+
     @RequestMapping(value = "/login")
     public String getLoginView(){
         return "login";

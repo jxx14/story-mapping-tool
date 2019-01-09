@@ -8,17 +8,26 @@
 
 .login-container {
     background: rgba(0.8, 0.8, 0.8, 0.4);
-    padding: 2rem 0;
+    padding: 3rem 0;
     position: fixed;
     width: 30%;
-    height: 40%;
-    top: 30%;
+    top: 25%;
     left: 35%;
     z-index: 1;
 }
 
 .login-container .title {
     color: #d9e2ec;
+}
+
+.login-container .link-container {
+    padding: 2.2rem 4rem 0;
+    float: right;
+}
+
+.login-container .link-container a {
+    color: #aaaaaa;
+    margin-left: 1.5rem;
 }
 
 .login-container .input-container {
@@ -44,7 +53,7 @@
 
 .login-container .input-container button {
     position: relative;
-    margin-top: 4rem;
+    margin-top: 3rem;
     width: 80%;
     left: 11%;
     background: #748cfa;

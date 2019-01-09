@@ -10,49 +10,59 @@
     <link rel="stylesheet" th:href="@{css/font-awesome.css}"/>
     <link rel="stylesheet" th:href="@{css/bootstrap.min.css}"/>
     <link rel="stylesheet" th:href="@{css/storymap.css}"/>
+
     <script th:src="@{js/jquery-3.2.1.min.js}"></script>
+    <script th:src="@{js/jquerysession.js}"></script>
     <script th:src="@{js/bootstrap.min.js}"></script>
     <script th:src="@{js/storymap.js}"></script>
+
+    <!--<script th:inline="javascript">-->
+        <!--/*<![CDATA[*/-->
+        <!--if($.session.get('userID')==null){-->
+            <!--window.location.href="/login";-->
+        <!--}-->
+        <!--/*]]>*/-->
+    <!--</script>-->
 </head>
 
 <body style="background-color: rgb(250,250,250)">
-    <div style="overflow:auto;white-space: nowrap;height: 100%;">
+    <div style="overflow:auto;white-space: nowrap;height: 100%;padding-bottom: 50px;">
         <div>
-            <div class="backlog_div">
-                <div>
-                    <div style="display: inline-block;" class="person_panel">
-                        <div class="person_card" data-name="TeamMember" title="TeamMember" data-pid="0">
-                            <img th:src="@{portraits/1.png}" width="30" height="30" class="person_img"/>
-                            <div class="person_card_operation" style="display: none;">
-                                <img th:src="@{icons/trash.png}" class="remove_person_icon removePerson"/>
-                            </div>
-                        </div>
-                    </div>
-                    <img class="add_person_card" th:src="@{icons/add_large.png}" />
-                </div>
+            <!--<div class="backlog_div">-->
+                <!--<div>-->
+                    <!--<div style="display: inline-block;" class="person_panel">-->
+                        <!--<div class="person_card" data-name="TeamMember" title="TeamMember" data-pid="0">-->
+                            <!--<img th:src="@{portraits/1.png}" width="30" height="30" class="person_img"/>-->
+                            <!--<div class="person_card_operation" style="display: none;">-->
+                                <!--<img th:src="@{icons/trash.png}" class="remove_person_icon removePerson"/>-->
+                            <!--</div>-->
+                        <!--</div>-->
+                    <!--</div>-->
+                    <!--<img class="add_person_card" th:src="@{icons/add_large.png}" />-->
+                <!--</div>-->
 
-                <div class="activity_card" data-aid="0">
-                    <div class="activity_textDiv">text</div>
-                    <div class="activity_estimation"></div>
-                    <div class="activity_card_operation" style="display: none;">
-                    <img th:src="@{icons/left-arrow.png}" class="add_left_icon addActivityLeft"/>
-                    <img th:src="@{icons/trash.png}" class="remove_icon removeActivity"/>
-                    <img th:src="@{icons/right-arrow.png}" class="add_right_icon addActivityRight"/>
-                    </div>
-                </div>
+                <!--<div class="activity_card" data-aid="0" data-position="">-->
+                    <!--<div class="activity_textDiv">text</div>-->
+                    <!--<div class="activity_estimation"></div>-->
+                    <!--<div class="activity_card_operation" style="display: none;">-->
+                    <!--<img th:src="@{icons/left-arrow.png}" class="add_left_icon addActivityLeft"/>-->
+                    <!--<img th:src="@{icons/trash.png}" class="remove_icon removeActivity"/>-->
+                    <!--<img th:src="@{icons/right-arrow.png}" class="add_right_icon addActivityRight"/>-->
+                    <!--</div>-->
+                <!--</div>-->
 
-                <div style="margin-left: -5px;">
-                    <div class="task_card" data-tid="0">
-                        <div class="activity_textDiv">text</div>
-                        <div class="task_estimation"></div>
-                        <div class="activity_card_operation" style="display: none;">
-                            <img th:src="@{icons/left-arrow.png}" class="add_left_icon addTaskLeft"/>
-                            <img th:src="@{icons/trash.png}" class="remove_icon removeTask" style="display: none;"/>
-                            <img th:src="@{icons/right-arrow.png}" class="add_right_icon addTaskRight"/>
-                        </div>
-                    </div>
-                </div>
-            </div>
+                <!--<div style="margin-left: -5px;">-->
+                    <!--<div class="task_card" data-tid="0">-->
+                        <!--<div class="activity_textDiv">text</div>-->
+                        <!--<div class="task_estimation"></div>-->
+                        <!--<div class="activity_card_operation" style="display: none;">-->
+                            <!--<img th:src="@{icons/left-arrow.png}" class="add_left_icon addTaskLeft"/>-->
+                            <!--<img th:src="@{icons/trash.png}" class="remove_icon removeTask" style="display: none;"/>-->
+                            <!--<img th:src="@{icons/right-arrow.png}" class="add_right_icon addTaskRight"/>-->
+                        <!--</div>-->
+                    <!--</div>-->
+                <!--</div>-->
+            <!--</div>-->
 
             <div class="backlog_div" style="width:141px;height: 206px;">
                 <div style="margin-top: 50px;text-align: center;">
@@ -61,38 +71,38 @@
         </div>
 
 
-        <div style="margin-top: 15px;" data-rid="0" class="release_label"><span>——Release 1</span>
-            <div style="display: inline-block;width: 20px;height: 20px;">
-                <img th:src="@{icons/trash.png}" class="remove_release" style="display: none;"/>
-            </div>
-        </div>
-        <div class="release_div" data-rid="0">
-            <div class="backlog_div">
-                <div class="story_panel"  data-aid="0" style="margin-left: -5px;">
-                    <div class="story_list" data-tid="0">
-                        <div class="story_card" data-sid="0">
-                            <div class="activity_textDiv">text</div>
-                            <div class="story_state ready">Ready</div>
-                            <div class="story_estimation"></div>
-                            <div class="activity_card_operation" style="display: none;">
-                                <img th:src="@{icons/up-arrow.png}" class="add_up_icon addStoryUp"/>
-                                <img th:src="@{icons/trash.png}" class="remove_icon removeStory"/>
-                                <img th:src="@{icons/down-arrow.png}" class="add_right_icon addStoryDown"/>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+        <!--<div style="margin-top: 15px;" data-rid="0" class="release_label"><span>——Release 1</span>-->
+            <!--<div style="display: inline-block;width: 20px;height: 20px;">-->
+                <!--<img th:src="@{icons/trash.png}" class="remove_release" style="display: none;"/>-->
+            <!--</div>-->
+        <!--</div>-->
+        <!--<div class="release_div" data-rid="0">-->
+            <!--<div class="backlog_div">-->
+                <!--<div class="story_panel"  data-aid="0" style="margin-left: -5px;">-->
+                    <!--<div class="story_list" data-tid="0">-->
+                        <!--<div class="story_card" data-sid="0">-->
+                            <!--<div class="activity_textDiv">text</div>-->
+                            <!--<div class="story_state ready">Ready</div>-->
+                            <!--<div class="story_estimation"></div>-->
+                            <!--<div class="activity_card_operation" style="display: none;">-->
+                                <!--<img th:src="@{icons/up-arrow.png}" class="add_up_icon addStoryUp"/>-->
+                                <!--<img th:src="@{icons/trash.png}" class="remove_icon removeStory"/>-->
+                                <!--<img th:src="@{icons/down-arrow.png}" class="add_right_icon addStoryDown"/>-->
+                            <!--</div>-->
+                        <!--</div>-->
+                    <!--</div>-->
+                <!--</div>-->
+            <!--</div>-->
 
-            <div class="backlog_div">
-                <div class="story_panel"  style="margin-left: -5px;">
-                    <div class="story_plus_card">
-                        <!--<div style="margin-top: 2px;margin-left: 25px;">-->
-                            <!--<img class="add_story" th:src="@{icons/add_large.png}" /></div>-->
-                    </div>
-                </div>
-            </div>
-        </div>
+            <!--<div class="backlog_div">-->
+                <!--<div class="story_panel"  style="margin-left: -5px;">-->
+                    <!--<div class="story_plus_card">-->
+                        <!--&lt;!&ndash;<div style="margin-top: 2px;margin-left: 25px;">&ndash;&gt;-->
+                            <!--&lt;!&ndash;<img class="add_story" th:src="@{icons/add_large.png}" /></div>&ndash;&gt;-->
+                    <!--</div>-->
+                <!--</div>-->
+            <!--</div>-->
+        <!--</div>-->
         <div>
             <div class="add_release_icon">
                 <i class="fa fa-plus" style="font-size: 16px;"></i>
@@ -161,8 +171,8 @@
                         </div>
                     </div>
                     <div class="modal_right">
-                        <p>create by XXX</p>
-                        <p>create 3 days ago</p>
+                        <p>create by <span id="roleCard_creator"> XXX</span></p>
+                        <p>create at <span id="roleCard_creatAt"> XXX</span></p>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -198,8 +208,8 @@
                         <!--<div class="cancelModifyAct"><i class="fa fa-close"></i></div>-->
                     </div>
                     <div class="modal_right">
-                        <p>create by XXX</p>
-                        <p>create 3 days ago</p>
+                        <p>create by <span id="activityCard_creator"> XXX</span></p>
+                        <p>create at <span id="activityCard_creatAt"> XXX</span></p>
                     </div>
                 </div>
                 <div class="modal-footer" style="margin-top: 30px;">
@@ -224,8 +234,8 @@
                         <!--<div class="cancelModifyAct"><i class="fa fa-close"></i></div>-->
                     </div>
                     <div class="modal_right">
-                        <p>create by XXX</p>
-                        <p>create 3 days ago</p>
+                        <p>create by <span id="taskCard_creator"> XXX</span></p>
+                        <p>create at <span id="taskCard_creatAt"> XXX</span></p>
                     </div>
                 </div>
                 <div class="modal-footer" style="margin-top: 30px;">
@@ -249,10 +259,10 @@
                         <div style="margin-top: 20px;">
                             <label style="min-width: 20%;">state</label>
                             <select class="form-control" style="width: 90%;" id="story_state_select">
-                                <option value="Ready">Ready</option>
-                                <option value="Doing">Doing</option>
-                                <option value="Todo">Todo</option>
-                                <option value="Done">Done</option>
+                                <option value="ready">ready</option>
+                                <option value="todo">todo</option>
+                                <option value="doing">doing</option>
+                                <option value="done">done</option>
                             </select></div>
                         <div style="margin-top: 20px;">
                             <label style="min-width: 20%;">content</label>
@@ -260,8 +270,8 @@
                         </div>
                     </div>
                     <div class="modal_right">
-                        <p>create by XXX</p>
-                        <p>create 3 days ago</p>
+                        <p>create by <span id="storyCard_creator"> XXX</span></p>
+                        <p>create at <span id="storyCard_creatAt"> XXX</span></p>
                     </div>
                 </div>
                 <div class="modal-footer" style="margin-top: 30px;">

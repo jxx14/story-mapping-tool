@@ -68,6 +68,8 @@ public class CardServiceImpl implements CardService{
             List<RoleInfo> roles = rolesToInfo(activityCard.getRoles(), activityRoles);
             activityCardInfo.setRoles(roles);
 
+            // 对工作时长进行求和
+            int activityWorktime = 0;
             //设置对应的TaskCard
             List<TaskCardInfo> tasks = new ArrayList<>();
             for(int t=0; t<taskCards.size(); t++){
@@ -82,6 +84,8 @@ public class CardServiceImpl implements CardService{
                     taskInfo.setPosition(task.getPosition());
                     taskInfo.setCreateAt(sdf.format(task.getCreateAt()));
 
+                    // 对工作时长进行求和
+                    int taskWorktime = 0;
                     List<StoryCardInfo> storys = new ArrayList<>();
                     for(int s=0; s<storyCards.size(); s++){
                         StoryCard story = storyCards.get(s);
@@ -98,15 +102,19 @@ public class CardServiceImpl implements CardService{
                             storyInfo.setStatus(story.getStatus());
                             story.setWorktime(story.getWorktime());
                             storys.add(storyInfo);
+                            taskWorktime += storyInfo.getWorktime();
                         }
                     }
 
                     taskInfo.setStorys(storys);
+                    taskInfo.setWorktime(taskWorktime);
                     tasks.add(taskInfo);
+                    activityWorktime += taskWorktime;
                 }
             }
 
             activityCardInfo.setTasks(tasks);
+            activityCardInfo.setWorktime(activityWorktime);
             cards.add(activityCardInfo);
         }
 
@@ -124,13 +132,7 @@ public class CardServiceImpl implements CardService{
         card.setPosition(cardInfo.getPosition());
         card.setCreateAt(new Timestamp(System.currentTimeMillis()));
 
-        List<String> roles = cardInfo.getRoles();
-        String roleString = "";
-        if(roles != null)
-            for(int i=0; i<roles.size(); i++){
-                roleString += roles.get(i) + " ";
-            }
-        card.setRoles(roleString);
+        card.setRoles("");
 
         card = activityCardDAO.save(card);
 
@@ -143,23 +145,12 @@ public class CardServiceImpl implements CardService{
 
     @Override
     public ResultInfo<Object> modifyActivityCard(HttpSession session, CardInfo cardInfo) {
-        ActivityCard card = new ActivityCard();
-        card.setId(cardInfo.getId());
-        card.setName(cardInfo.getName());
-        card.setStoryMapId(cardInfo.getMapId());
-        card.setContent(cardInfo.getContent());
-        User creator = accountDAO.findOne(cardInfo.getCreatorId());
-        card.setCreator(creator);
-        card.setPosition(cardInfo.getPosition());
-        card.setCreateAt(new Timestamp(System.currentTimeMillis()));
-
-        List<String> roles = cardInfo.getRoles();
-        String roleString = "";
-        if(roles != null)
-            for(int i=0; i<roles.size(); i++){
-                roleString += roles.get(i) + " ";
-            }
-        card.setRoles(roleString);
+        ActivityCard card = activityCardDAO.findOne(cardInfo.getId());
+        if(cardInfo.getName() != null)
+            card.setName(cardInfo.getName());
+        //这里无法把已有值归0
+        if(cardInfo.getPosition() != 0.0)
+            card.setPosition(cardInfo.getPosition());
 
         card = activityCardDAO.save(card);
 
@@ -195,16 +186,12 @@ public class CardServiceImpl implements CardService{
 
     @Override
     public ResultInfo<Object> modifyTaskCard(HttpSession session, CardInfo cardInfo) {
-        TaskCard card = new TaskCard();
-        card.setId(cardInfo.getId());
-        card.setName(cardInfo.getName());
-        card.setContent(cardInfo.getContent());
-        card.setStoryMapId(cardInfo.getMapId());
-        card.setPosition(cardInfo.getPosition());
-        card.setCreateAt(new Timestamp(System.currentTimeMillis()));
-        User creator = accountDAO.findOne(cardInfo.getCreatorId());
-        card.setCreator(creator);
-        card.setActivityId(cardInfo.getParent());
+        TaskCard card = taskCardDAO.findOne(cardInfo.getId());
+        if(cardInfo.getName() != null)
+            card.setName(cardInfo.getName());
+
+        if(cardInfo.getPosition() != 0)
+            card.setPosition(cardInfo.getPosition());
 
         card = taskCardDAO.save(card);
 
@@ -221,6 +208,7 @@ public class CardServiceImpl implements CardService{
     @Override
     public ResultInfo<Object> createStoryCard(HttpSession session, CardInfo cardInfo) {
         StoryCard card = new StoryCard();
+
         card.setName(cardInfo.getName());
         card.setContent(cardInfo.getContent());
         card.setTaskId(cardInfo.getParent());
@@ -241,19 +229,13 @@ public class CardServiceImpl implements CardService{
 
     @Override
     public ResultInfo<Object> modifyStoryCard(HttpSession session, CardInfo cardInfo) {
-        StoryCard card = new StoryCard();
-        card.setId(cardInfo.getId());
-        card.setName(cardInfo.getName());
-        card.setContent(cardInfo.getContent());
-        card.setTaskId(cardInfo.getParent());
-        card.setWorktime(cardInfo.getWorktime());
-        card.setCreateAt(new Timestamp(System.currentTimeMillis()));
-        card.setRelease(cardInfo.getRelease());
-        card.setStatus(cardInfo.getStatus());
-        User creator = accountDAO.findOne(cardInfo.getCreatorId());
-        card.setCreator(creator);
-        card.setPosition(cardInfo.getPosition());
-        card.setStoryMapId(cardInfo.getMapId());
+        StoryCard card = storyCardDAO.findOne(cardInfo.getId());
+        if(cardInfo.getName() != null)
+            card.setName(cardInfo.getName());
+        if(cardInfo.getWorktime() != 0)
+            card.setWorktime(cardInfo.getWorktime());
+        if(cardInfo.getStatus() != 0)
+            card.setStatus(cardInfo.getStatus());
 
         card = storyCardDAO.save(card);
         StoryCardInfo storyCardInfo = storyCardToInfo(card);
@@ -273,9 +255,10 @@ public class CardServiceImpl implements CardService{
 
         for(int i=0; i<roles.size(); i++){
             RoleInfo info = new RoleInfo();
-            info.setName(roles.get(i).getPk().getName());
+            info.setId(roles.get(i).getId());
+            info.setName(roles.get(i).getName());
             info.setAvatar(roles.get(i).getAvatar());
-            info.setMapId(roles.get(i).getPk().getMapId());
+            info.setMapId(roles.get(i).getMapId());
             roleInfos.add(info);
         }
 
@@ -287,33 +270,101 @@ public class CardServiceImpl implements CardService{
         List<Role> roles = roleDAO.findByMapId(roleInfo.getMapId());
 
         for(int i=0; i<roles.size(); i++){
-            if(roles.get(i).getPk().getName().equals(roleInfo.getName()))
+            if(roles.get(i).getName().equals(roleInfo.getName()))
                 return new ResultInfo<>(false, "fail", "名称已存在，请使用其他角色名");
         }
         Role role = new Role();
-        role.setPk(new RolePK(roleInfo.getMapId(), roleInfo.getName()));
+        role.setName(roleInfo.getName());
+        role.setMapId(roleInfo.getMapId());
         role.setAvatar(roleInfo.getAvatar());
 
         role = roleDAO.save(role);
-        roleInfo.setMapId(role.getPk().getMapId());
-        roleInfo.setName(role.getPk().getName());
+        roleInfo.setId(role.getId());
+        roleInfo.setMapId(role.getMapId());
+        roleInfo.setName(role.getName());
         roleInfo.setAvatar(role.getAvatar());
         return new ResultInfo<>(true, "success", roleInfo);
+    }
+
+    @Override
+    public ResultInfo<Object> modifyRole(HttpSession session, RoleInfo roleInfo) {
+        Role role = roleDAO.findOne(roleInfo.getId());
+        if(roleInfo.getName() != null)
+            role.setName(roleInfo.getName());
+
+        if(roleInfo.getAvatar() != null)
+            role.setAvatar(roleInfo.getAvatar());
+
+        if(roleInfo.getMapId() != 0)
+            role.setMapId(roleInfo.getMapId());
+
+        role = roleDAO.save(role);
+        roleInfo.setId(role.getId());
+        roleInfo.setMapId(role.getMapId());
+        roleInfo.setName(role.getName());
+        roleInfo.setAvatar(role.getAvatar());
+        return new ResultInfo<>(true, "success", roleInfo);
+    }
+
+    @Override
+    public ResultInfo<Object> addRoleToActivity(HttpSession session, RoleInfo roleInfo, int activiyId) {
+        ActivityCard card = activityCardDAO.findOne(activiyId);
+        String roleString = card.getRoles();
+
+        String[] rs = roleString.split(" ");
+        for(int i=1; i<rs.length; i++){
+            if(Integer.parseInt(rs[i]) == roleInfo.getId()){
+                return new ResultInfo<>(true, "fail", "无法添加重复角色");
+            }
+        }
+
+        roleString += " " + roleInfo.getId();
+        card.setRoles(roleString);
+        card = activityCardDAO.save(card);
+        List<Role> roles = roleDAO.findByMapId(card.getStoryMapId());
+        return new ResultInfo<>(true, "success", activityCardToInfo(card, roles));
+    }
+
+    @Override
+    public ResultInfo<Object> removeRoleFromActivity(HttpSession session, RoleInfo roleInfo, int activiyId) {
+        ActivityCard card = activityCardDAO.findOne(activiyId);
+        String roleString = card.getRoles();
+
+        String[] rs = roleString.split(" ");
+        roleString = "";
+        boolean find = false;
+        for(int i=1; i<rs.length; i++){
+            if(Integer.parseInt(rs[i]) == roleInfo.getId()){
+                find = true;
+            }
+            else{
+                roleString += " " +rs[i];
+            }
+        }
+
+        if(!find){
+            return new ResultInfo<>(false, "fail", "角色不存在，请刷新页面重试");
+        }
+        card.setRoles(roleString);
+        card = activityCardDAO.save(card);
+        List<Role> roles = roleDAO.findByMapId(card.getStoryMapId());
+        return new ResultInfo<>(true, "success", activityCardToInfo(card, roles));
     }
 
     private static List<RoleInfo> rolesToInfo(String roles, List<Role> activityRoles){
         List<RoleInfo> roleInfos = new ArrayList<>();
         String[] roleList = roles.split(" ");
 
-        for(int r=0; r<roleList.length; r++){
-            String roleName = roleList[r];
+        for(int r=1; r<roleList.length; r++){
+            int roleId = Integer.parseInt(roleList[r]);
             for(int i=0; i<activityRoles.size(); i++){
                 Role role = activityRoles.get(i);
-                if(roleName.equals(activityRoles.get(i).getPk().getName())){
+                if(activityRoles.get(i).getId() == roleId){
                     RoleInfo roleInfo = new RoleInfo();
-                    roleInfo.setName(role.getPk().getName());
+                    roleInfo.setId(role.getId());
+                    roleInfo.setName(role.getName());
                     roleInfo.setAvatar(role.getAvatar());
-                    roleInfo.setMapId(role.getPk().getMapId());
+                    roleInfo.setMapId(role.getMapId());
                     roleInfos.add(roleInfo);
                     break;
                 }
