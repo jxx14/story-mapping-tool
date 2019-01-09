@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html  xmlns:th="http://www.thymeleaf.org" lang="en-US">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Map Creation</title>
+    <link rel="stylesheet" th:href="@{css/global.css}"/>
+    <link rel="stylesheet" th:href="@{css/bootstrap.min.css}"/>
+    <link rel="stylesheet" th:href="@{css/map-create.css}"/>
+</head>
+<body>
+
+<nav class="navbar navbar-default navbar-fixed-top navbar-inverse" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+　　　　 　　<a class="navbar-brand" href="user">User Story Mapping Tool</a>
+        </div>
+        <div class="collapse navbar-collapse navbar-right" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav">
+                <li><a href="javascript:logout();">logout</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<form class="container map-container" id="mapContainer">
+    <h4 class="title">New a Story Map</h4>
+    <div class="input-container">
+        <input type="text" name="name" class="form-control text-input name" placeholder="Input the name of the map">
+        <span class="help-block has-error" id="nameCheckMessage"></span>
+        <textarea name="description" class="form-control text-input description" placeholder="Input the description of the map"></textarea>
+        <span class="help-block has-error" id="descCheckMessage"></span>
+    </div>
+
+    <div class="button-container">
+        <button type="submit" class="btn btn-primary button">New</button>
+        <button type="button" class="btn btn-default button" id="cancel">Cancel</button>
+    </div>
+</form>
+
+<div id="tip"></div>
+
+<script th:src="@{js/jquery-3.2.1.min.js}"></script>
+<script th:src="@{js/bootstrap.min.js}"></script>
+<script th:src="@{js/bootstrapValidator.min.js}"></script>
+<script th:src="@{js/account.js}"></script>
+
+<script>
+    $(function () {
+        $('#mapContainer').bootstrapValidator({
+            fields: {
+                name: {
+                    container: '#nameCheckMessage',
+                    validators: {
+                        notEmpty: {
+                            message: "Name shouldn't be empty"
+
+                        }
+                    }
+                },
+                description: {
+                    container: '#descCheckMessage',
+                    validators: {
+                        notEmpty: {
+                            message: "Description shouldn't be empty"
+                        }
+                    }
+                }
+            }
+        })
+        .on('success.form.bv', function(e) {
+            e.preventDefault();
+
+            const form = $(e.target);
+            const validator = form.data('bootstrapValidator');
+            const name = validator.getFieldElements("name").val();
+            const description = validator.getFieldElements("description").val();
+            alert(name + "," + description);
+
+            // $.ajax({
+            //     url: '/login',
+            //     type: 'post',
+            //     contentType: 'application/json',
+            //     data: JSON.stringify({ "email": email, "password": pwd }),
+            //     success: function (result) {
+            //         if (result.success) {
+            //             window.location= '/user';
+            //         } else {
+            //             showTip($('#tip'), result.message, 'white');
+            //         }
+            //     },
+            //     error: function (message) {
+            //         showTip($('#tip'), message, 'white');
+            //     }
+            // })
+        });
+    });
+
+    $('#cancel').click(function () {
+        window.location = '/user';
+    });
+</script>
+
+</body>
+</html>

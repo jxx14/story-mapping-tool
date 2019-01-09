@@ -4,13 +4,28 @@
 
 .info-container {
     margin-top: 3rem;
-    padding: 2rem;
+}
+
+.info-container span {
+    margin: 0 4rem 0 2rem;
+}
+
+.info-container button {
+    margin-right: 2rem;
 }
 
 .info-container > img {
     position: relative;
     left: 3rem;
     width: 35%;
+    margin-bottom: 1.5rem;
+}
+
+.title-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding-right: 1rem;
     margin-bottom: 1.5rem;
 }
 
