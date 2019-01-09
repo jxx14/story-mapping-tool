@@ -1,6 +1,7 @@
 package nju.agilegroup.storymappingtool.model;
 
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -25,8 +26,15 @@ public class User {
 //    @JoinColumn(name = "teamName")
 //    private List<String> teamNames;
 
-    @ManyToMany
-    private Set<Team> teams;
+    @ManyToMany(cascade=CascadeType.ALL,fetch=FetchType.LAZY,mappedBy="users")
+    private Set<Team> teams= new HashSet<>();
+
+//    @ManyToMany(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
+//    @JoinTable(name = "user_teams",
+//            joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")},
+//            inverseJoinColumns = {@JoinColumn(name = "team_id", referencedColumnName ="id")})
+//    private Set<Team> teams;
+
 //
 //    @ManyToMany(cascade = CascadeType.PERSIST, fetch=FetchType.LAZY)
 //    @JoinTable(name = "Teacher_Student",joinColumns =
