@@ -241,16 +241,7 @@ public class CardServiceImpl implements CardService{
     @Override
     public ResultInfo<Object> getRoles(HttpSession session, int mapId) {
         List<Role> roles = roleDAO.findByMapId(mapId);
-        List<RoleInfo> roleInfos = new ArrayList<>();
-
-        for(int i=0; i<roles.size(); i++){
-            RoleInfo info = new RoleInfo();
-            info.setId(roles.get(i).getId());
-            info.setName(roles.get(i).getName());
-            info.setAvatar(roles.get(i).getAvatar());
-            info.setMapId(roles.get(i).getMapId());
-            roleInfos.add(info);
-        }
+        List<RoleInfo> roleInfos = rolesToInfo(roles);
 
         return new ResultInfo<>(true, "success", roleInfos);
     }
@@ -269,6 +260,9 @@ public class CardServiceImpl implements CardService{
         roleInfo.setMapId(role.getMapId());
         roleInfo.setName(role.getName());
         roleInfo.setAvatar(role.getAvatar());
+        roleInfo.setCreator(role.getCreator().getName());
+        roleInfo.setCreatorId(role.getCreator().getId());
+        roleInfo.setCreateAt(sdf.format(role.getCreateAt()));
         return new ResultInfo<>(true, "success", roleInfo);
     }
 
@@ -283,6 +277,9 @@ public class CardServiceImpl implements CardService{
         role.setName(roleInfo.getName());
         role.setAvatar(roleInfo.getAvatar());
         role.setActivityId(activiyId);
+        User creator = accountDAO.findOne(roleInfo.getCreatorId());
+        role.setCreator(creator);
+        role.setCreateAt(new Timestamp(System.currentTimeMillis()));
         roleDAO.save(role);
 
         List<Role> roles = roleDAO.findByActivtiyId(activiyId);
@@ -309,6 +306,9 @@ public class CardServiceImpl implements CardService{
             roleInfo.setName(role.getName());
             roleInfo.setAvatar(role.getAvatar());
             roleInfo.setMapId(role.getMapId());
+            roleInfo.setCreator(role.getCreator().getName());
+            roleInfo.setCreatorId(role.getCreator().getId());
+            roleInfo.setCreateAt(sdf.format(role.getCreateAt()));
             roleInfos.add(roleInfo);
         }
 
