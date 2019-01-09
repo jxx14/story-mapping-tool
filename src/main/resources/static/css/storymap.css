@@ -305,3 +305,26 @@
 #back_icon:hover{
     color: rgba(255,255,255,1);
 }
+
+#nav_user_li{
+    cursor: pointer;
+    display: inline-block;
+    color: rgb(122,184,221);
+    font-size: 22px;
+    /*height: 50px;*/
+    /*width:40px;*/
+    padding: 12px;
+}
+#nav_user_li:hover{
+    background-color: rgba(255,255,255,0.2);
+}
+#nav_logout_li{
+    cursor: pointer;
+    color: rgba(255,255,255,0.6);
+    font-size: 18px;
+    padding-right: 12px;
+    padding-top: 12px;
+}
+#nav_logout_li:hover{
+    color: rgba(255,255,255,1);
+}
