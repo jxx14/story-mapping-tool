@@ -2,7 +2,7 @@
 // var tindex = 1;
 // var sindex = 1;
 var rindex = 1;
-var pindex = 1;
+// var pindex = 1;
 var edit_activity = false;
 var edit_task = false;
 var story_states = ['ready','todo','doing','done'];
@@ -116,19 +116,20 @@ function addPerson() {
 
         $.ajax({
             type: "post",
-            url: "/createRole",
-            data:{"mapId":mapId,"name":personName,"avatar":imgpath},
+            url: "/addRoleToActivity?activity="+aid,
+            data:JSON.stringify({"mapId":mapId,"name":personName,"avatar":imgpath}),
+            contentType: "application/json; charset=utf-8",
             async: false,
             success: function (data) {
 
                 $('.activity_card[data-aid='+aid+']').parent().find('.person_panel').append('<div class="person_card" data-name="'+personName
-                    +'" title="'+personName+'" data-pid="'+pindex+'">\n' +
+                    +'" title="'+personName+'" data-pid="'+data['data']['id']+'">\n' +
                     '                            <img src="../portraits/'+imgpath+'.png" width="30" height="30" class="person_img"/>\n' +
                     '                            <div class="person_card_operation" style="display: none;">\n' +
                     '                                <img src="../icons/trash.png" class="remove_person_icon removePerson"/>\n' +
                     '                            </div>\n' +
                     '                        </div>');
-                pindex+=1;
+
                 $('#addPersonModal').modal('hide');
 
             }, error: function (XMLHttpRequest, textStatus, errorThrown) {
@@ -143,8 +144,23 @@ function addPerson() {
 
 function removePersonCard() {
     $('body').on("click",'.removePerson',function () {
-        $(this).parent().parent().remove();
-
+        var pcard = $(this).parent().parent();
+        var aid = $(pcard).parent().parent().parent().find('.activity_card').attr('data-aid');
+        var pid = $(pcard).attr('data-pid');
+        $.ajax({
+            type: "post",
+            url: "/removeRoleFromActivity?activity="+aid,
+            data:{'id':pid},
+            contentType: "application/json; charset=utf-8",
+            async: false,
+            success: function (data) {
+                $(pcard).remove();
+            }, error: function (XMLHttpRequest, textStatus, errorThrown) {
+                alert(XMLHttpRequest.status);
+                alert(XMLHttpRequest.readyState);
+                alert(textStatus);
+            }
+        });
     });
 }
 
@@ -154,7 +170,11 @@ function modifyPersonCard() {
         var opval = parseInt(imgpath.split('/')[1].substring(0));
         var pname = $(this).attr('data-name');
         var pid = $(this).attr('data-pid');
+        var creator = $(this).attr('data-creator');
+        var creatAt = $(this).attr('data-creatAt').split(' ')[0];
 
+        $('#roleCard_creator').text(creator);
+        $('#roleCard_creatAt').text(creatAt);
         $('#modifyPersonModal').attr('data-pid',pid);
         $('#personNameInput_m').val(pname);
         $('input[name="roleOption2"]').eq(opval-1).attr("checked",'checked');
@@ -166,31 +186,25 @@ function modifyPersonCard() {
         var personName = $('#personNameInput_m').val();
         var imgpath = $('input[name="roleOption2"]:checked').val();
 
-        var pcard = $('.person_card[data-pid='+pid+']');
-        $(pcard).attr('data-name',personName);
-        $(pcard).attr('title', personName);
-        $(pcard).find('.person_img').attr('src','../portraits/'+imgpath+'.png');
-        $('#modifyPersonModal').modal('hide');
+        $.ajax({
+            type: "post",
+            url: "/modifyRole",
+            data:JSON.stringify({"id":pid,"mapId":mapId,"name":personName,"avatar":imgpath}),
+            contentType: "application/json; charset=utf-8",
+            async: false,
+            success: function (data) {
+                var pcard = $('.person_card[data-pid='+pid+']');
+                $(pcard).attr('data-name',personName);
+                $(pcard).attr('title', personName);
+                $(pcard).find('.person_img').attr('src','../portraits/'+imgpath+'.png');
+                $('#modifyPersonModal').modal('hide');
 
-        // $.ajax({
-        //     type: "post",
-        //     url: "/createRole",
-        //     data:{"mapId":mapId,"name":personName,"avatar":imgpath},
-        //     async: false,
-        //     success: function (data) {
-        //
-        //         var pcard = $('.person_card[data-pid='+pid+']');
-        //         $(pcard).attr('data-name',personName);
-        //         $(pcard).attr('title', personName);
-        //         $(pcard).find('.person_img').attr('src','../portraits/'+imgpath+'.png');
-        //         $('#modifyPersonModal').modal('hide');
-        //
-        //     }, error: function (XMLHttpRequest, textStatus, errorThrown) {
-        //         alert(XMLHttpRequest.status);
-        //         alert(XMLHttpRequest.readyState);
-        //         alert(textStatus);
-        //     }
-        // });
+            }, error: function (XMLHttpRequest, textStatus, errorThrown) {
+                alert(XMLHttpRequest.status);
+                alert(XMLHttpRequest.readyState);
+                alert(textStatus);
+            }
+        });
     });
 }
 
@@ -381,9 +395,8 @@ function modifyActicityCard() {
     $('body').on("dblclick",'.activity_card',function () {
         var aid = $(this).attr('data-aid');
         var content = $(this).find('.activity_textDiv').html();
-        var acard = $('.activity_card[data-aid='+aid+']');
-        var creator = $(acard).attr('data-creator');
-        var creatAt = $(acard).attr('data-creatAt').split(' ')[0];
+        var creator = $(this).attr('data-creator');
+        var creatAt = $(this).attr('data-creatAt').split(' ')[0];
         $('#activityModal').find('.modal_content').html(content);
         $('#activityModal').attr('data-aid',aid);
         $('#activityCard_creator').text(creator);
@@ -423,25 +436,23 @@ function modifyActicityCard() {
     $('#activityModal').on("click",'.saveActivity',function () {
         var aid = $('#activityModal').attr('data-aid');
         var content = $('#activityModal').find('.modal_content textarea').val();
-        var position = $('.activity_card[data-aid='+aid+']').attr('data-position');
 
-        $('.activity_card[data-aid='+aid+']').find('.activity_textDiv').html(content);
-        $('#activityModal').find('.modal_content').html(content);
-        // $.ajax({
-        //     type: "post",
-        //     url: "/modifyActivity",
-        //     data:{"id":aid,"mapId":mapId,"name":content,"creatorId":userId,"position":position},
-        //     async: false,
-        //     success: function (act) {
-        //         $('.activity_card[data-aid='+aid+']').find('.activity_textDiv').html(content);
-        //         $('#activityModal').find('.modal_content').html(content);
-        //
-        //     }, error: function (XMLHttpRequest, textStatus, errorThrown) {
-        //         alert(XMLHttpRequest.status);
-        //         alert(XMLHttpRequest.readyState);
-        //         alert(textStatus);
-        //     }
-        // });
+        $.ajax({
+            type: "post",
+            url: "/modifyActivity",
+            data:JSON.stringify({"id":aid,"name":content}),
+            contentType: "application/json; charset=utf-8",
+            async: false,
+            success: function (data) {
+                $('.activity_card[data-aid='+aid+']').find('.activity_textDiv').html(content);
+                $('#activityModal').find('.modal_content').html(content);
+
+            }, error: function (XMLHttpRequest, textStatus, errorThrown) {
+                alert(XMLHttpRequest.status);
+                alert(XMLHttpRequest.readyState);
+                alert(textStatus);
+            }
+        });
 
     });
 
@@ -568,9 +579,8 @@ function modifyTaskCard() {
     $('body').on("dblclick",'.task_card',function () {
         var tid = $(this).attr('data-tid');
         var content = $(this).find('.activity_textDiv').html();
-        var tcard = $('.task_card[data-tid='+tid+']');
-        var creator = $(tcard).attr('data-creator');
-        var creatAt = $(tcard).attr('data-creatAt').split(' ')[0];
+        var creator = $(this).attr('data-creator');
+        var creatAt = $(this).attr('data-creatAt').split(' ')[0];
         $('#taskCard_creator').text(creator);
         $('#taskCard_creatAt').text(creatAt);
         $('#taskModal').find('.modal_content').html(content);
@@ -601,22 +611,22 @@ function modifyTaskCard() {
         var tid = $('#taskModal').attr('data-tid');
         var content = $('#taskModal').find('.modal_content textarea').val();
 
+        $.ajax({
+            type: "post",
+            url: "/modifyTask",
+            data:JSON.stringify({"id":tid,"name":content}),
+            contentType: "application/json; charset=utf-8",
+            async: false,
+            success: function (data) {
+                $('.task_card[data-tid='+tid+']').find('.activity_textDiv').html(content);
+                $('#taskModal').find('.modal_content').html(content);
 
-        // $.ajax({
-        //     type: "post",
-        //     url: "/modifyTask",
-        //     data:{"mapId":mapId,"name":'text',"creatorId":userId,"position":(position_L+position_R)/2,"roles":[]},
-        //     async: false,
-        //     success: function (act) {
-        //
-        //     }, error: function (XMLHttpRequest, textStatus, errorThrown) {
-        //         alert(XMLHttpRequest.status);
-        //         alert(XMLHttpRequest.readyState);
-        //         alert(textStatus);
-        //     }
-        // });
-        $('.task_card[data-tid='+tid+']').find('.activity_textDiv').html(content);
-        $('#taskModal').find('.modal_content').html(content);
+            }, error: function (XMLHttpRequest, textStatus, errorThrown) {
+                alert(XMLHttpRequest.status);
+                alert(XMLHttpRequest.readyState);
+                alert(textStatus);
+            }
+        });
     });
 
     $('#taskModal').on("click",'.cancelModifyTask',function () {
@@ -749,9 +759,8 @@ function modifyStoryCard() {
         var estimation = $(this).find('.story_estimation').html();
         var state = $(this).find('.story_state').html();
         var content = $(this).find('.activity_textDiv').html();
-        var scard = $('.story_card[data-sid='+sid+']');
-        var creator = $(scard).attr('data-creator');
-        var creatAt = $(scard).attr('data-creatAt').split(' ')[0];
+        var creator = $(this).attr('data-creator');
+        var creatAt = $(this).attr('data-creatAt').split(' ')[0];
         $('#storyCard_creator').text(creator);
         $('#storyCard_creatAt').text(creatAt);
 
@@ -767,30 +776,45 @@ function modifyStoryCard() {
         var sid = $('#storyModal').attr('data-sid');
         var estimation = $('#story_estimation').val();
         var state = $('#story_state_select').val();
+        var status = story_states.indexOf(state);
         var content = $('#story_content').val();
 
-        var scard = $('.story_card[data-sid='+sid+']');
-        $(scard).find('.story_estimation').html(estimation);
-        $(scard).find('.story_state').html(state);
-        $(scard).find('.story_state').attr('class','story_state '+state.toLowerCase());
-        $(scard).find('.activity_textDiv').html(content);
+        $.ajax({
+            type: "post",
+            url: "/modifyStory",
+            data:JSON.stringify({"id":sid,"name":content,"status":status,"worktime":estimation}),
+            contentType: "application/json; charset=utf-8",
+            async: false,
+            success: function (data) {
+                var scard = $('.story_card[data-sid='+sid+']');
+                $(scard).find('.story_estimation').html(estimation);
+                $(scard).find('.story_state').html(state);
+                $(scard).find('.story_state').attr('class','story_state '+state.toLowerCase());
+                $(scard).find('.activity_textDiv').html(content);
 
-        var tid = $(scard).parent().attr('data-tid');
-        var aid = $(scard).parent().parent().attr('data-aid');
-        var t_estimation = 0;
-        var a_estimation = 0;
-        var sList = $('.story_list[data-tid='+tid+']').find('.story_card');
-        for(var i = 0;i<sList.length;i++){
-            t_estimation+=parseInt(sList.eq(i).find('.story_estimation').html());
-        }
-        sList = $('.story_panel[data-aid='+aid+']').find('.story_card');
-        for(var i = 0;i<sList.length;i++){
-            a_estimation+=parseInt(sList.eq(i).find('.story_estimation').html());
-        }
-        $('.task_card[data-tid='+tid+']').find('.task_estimation').html(t_estimation);
-        $('.activity_card[data-aid='+aid+']').find('.activity_estimation').html(a_estimation);
+                var tid = $(scard).parent().attr('data-tid');
+                var aid = $(scard).parent().parent().attr('data-aid');
+                var t_estimation = 0;
+                var a_estimation = 0;
+                var sList = $('.story_list[data-tid='+tid+']').find('.story_card');
+                for(var i = 0;i<sList.length;i++){
+                    t_estimation+=parseInt(sList.eq(i).find('.story_estimation').html());
+                }
+                sList = $('.story_panel[data-aid='+aid+']').find('.story_card');
+                for(var i = 0;i<sList.length;i++){
+                    a_estimation+=parseInt(sList.eq(i).find('.story_estimation').html());
+                }
 
-        $('#storyModal').modal('hide');
+                $('.task_card[data-tid='+tid+']').find('.task_estimation').html(t_estimation);
+                $('.activity_card[data-aid='+aid+']').find('.activity_estimation').html(a_estimation);
+                $('#storyModal').modal('hide');
+
+            }, error: function (XMLHttpRequest, textStatus, errorThrown) {
+                alert(XMLHttpRequest.status);
+                alert(XMLHttpRequest.readyState);
+                alert(textStatus);
+            }
+        });
     });
 }
 
@@ -889,23 +913,18 @@ function init() {
                 var acreatAt = dList[i]['createAt'];
                 var tList = dList[i]['tasks'];
 
-                if(pList!=null){
-                    var pdiv = '<div>';
-                    for(var j = 0;j<pList.length;j++){
-                        var role = pList[j];
-                        pdiv+='<div style="display: inline-block;" class="person_panel">\n' +
-                            '                        <div class="person_card" data-name="'+role['name']+'" title="'+role['name']+'" data-pid="'+pindex+'">\n' +
-                        '                            <img src="../portraits/'+role['avatar']+'.png}" width="30" height="30" class="person_img"/>\n' +
+                var pdiv = '<div><div style="display: inline-block;" class="person_panel">';
+                for(var j = 0;j<pList.length;j++){
+                    var role = pList[j];
+                    pdiv+='<div class="person_card" data-name="'+role['name']+'" title="'+role['name']+'" data-pid="'+role['id']+'">\n' +
+                        '                            <img src="../portraits/'+role['avatar']+'.png" width="30" height="30" class="person_img"/>\n' +
                         '                            <div class="person_card_operation" style="display: none;">\n' +
                         '                                <img src="../icons/trash.png" class="remove_person_icon removePerson"/>\n' +
                         '                            </div>\n' +
-                        '                        </div>\n' +
-                        '                    </div>';
-                        pindex++;
-                    }
-                    pdiv+='<img class="add_person_card" src="../icons/add_large.png" />\n' +
-                        '                </div>';
+                        '                        </div>';
                 }
+                pdiv+='</div><img class="add_person_card" src="../icons/add_large.png" />\n' +
+                    '                </div>';
                 bdiv+=pdiv;
 
                 bdiv+='<div class="activity_card" data-aid="'+aid+'" data-position="'+aposition+'" data-creator="'+acreator+'" data-creatAt="'+acreatAt+'">\n' +
