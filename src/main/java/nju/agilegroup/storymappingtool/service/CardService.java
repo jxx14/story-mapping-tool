@@ -30,8 +30,6 @@ public interface CardService {
 
     ResultInfo<Object> getRoles(HttpSession session, int mapId);
 
-    ResultInfo<Object> createRole(HttpSession session, RoleInfo roleInfo);
-
     ResultInfo<Object> modifyRole(HttpSession session, RoleInfo roleInfo);
 
     ResultInfo<Object> addRoleToActivity(HttpSession session, RoleInfo roleInfo, int activiyId);

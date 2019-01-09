@@ -20,6 +20,9 @@ public class Role {
     @Column(name = "avatar")
     private String avatar;
 
+    @Column(name = "activity_id")
+    private int activityId;
+
     public Role(){
 
     }
@@ -54,5 +57,13 @@ public class Role {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public int getActivityId() {
+        return activityId;
+    }
+
+    public void setActivityId(int activityId) {
+        this.activityId = activityId;
     }
 }

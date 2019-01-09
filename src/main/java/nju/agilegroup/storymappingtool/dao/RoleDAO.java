@@ -10,4 +10,7 @@ import java.util.List;
 public interface RoleDAO extends JpaRepository<Role, Integer>{
     @Query(value = "select * from role s where s.map_id = ?1", nativeQuery = true)
     List<Role> findByMapId(int mapId);
+
+    @Query(value = "select * from role s where s.activity_id = ?1", nativeQuery = true)
+    List<Role> findByActivtiyId(int activityId);
 }
