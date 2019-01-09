@@ -55,11 +55,14 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public ResultInfo<Object> signUp(AccountInfo account) {
         String email = account.getEmail();
-        List<User> users = accountDAO.findAllByEmail(email);
-        if (!users.isEmpty()) {
+        String name = account.getName();
+        List<User> usersGetByEmail = accountDAO.findAllByEmail(email);
+        List<User> usersGetByName = accountDAO.findAllByName(name);
+        if (!usersGetByEmail.isEmpty()) {
             return new ResultInfo<>(false, "The mailbox has been registered", null);
+        }if (!usersGetByName.isEmpty()) {
+            return new ResultInfo<>(false, "Username already exists", null);
         }
-
         accountDAO.save(account.toUser());
         return new ResultInfo<>(true, "Registered successfully", null);
     }
