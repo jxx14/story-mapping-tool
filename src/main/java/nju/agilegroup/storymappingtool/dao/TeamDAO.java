@@ -1,8 +1,6 @@
 package nju.agilegroup.storymappingtool.dao;
 
-import nju.agilegroup.storymappingtool.model.StoryMap;
 import nju.agilegroup.storymappingtool.model.Team;
-import nju.agilegroup.storymappingtool.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -14,10 +12,7 @@ public interface TeamDAO extends JpaRepository<Team, Integer> {
 
     Team getTeamById(int id);//根据团队id查团队信息
 
-//
-//
-//    //查看团队的所有storymap
-//    @Query(value = "SELECT * FROM  storymap s WHERE s.team_id =?1",nativeQuery = true)
-//    List<StoryMap> getStoryMaps (int team_id);
-
+    //查看用户参加的所有团队
+    @Query(value = "SELECT t.* FROM  user u join team t WHERE u.team_id=t.id and u.email=?1",nativeQuery = true)
+    List<Team>getTeamsByUserEmail (String email);
 }
