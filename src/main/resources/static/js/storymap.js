@@ -120,13 +120,13 @@ function addPerson() {
         $.ajax({
             type: "post",
             url: "/addRoleToActivity?activity="+aid,
-            data:JSON.stringify({"mapId":mapId,"name":personName,"avatar":imgpath,}),
+            data:JSON.stringify({"mapId":mapId,"name":personName,"avatar":imgpath,"creatorId":userId}),
             contentType: "application/json; charset=utf-8",
             async: false,
             success: function (data) {
 
                 $('.activity_card[data-aid='+aid+']').parent().find('.person_panel').append('<div class="person_card" data-name="'+personName
-                    +'" title="'+personName+'" data-pid="'+data['data']['id']+'" data-creator="'+role['creatorId']+'" data-creatAt="'+role['createAt']+'">\n' +
+                    +'" title="'+personName+'" data-pid="'+data['data']['id']+'" data-creator="'+data['data']['creator']+'" data-creatAt="'+data['data']['createAt']+'">\n' +
                     '                            <img src="../portraits/'+imgpath+'.png" width="30" height="30" class="person_img"/>\n' +
                     '                            <div class="person_card_operation" style="display: none;">\n' +
                     '                                <img src="../icons/trash.png" class="remove_person_icon removePerson"/>\n' +
@@ -920,7 +920,7 @@ function init() {
                 var pdiv = '<div><div style="display: inline-block;" class="person_panel">';
                 for(var j = 0;j<pList.length;j++){
                     var role = pList[j];
-                    pdiv+='<div class="person_card" data-name="'+role['name']+'" title="'+role['name']+'" data-pid="'+role['id']+'" data-creator="'+role['creatorId']+'" data-creatAt="'+role['createAt']+'">\n' +
+                    pdiv+='<div class="person_card" data-name="'+role['name']+'" title="'+role['name']+'" data-pid="'+role['id']+'" data-creator="'+role['creator']+'" data-creatAt="'+role['createAt']+'">\n' +
                         '                            <img src="../portraits/'+role['avatar']+'.png" width="30" height="30" class="person_img"/>\n' +
                         '                            <div class="person_card_operation" style="display: none;">\n' +
                         '                                <img src="../icons/trash.png" class="remove_person_icon removePerson"/>\n' +
@@ -1056,6 +1056,7 @@ function init() {
                     '            </div>';
                 $(this).append(s);
             });
+            $('.remove_release').show();
 
         }, error: function (XMLHttpRequest, textStatus, errorThrown) {
             alert(XMLHttpRequest.status);
