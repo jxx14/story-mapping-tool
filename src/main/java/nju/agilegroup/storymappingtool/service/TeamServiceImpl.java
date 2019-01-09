@@ -1,22 +1,29 @@
 package nju.agilegroup.storymappingtool.service;
 
+import nju.agilegroup.storymappingtool.dao.AccountDAO;
 import nju.agilegroup.storymappingtool.dao.TeamDAO;
 import nju.agilegroup.storymappingtool.model.Team;
+import nju.agilegroup.storymappingtool.model.User;
+import nju.agilegroup.storymappingtool.view.AccountInfo;
 import nju.agilegroup.storymappingtool.view.ResultInfo;
 import nju.agilegroup.storymappingtool.view.TeamInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class TeamServiceImpl implements TeamService{
 
     private final TeamDAO teamDAO;
+    private final AccountDAO accountDAO;
 
     @Autowired
-       public TeamServiceImpl(TeamDAO teamDAO) {
+       public TeamServiceImpl(TeamDAO teamDAO, AccountDAO accountDAO) {
         this.teamDAO = teamDAO;
+        this.accountDAO = accountDAO;
     }
 
 
@@ -46,12 +53,38 @@ public class TeamServiceImpl implements TeamService{
     }
 
     @Override
-    public ResultInfo<Object> addUser(String userName, String teamName) {
-//        Team team = teamDAO.getTeamByName(teamName);
-//        User user = accountDAO.getUserByName(userName);
-//        user.getTeams().add(team);
-//
-//        accountDAO.saveAndFlush(user);
-        return new ResultInfo<>(true, "success","");
+    public ResultInfo<Object> addMember(String userName, String teamName) {
+        Team team = teamDAO.getTeamByName(teamName);
+        User user = accountDAO.getUserByName(userName);
+
+        team.getUsers().add(user);
+        teamDAO.saveAndFlush(team);
+
+        return new ResultInfo<>(true, "success",userToInfo(team));
     }
+
+
+    @Override
+    public ResultInfo<Object> deleteMember(String userName, String teamName) {
+        Team team = teamDAO.getTeamByName(teamName);
+        User user = accountDAO.getUserByName(userName);
+
+        team.getUsers().remove(user);
+        teamDAO.saveAndFlush(team);
+
+        return new ResultInfo<>(true, "success",userToInfo(team));
+    }
+
+
+    private static List<AccountInfo> userToInfo(Team team){
+        List<AccountInfo> ifs = new ArrayList<>();
+        for (User user1 : team.getUsers()) {
+            AccountInfo info = new AccountInfo();
+            info.setName(user1.getName());
+            info.setEmail(user1.getEmail());
+            ifs.add(info);
+        }
+        return ifs;
+    }
+
 }

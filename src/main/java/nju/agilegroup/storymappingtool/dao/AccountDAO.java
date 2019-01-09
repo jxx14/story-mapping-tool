@@ -19,7 +19,7 @@ public interface AccountDAO  extends JpaRepository<User, Integer> {
     User getUserByName(String name);
 
     //查看所有团队成员
-    @Query(value = "SELECT u.* FROM  user u Join user_teams ut WHERE ut.teams_id =?1 AND u.id=ut.user_id",nativeQuery = true)
+    @Query(value = "SELECT u.* FROM  user u Join team_users tu WHERE tu.teams_id=?1 AND u.id=tu.users_id",nativeQuery = true)
     List<User> getTeamMembers (int team_id);
 
 }

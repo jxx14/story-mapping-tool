@@ -134,7 +134,7 @@ public class AccountServiceImpl implements AccountService {
 
 
     @Override
-    public ResultInfo<Object> deleteUser(String userName, String teamName) {
+    public ResultInfo<Object> leaveTeam(String userName, String teamName) {
         Team team = teamDAO.getTeamByName(teamName);
         User user = accountDAO.getUserByName(userName);
         user.getTeams().remove(team);

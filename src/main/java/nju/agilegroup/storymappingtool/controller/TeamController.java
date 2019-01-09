@@ -35,7 +35,6 @@ public class TeamController {
 //    }
 
 
-
     //参数团队信息，增加团队
     @RequestMapping(value = "/addTeam", method = RequestMethod.POST)
     public ResultInfo<Object> addTeam(HttpServletRequest request, @RequestBody TeamInfo teamInfo) {
@@ -60,10 +59,16 @@ public class TeamController {
     }
 
 
-    //新增成员，返回团队的成员列表
-    @RequestMapping(value = "/addUser", method = RequestMethod.POST)
-    public ResultInfo<Object> addUser(@RequestParam String userName,@RequestParam String teamName) {
-        return teamService.addUser(userName,teamName);
+    //新增成员，data里最是新团队的成员列表
+    @RequestMapping(value = "/addMember", method = RequestMethod.POST)
+    public ResultInfo<Object> addMember(@RequestParam String userName,@RequestParam String teamName) {
+        return teamService.addMember(userName,teamName);
+    }
+
+    //删除成员,data里是最新团队成员列表是
+    @RequestMapping(value = "/deleteMember", method = RequestMethod.POST)
+    public ResultInfo<Object> deleteMember(@RequestParam String userName,@RequestParam String teamName) {
+        return teamService.deleteMember(userName,teamName);
     }
 
 }
