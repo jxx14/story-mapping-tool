@@ -13,6 +13,10 @@ public interface TeamDAO extends JpaRepository<Team, Integer> {
     Team getTeamById(int id);//根据团队id查团队信息
 
     //查看用户参加的所有团队
-    @Query(value = "SELECT t.* FROM  user u join team t WHERE u.team_id=t.id and u.email=?1",nativeQuery = true)
-    List<Team>getTeamsByUserEmail (String email);
+    @Query(value = "SELECT DISTINCT t.* FROM  user u join user_teams ut join team t WHERE ut.user_id =?1 and ut.teams_id =t.id\n",nativeQuery = true)
+    List<Team>getTeamsByUserId(int user_id);
+
+   Team getTeamByName(String name);
+
+   List<Team> getTeamsByName(String name);
 }

@@ -25,4 +25,8 @@ public interface AccountService {
     ResultInfo<Object> getTeamMembers(HttpSession session, int id);
 
     ResultInfo<Object> getTeams(HttpSession session);
+
+    ResultInfo<Object> joinTeam(String userName, String teamName);
+
+    ResultInfo<Object> deleteUser(String userName, String teamName);
 }

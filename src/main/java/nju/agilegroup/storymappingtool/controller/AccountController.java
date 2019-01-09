@@ -54,6 +54,19 @@ public class AccountController {
         return accountService.getTeams(session);
     }
 
+    //加入团队，返回值data里是所加入的所有团队
+    @RequestMapping(value = "/joinTeam", method = RequestMethod.POST)
+    public ResultInfo<Object> joinTeam(@RequestParam String userName,@RequestParam String teamName) {
+        return accountService.joinTeam(userName,teamName);
+    }
+
+
+    //删除成员
+    @RequestMapping(value = "/deleteUser", method = RequestMethod.POST)
+    public ResultInfo<Object> deleteUser(@RequestParam String userName,@RequestParam String teamName) {
+        return accountService.deleteUser(userName,teamName);
+    }
+
     //未实现
     @RequestMapping(value = "/resetPwd", method = RequestMethod.POST)
     public ResultInfo<Object> resetPwd(HttpServletRequest request,@RequestParam int userId) {

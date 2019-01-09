@@ -44,4 +44,14 @@ public class TeamServiceImpl implements TeamService{
         team.setName(teamInfo.getName());
         return new ResultInfo<>(true,"modify team information", teamDAO.saveAndFlush(team));
     }
+
+    @Override
+    public ResultInfo<Object> addUser(String userName, String teamName) {
+//        Team team = teamDAO.getTeamByName(teamName);
+//        User user = accountDAO.getUserByName(userName);
+//        user.getTeams().add(team);
+//
+//        accountDAO.saveAndFlush(user);
+        return new ResultInfo<>(true, "success","");
+    }
 }

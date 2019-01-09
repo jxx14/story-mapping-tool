@@ -64,6 +64,7 @@ public class AccountServiceImpl implements AccountService {
             return new ResultInfo<>(false, "Username already exists", null);
         }
         accountDAO.save(account.toUser());
+
         return new ResultInfo<>(true, "Registered successfully", null);
     }
 
@@ -93,7 +94,7 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public ResultInfo<Object> getTeamMembers(HttpSession session, int id) {
-        List<User> users = accountDAO.getTeamMember(id);
+        List<User> users = accountDAO.getTeamMembers(id);
         List<AccountInfo> ifs = new ArrayList<>();
         for (User user : users) {
             AccountInfo info = new AccountInfo();
@@ -107,7 +108,9 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public ResultInfo<Object> getTeams(HttpSession session) {
         String email=(String)session.getAttribute(USER_KEY);
-        List<Team> teams = teamDAO.getTeamsByUserEmail(email);
+        User user =  accountDAO.getUserByEmail(email);
+        List<Team> teams = teamDAO.getTeamsByUserId(user.getId());
+
         List<TeamInfo> ifs = new ArrayList<>();
         for (Team team : teams) {
             TeamInfo info = new TeamInfo();
@@ -117,5 +120,25 @@ public class AccountServiceImpl implements AccountService {
             ifs.add(info);
         }
         return new ResultInfo<>(true, "success",ifs);
+    }
+
+    @Override
+    public ResultInfo<Object> joinTeam(String userName, String teamName) {
+        Team team = teamDAO.getTeamByName(teamName);
+        User user = accountDAO.getUserByName(userName);
+
+        user.getTeams().add(team);
+        accountDAO.saveAndFlush(user);
+        return new ResultInfo<>(true, "success",user.getTeams());
+    }
+
+
+    @Override
+    public ResultInfo<Object> deleteUser(String userName, String teamName) {
+        Team team = teamDAO.getTeamByName(teamName);
+        User user = accountDAO.getUserByName(userName);
+        user.getTeams().remove(team);
+        accountDAO.saveAndFlush(user);
+        return new ResultInfo<>(true, "success",user);
     }
 }
