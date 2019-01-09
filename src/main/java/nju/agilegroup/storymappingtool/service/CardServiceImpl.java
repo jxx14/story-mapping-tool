@@ -295,6 +295,9 @@ public class CardServiceImpl implements CardService{
         if(roleInfo.getAvatar() != null)
             role.setAvatar(roleInfo.getAvatar());
 
+        if(roleInfo.getMapId() != 0)
+            role.setMapId(roleInfo.getMapId());
+
         role = roleDAO.save(role);
         roleInfo.setId(role.getId());
         roleInfo.setMapId(role.getMapId());
