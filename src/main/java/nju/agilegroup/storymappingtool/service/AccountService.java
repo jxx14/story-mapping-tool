@@ -15,13 +15,18 @@ public interface AccountService {
 
     ResultInfo<Object> signUp(AccountInfo account);
 
-    ResultInfo<Object> getUserInfo(int id);
+    ResultInfo<Object> getUserInfo(HttpSession session);
 
-    ResultInfo<Object> modify(HttpSession session,AccountInfo account,int id);
+    ResultInfo<Object> modify(HttpSession session,AccountInfo account);
 
     ResultInfo<Object> resetPWd(HttpSession session,String password,int id);
 
     //参数id，查看团队成员
     ResultInfo<Object> getTeamMembers(HttpSession session, int id);
 
+    ResultInfo<Object> getTeams(HttpSession session);
+
+    ResultInfo<Object> joinTeam(String userName, String teamName);
+
+    ResultInfo<Object> deleteUser(String userName, String teamName);
 }

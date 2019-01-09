@@ -69,4 +69,10 @@ public class Team {
                 ", description='" + description + '\'' +
                 '}';
     }
+
+    public void setLeader_id(int leader_id) {
+        this.leader_id = leader_id;
+    }
+
+
 }

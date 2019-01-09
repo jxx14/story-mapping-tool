@@ -1,15 +1,16 @@
 package nju.agilegroup.storymappingtool.model;
 
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import org.springframework.data.annotation.CreatedDate;
+
+import javax.persistence.*;
+import java.sql.Timestamp;
 
 @Entity
 @Table(name = "role")
 public class Role {
     @Id
+    @GeneratedValue
     @Column(name = "id")
     private int id;
 
@@ -21,6 +22,17 @@ public class Role {
 
     @Column(name = "avatar")
     private String avatar;
+
+    @Column(name = "activity_id")
+    private int activityId;
+
+    @ManyToOne(optional = false, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "creator_id")
+    private User creator;
+
+    @CreatedDate
+    @Column(name = "create_at")
+    private Timestamp createAt;
 
     public Role(){
 
@@ -56,5 +68,29 @@ public class Role {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public int getActivityId() {
+        return activityId;
+    }
+
+    public void setActivityId(int activityId) {
+        this.activityId = activityId;
+    }
+
+    public User getCreator() {
+        return creator;
+    }
+
+    public void setCreator(User creator) {
+        this.creator = creator;
+    }
+
+    public Timestamp getCreateAt() {
+        return createAt;
+    }
+
+    public void setCreateAt(Timestamp createAt) {
+        this.createAt = createAt;
     }
 }

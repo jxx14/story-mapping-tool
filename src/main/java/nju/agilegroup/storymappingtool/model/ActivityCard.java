@@ -21,9 +21,6 @@ public class ActivityCard {
     @Column(name = "content")
     private String content;
 
-    @Column(name = "roles")
-    private String roles;
-
     @Column(name = "create_at")
     private Timestamp createAt;
 
@@ -68,14 +65,6 @@ public class ActivityCard {
 
     public void setContent(String content) {
         this.content = content;
-    }
-
-    public String getRoles() {
-        return roles;
-    }
-
-    public void setRoles(String roles) {
-        this.roles = roles;
     }
 
     public Timestamp getCreateAt() {

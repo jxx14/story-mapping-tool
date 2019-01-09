@@ -103,19 +103,6 @@ public class CardController {
     }
 
     /**
-     * 创建一个role
-     * 返回RoleInfo的json
-     * @param request
-     * @param roleInfo
-     * @return
-     */
-    @RequestMapping(value = "/createRole", method = RequestMethod.POST)
-    public ResultInfo<Object> createRole(HttpServletRequest request, @RequestBody RoleInfo roleInfo){
-        HttpSession session = request.getSession();
-        return cardService.createRole(session, roleInfo);
-    }
-
-    /**
      * 修改已创建的role
      * 只需要填写id和要修改的字段
      * 返回修改后的roleInfo

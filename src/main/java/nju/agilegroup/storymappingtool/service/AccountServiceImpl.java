@@ -1,10 +1,12 @@
 package nju.agilegroup.storymappingtool.service;
 
 import nju.agilegroup.storymappingtool.dao.AccountDAO;
+import nju.agilegroup.storymappingtool.dao.TeamDAO;
 import nju.agilegroup.storymappingtool.model.Team;
 import nju.agilegroup.storymappingtool.model.User;
 import nju.agilegroup.storymappingtool.view.AccountInfo;
 import nju.agilegroup.storymappingtool.view.ResultInfo;
+import nju.agilegroup.storymappingtool.view.TeamInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,10 +20,11 @@ public class AccountServiceImpl implements AccountService {
     private static final String USER_KEY = "USER_NAME";
 
     private final AccountDAO accountDAO;
-
+    private final TeamDAO teamDAO;
     @Autowired
-    public AccountServiceImpl(AccountDAO accountDAO) {
+    public AccountServiceImpl(AccountDAO accountDAO, TeamDAO teamDAO) {
         this.accountDAO = accountDAO;
+        this.teamDAO = teamDAO;
     }
 
     @Override
@@ -52,27 +55,33 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public ResultInfo<Object> signUp(AccountInfo account) {
         String email = account.getEmail();
-        List<User> users = accountDAO.findAllByEmail(email);
-        if (!users.isEmpty()) {
+        String name = account.getName();
+        List<User> usersGetByEmail = accountDAO.findAllByEmail(email);
+        List<User> usersGetByName = accountDAO.findAllByName(name);
+        if (!usersGetByEmail.isEmpty()) {
             return new ResultInfo<>(false, "The mailbox has been registered", null);
+        }if (!usersGetByName.isEmpty()) {
+            return new ResultInfo<>(false, "Username already exists", null);
         }
-
         accountDAO.save(account.toUser());
+
         return new ResultInfo<>(true, "Registered successfully", null);
     }
 
     @Override
-    public ResultInfo<Object> getUserInfo(int id) {
-        User user = accountDAO.getUserById(id);
+    public ResultInfo<Object> getUserInfo(HttpSession session) {
+        String email=(String)session.getAttribute(USER_KEY);
+        User user = accountDAO.getUserByEmail(email);
         AccountInfo accountInfo = new AccountInfo();
-        accountInfo.setEmail(user.getEmail());
+        accountInfo.setEmail(email);
         accountInfo.setName(user.getName());
         return new ResultInfo<>(true,"user information",accountInfo );
     }
 
     @Override
-    public ResultInfo<Object> modify(HttpSession session, AccountInfo account, int id) {
-        User user = accountDAO.getUserById(id);
+    public ResultInfo<Object> modify(HttpSession session, AccountInfo account) {
+        String email=(String)session.getAttribute(USER_KEY);
+        User user = accountDAO.getUserByEmail(email);
         user.setEmail(account.getEmail());
         user.setName(account.getName());
         return new ResultInfo<>(true,"modify user information", accountDAO.saveAndFlush(user));
@@ -85,12 +94,8 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public ResultInfo<Object> getTeamMembers(HttpSession session, int id) {
-        List<User> users = accountDAO.getTeamMember(id);
-        for (User user : users) {
-            System.out.println(user.toString());
-        }
+        List<User> users = accountDAO.getTeamMembers(id);
         List<AccountInfo> ifs = new ArrayList<>();
-
         for (User user : users) {
             AccountInfo info = new AccountInfo();
             info.setName(user.getName());
@@ -98,5 +103,42 @@ public class AccountServiceImpl implements AccountService {
             ifs.add(info);
         }
         return new ResultInfo<>(true, "success", ifs);
+    }
+
+    @Override
+    public ResultInfo<Object> getTeams(HttpSession session) {
+        String email=(String)session.getAttribute(USER_KEY);
+        User user =  accountDAO.getUserByEmail(email);
+        List<Team> teams = teamDAO.getTeamsByUserId(user.getId());
+
+        List<TeamInfo> ifs = new ArrayList<>();
+        for (Team team : teams) {
+            TeamInfo info = new TeamInfo();
+            info.setName(team.getName());
+            info.setDescription(team.getDescription());
+            info.setLeader(team.getLeader_id());
+            ifs.add(info);
+        }
+        return new ResultInfo<>(true, "success",ifs);
+    }
+
+    @Override
+    public ResultInfo<Object> joinTeam(String userName, String teamName) {
+        Team team = teamDAO.getTeamByName(teamName);
+        User user = accountDAO.getUserByName(userName);
+
+        user.getTeams().add(team);
+        accountDAO.saveAndFlush(user);
+        return new ResultInfo<>(true, "success",user.getTeams());
+    }
+
+
+    @Override
+    public ResultInfo<Object> deleteUser(String userName, String teamName) {
+        Team team = teamDAO.getTeamByName(teamName);
+        User user = accountDAO.getUserByName(userName);
+        user.getTeams().remove(team);
+        accountDAO.saveAndFlush(user);
+        return new ResultInfo<>(true, "success",user);
     }
 }

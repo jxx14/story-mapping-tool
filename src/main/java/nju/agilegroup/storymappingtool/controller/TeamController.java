@@ -59,4 +59,11 @@ public class TeamController {
         return teamService.modifyTeamInfo(session, teamInfo,teamId);
     }
 
+
+    //新增成员，返回团队的成员列表
+    @RequestMapping(value = "/addUser", method = RequestMethod.POST)
+    public ResultInfo<Object> addUser(@RequestParam String userName,@RequestParam String teamName) {
+        return teamService.addUser(userName,teamName);
+    }
+
 }

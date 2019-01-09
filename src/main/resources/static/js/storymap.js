@@ -1,34 +1,77 @@
-var aindex = 1;
-var tindex = 1;
-var sindex = 1;
+// var aindex = 1;
+// var tindex = 1;
+// var sindex = 1;
 var rindex = 1;
-var pindex = 1;
+// var pindex = 1;
 var edit_activity = false;
 var edit_task = false;
+var story_states = ['ready','todo','doing','done'];
+var mapId;
+var userId = 1;
 
 $(function(){
+    init();
+    $('#back_icon').click(function () {
+        window.history.go(-1);
+    });
+    
     $('.add_backlog').on("click",function () {
-        $(this).parent().parent().before(createBacklogDiv());
-        var aid = aindex-1;
-        var tid = tindex-1;
+        var tcard = $(this).parent().parent();
+        var position = 1;
+        if($('.activity_card').length>0)
+            position = $('.activity_card:last').attr('data-position')+1;
 
-        $('.release_div').each(function () {
-            var s = '<div class="story_panel" data-aid="'+aid+'" style="margin-left: -5px;">\n' +
-                '<div class="story_list" data-tid="'+tid+'"><div class="story_plus_card">\n' +
-                '                        <div style="margin-top: 2px;text-align: center;">\n' +
-                '                            <img class="add_story" src="../icons/add_large.png" /></div>\n' +
-                '                    </div>\n' +
-                '                </div></div>';
-            $(this).find('.backlog_div:last').html(s);
-            var rh = $(this).height() - 20;
-            s = '<div class="backlog_div">\n' +
-                '                <div class="story_panel" style="height: '+rh+'px;" style="margin-left: -5px;">\n' +
-                '                    <div class="story_plus_card" style="margin-left: 5px;">\n' +
-                '                    </div>\n' +
-                '                </div>\n' +
-                '            </div>';
-            $(this).append(s);
+        $.ajax({
+            type: "post",
+            url: "/createActivity",
+            data:JSON.stringify({"mapId":mapId,"name":'text',"creatorId":userId,"position":position,"roles":[]}),
+            contentType: "application/json; charset=utf-8",
+            async: false,
+            success: function (act) {
+                var aid = act['data']['id'];
+
+                $.ajax({
+                    type: "post",
+                    url: "/createTask",
+                    data:JSON.stringify({"mapId":mapId,"name":'text',"creatorId":userId,"position":1,"roles":[],"parent":aid}),
+                    contentType: "application/json; charset=utf-8",
+                    async: false,
+                    success: function (task) {
+                        var tid = task['data']['id'];
+                        $(tcard).before(createBacklogDiv(act['data'],task['data']));
+
+                        $('.release_div').each(function () {
+                            var s = '<div class="story_panel" data-aid="'+aid+'" style="margin-left: -5px;">\n' +
+                                '<div class="story_list" data-tid="'+tid+'"><div class="story_plus_card">\n' +
+                                '                        <div style="margin-top: 2px;text-align: center;">\n' +
+                                '                            <img class="add_story" src="../icons/add_large.png" /></div>\n' +
+                                '                    </div>\n' +
+                                '                </div></div>';
+                            $(this).find('.backlog_div:last').html(s);
+                            var rh = $(this).height() - 20;
+                            s = '<div class="backlog_div">\n' +
+                                '                <div class="story_panel" style="height: '+rh+'px;" style="margin-left: -5px;">\n' +
+                                '                    <div class="story_plus_card" style="margin-left: 5px;">\n' +
+                                '                    </div>\n' +
+                                '                </div>\n' +
+                                '            </div>';
+                            $(this).append(s);
+                        });
+
+                    }, error: function (XMLHttpRequest, textStatus, errorThrown) {
+                        alert(XMLHttpRequest.status);
+                        alert(XMLHttpRequest.readyState);
+                        alert(textStatus);
+                    }
+                });
+
+            }, error: function (XMLHttpRequest, textStatus, errorThrown) {
+                alert(XMLHttpRequest.status);
+                alert(XMLHttpRequest.readyState);
+                alert(textStatus);
+            }
         });
+
     });
 
     personCardBind();
@@ -74,22 +117,53 @@ function addPerson() {
         var personName = $('#personNameInput').val();
         var imgpath = $('input[name="roleOption"]:checked').val();
 
-        $('.activity_card[data-aid='+aid+']').parent().find('.person_panel').append('<div class="person_card" data-name="'+personName
-            +'" title="'+personName+'" data-pid="'+pindex+'">\n' +
-            '                            <img src="../portraits/'+imgpath+'.png" width="30" height="30" class="person_img"/>\n' +
-            '                            <div class="person_card_operation" style="display: none;">\n' +
-            '                                <img src="../icons/trash.png" class="remove_person_icon removePerson"/>\n' +
-            '                            </div>\n' +
-            '                        </div>');
-        pindex+=1;
-        $('#addPersonModal').modal('hide');
+        $.ajax({
+            type: "post",
+            url: "/addRoleToActivity?activity="+aid,
+            data:JSON.stringify({"mapId":mapId,"name":personName,"avatar":imgpath,}),
+            contentType: "application/json; charset=utf-8",
+            async: false,
+            success: function (data) {
+
+                $('.activity_card[data-aid='+aid+']').parent().find('.person_panel').append('<div class="person_card" data-name="'+personName
+                    +'" title="'+personName+'" data-pid="'+data['data']['id']+'" data-creator="'+role['creatorId']+'" data-creatAt="'+role['createAt']+'">\n' +
+                    '                            <img src="../portraits/'+imgpath+'.png" width="30" height="30" class="person_img"/>\n' +
+                    '                            <div class="person_card_operation" style="display: none;">\n' +
+                    '                                <img src="../icons/trash.png" class="remove_person_icon removePerson"/>\n' +
+                    '                            </div>\n' +
+                    '                        </div>');
+
+                $('#addPersonModal').modal('hide');
+
+            }, error: function (XMLHttpRequest, textStatus, errorThrown) {
+                alert(XMLHttpRequest.status);
+                alert(XMLHttpRequest.readyState);
+                alert(textStatus);
+            }
+        });
+
     });
 }
 
 function removePersonCard() {
     $('body').on("click",'.removePerson',function () {
-        $(this).parent().parent().remove();
-
+        var pcard = $(this).parent().parent();
+        var aid = $(pcard).parent().parent().parent().find('.activity_card').attr('data-aid');
+        var pid = $(pcard).attr('data-pid');
+        $.ajax({
+            type: "post",
+            url: "/removeRoleFromActivity?activity="+aid,
+            data:JSON.stringify({'id':pid}),
+            contentType: "application/json; charset=utf-8",
+            async: false,
+            success: function (data) {
+                $(pcard).remove();
+            }, error: function (XMLHttpRequest, textStatus, errorThrown) {
+                // alert(XMLHttpRequest.status);
+                // alert(XMLHttpRequest.readyState);
+                // alert(textStatus);
+            }
+        });
     });
 }
 
@@ -99,7 +173,11 @@ function modifyPersonCard() {
         var opval = parseInt(imgpath.split('/')[1].substring(0));
         var pname = $(this).attr('data-name');
         var pid = $(this).attr('data-pid');
+        var creator = $(this).attr('data-creator');
+        var creatAt = $(this).attr('data-creatAt').split(' ')[0];
 
+        $('#roleCard_creator').text(creator);
+        $('#roleCard_creatAt').text(creatAt);
         $('#modifyPersonModal').attr('data-pid',pid);
         $('#personNameInput_m').val(pname);
         $('input[name="roleOption2"]').eq(opval-1).attr("checked",'checked');
@@ -111,29 +189,37 @@ function modifyPersonCard() {
         var personName = $('#personNameInput_m').val();
         var imgpath = $('input[name="roleOption2"]:checked').val();
 
-        var pcard = $('.person_card[data-pid='+pid+']');
-        $(pcard).attr('data-name',personName);
-        $(pcard).attr('title', personName);
-        $(pcard).find('.person_img').attr('src','../portraits/'+imgpath+'.png');
-        $('#modifyPersonModal').modal('hide');
+        $.ajax({
+            type: "post",
+            url: "/modifyRole",
+            data:JSON.stringify({"id":pid,"name":personName,"avatar":imgpath}),
+            contentType: "application/json; charset=utf-8",
+            async: false,
+            success: function (data) {
+                var pcard = $('.person_card[data-pid='+pid+']');
+                $(pcard).attr('data-name',personName);
+                $(pcard).attr('title', personName);
+                $(pcard).find('.person_img').attr('src','../portraits/'+imgpath+'.png');
+                $('#modifyPersonModal').modal('hide');
+
+            }, error: function (XMLHttpRequest, textStatus, errorThrown) {
+                alert(XMLHttpRequest.status);
+                alert(XMLHttpRequest.readyState);
+                alert(textStatus);
+            }
+        });
     });
 }
 
 
-function createBacklogDiv() {
+function createBacklogDiv(acardInfo,tcardInfo) {
     var bdiv = '<div class="backlog_div">\n' +
         '                <div>\n' +
         '<div style="display: inline-block;" class="person_panel">\n' +
-        '                        <div class="person_card" data-name="Common" title="Common">\n' +
-        '                            <img src="../portraits/4.png" width="30" height="30" class="person_img"/>\n' +
-        '                            <div class="person_card_operation" style="display: none;">\n' +
-        '                                <img src="../icons/trash.png" class="remove_person_icon removePerson"/>\n' +
-        '                            </div>\n' +
-        '                        </div>\n' +
         '                    </div>' +
         '                    <img class="add_person_card" src="../icons/add_large.png" />\n' +
         '                </div>\n' +
-        '                <div class="activity_card" data-aid="'+aindex+'">\n' +
+        '                <div class="activity_card" data-aid="'+acardInfo['id']+'" data-position="'+acardInfo['position']+'" data-creator="'+acardInfo['creator']+'" data-creatAt="'+acardInfo['creatAt']+'">\n' +
         '                    <div class="activity_textDiv">text</div>\n' +
         '                    <div class="activity_estimation"></div>\n' +
         '                    <div class="activity_card_operation" style="display: none;">\n' +
@@ -143,7 +229,7 @@ function createBacklogDiv() {
         '                    </div>\n' +
         '                </div>\n' +
         '                <div style="margin-left: -5px;">\n' +
-        '                    <div class="task_card" data-tid="'+tindex+'">\n' +
+        '                    <div class="task_card" data-tid="'+tcardInfo['id']+'" data-position="'+tcardInfo['position']+'" data-creator="'+tcardInfo['creator']+'" data-creatAt="'+tcardInfo['creatAt']+'">\n' +
         '                        <div class="activity_textDiv">text</div>\n' +
         '                        <div class="task_estimation"></div>\n' +
         '                        <div class="activity_card_operation" style="display: none;">\n' +
@@ -154,49 +240,123 @@ function createBacklogDiv() {
         '                    </div>\n' +
         '                </div>\n' +
         '            </div>';
-    aindex += 1;
-    tindex += 1;
+
     return bdiv;
 }
              
 function addActivityCard() {
     $('body').on("click",'.addActivityLeft',function () {
+        var pcard = $(this).parent().parent().parent();
         var aid_old = $(this).parent().parent().attr('data-aid');
-        $(this).parent().parent().parent().before(createBacklogDiv());
-        var aid = aindex-1;
-        var tid = tindex-1;
+        var acard = $(this).parent().parent();
+        var bnode = this.parentNode.parentNode.parentNode;
 
-        $('.release_div').each(function () {
-            var op = '.story_panel[data-aid='+aid_old+']';
-            var s = '<div class="backlog_div">\n' +
-                '<div class="story_panel" data-aid="'+aid+'" style="margin-left: -5px;">\n' +
-                '<div class="story_list" data-tid="'+tid+'"><div class="story_plus_card">\n' +
-                '                        <div style="margin-top: 2px;text-align: center;">\n' +
-                '                            <img class="add_story" src="../icons/add_large.png" /></div>\n' +
-                '                    </div>\n' +
-                '                </div>'+
-                '                </div></div>';
-            $(this).find(op).parent().before(s);
+        var position_R = $(acard).attr('data-position');
+        var position_L = 0;
+        if(bnode.previousSibling!=null)
+            position_L = bnode.previousSibling.childNodes[1].getAttribute('data-position');
+
+        $.ajax({
+            type: "post",
+            url: "/createActivity",
+            data:JSON.stringify({"mapId":mapId,"name":'text',"creatorId":userId,"position":(position_L+position_R)/2}),
+            contentType: "application/json; charset=utf-8",
+            async: false,
+            success: function (act) {
+                var aid = act['data']['id'];
+
+                $.ajax({
+                    type: "post",
+                    url: "/createTask",
+                    data:JSON.stringify({"mapId":mapId,"name":'text',"creatorId":userId,"position":1,"roles":[],"parent":aid}),
+                    contentType: "application/json; charset=utf-8",
+                    async: false,
+                    success: function (task) {
+                        var tid = task['data']['id'];
+                        $(pcard).before(createBacklogDiv(act['data'],task['data']));
+
+                        $('.release_div').each(function () {
+                            var op = '.story_panel[data-aid='+aid_old+']';
+                            var s = '<div class="backlog_div">\n' +
+                                '<div class="story_panel" data-aid="'+aid+'" style="margin-left: -5px;">\n' +
+                                '<div class="story_list" data-tid="'+tid+'"><div class="story_plus_card">\n' +
+                                '                        <div style="margin-top: 2px;text-align: center;">\n' +
+                                '                            <img class="add_story" src="../icons/add_large.png" /></div>\n' +
+                                '                    </div>\n' +
+                                '                </div>'+
+                                '                </div></div>';
+                            $(this).find(op).parent().before(s);
+                        });
+
+                    }, error: function (XMLHttpRequest, textStatus, errorThrown) {
+                        alert(XMLHttpRequest.status);
+                        alert(XMLHttpRequest.readyState);
+                        alert(textStatus);
+                    }
+                });
+
+            }, error: function (XMLHttpRequest, textStatus, errorThrown) {
+                alert(XMLHttpRequest.status);
+                alert(XMLHttpRequest.readyState);
+                alert(textStatus);
+            }
         });
     });
 
     $('body').on("click",'.addActivityRight',function () {
+        var pcard = $(this).parent().parent().parent();
         var aid_old = $(this).parent().parent().attr('data-aid');
-        $(this).parent().parent().parent().after(createBacklogDiv());
-        var aid = aindex-1;
-        var tid = tindex-1;
+        var acard = $(this).parent().parent();
+        var bnode = this.parentNode.parentNode.parentNode;
+        var position_L = $(acard).attr('data-position');
+        var position_R = position_L*3;
+        if(bnode.nextSibling!=null)
+            position_R = bnode.nextSibling.childNodes[1].getAttribute('data-position');
 
-        $('.release_div').each(function () {
-            var op = '.story_panel[data-aid='+aid_old+']';
-            var s = '<div class="backlog_div">\n' +
-                '<div class="story_panel" data-aid="'+aid+'" style="margin-left: -5px;">\n' +
-                '<div class="story_list" data-tid="'+tid+'"><div class="story_plus_card">\n' +
-                '                        <div style="margin-top: 2px;text-align: center;">\n' +
-                '                            <img class="add_story" src="../icons/add_large.png" /></div>\n' +
-                '                    </div>\n' +
-                '                </div>'+
-                '                </div></div>';
-            $(this).find(op).parent().after(s);
+        $.ajax({
+            type: "post",
+            url: "/createActivity",
+            data:JSON.stringify({"mapId":mapId,"name":'text',"creatorId":userId,"position":(position_L+position_R)/2,"roles":[]}),
+            contentType: "application/json; charset=utf-8",
+            async: false,
+            success: function (act) {
+                var aid = act['data']['id'];
+
+                $.ajax({
+                    type: "post",
+                    url: "/createTask",
+                    data:JSON.stringify({"mapId":mapId,"name":'text',"creatorId":userId,"position":1,"roles":[],"parent":aid}),
+                    contentType: "application/json; charset=utf-8",
+                    async: false,
+                    success: function (task) {
+                        var tid = task['data']['id'];
+                        $(pcard).after(createBacklogDiv(act['data'],task['data']));
+
+                        $('.release_div').each(function () {
+                            var op = '.story_panel[data-aid='+aid_old+']';
+                            var s = '<div class="backlog_div">\n' +
+                                '<div class="story_panel" data-aid="'+aid+'" style="margin-left: -5px;">\n' +
+                                '<div class="story_list" data-tid="'+tid+'"><div class="story_plus_card">\n' +
+                                '                        <div style="margin-top: 2px;text-align: center;">\n' +
+                                '                            <img class="add_story" src="../icons/add_large.png" /></div>\n' +
+                                '                    </div>\n' +
+                                '                </div>'+
+                                '                </div></div>';
+                            $(this).find(op).parent().after(s);
+                        });
+
+                    }, error: function (XMLHttpRequest, textStatus, errorThrown) {
+                        alert(XMLHttpRequest.status);
+                        alert(XMLHttpRequest.readyState);
+                        alert(textStatus);
+                    }
+                });
+
+            }, error: function (XMLHttpRequest, textStatus, errorThrown) {
+                alert(XMLHttpRequest.status);
+                alert(XMLHttpRequest.readyState);
+                alert(textStatus);
+            }
         });
     });
 
@@ -214,6 +374,20 @@ function activityCardBind() {
 function removeActivityCard() {
     $('body').on("click",'.removeActivity',function () {
         var aid = $(this).parent().parent().attr('data-aid');
+
+        // $.ajax({
+        //     type: "post",
+        //     url: "/createActivity",
+        //     data:{"mapId":mapId,"name":'text',"creatorId":userId,"position":(position_L+position_R)/2,"roles":[]},
+        //     async: false,
+        //     success: function (act) {
+        //
+        //     }, error: function (XMLHttpRequest, textStatus, errorThrown) {
+        //         alert(XMLHttpRequest.status);
+        //         alert(XMLHttpRequest.readyState);
+        //         alert(textStatus);
+        //     }
+        // });
         $(this).parent().parent().parent().remove();
         var op = '.story_panel[data-aid='+aid+']';
         $(op).parent().remove();
@@ -224,8 +398,12 @@ function modifyActicityCard() {
     $('body').on("dblclick",'.activity_card',function () {
         var aid = $(this).attr('data-aid');
         var content = $(this).find('.activity_textDiv').html();
+        var creator = $(this).attr('data-creator');
+        var creatAt = $(this).attr('data-creatAt').split(' ')[0];
         $('#activityModal').find('.modal_content').html(content);
         $('#activityModal').attr('data-aid',aid);
+        $('#activityCard_creator').text(creator);
+        $('#activityCard_creatAt').text(creatAt);
 
         var personList = $(this).parent().find('.person_panel').find('.person_card');
         var s = '';
@@ -261,8 +439,24 @@ function modifyActicityCard() {
     $('#activityModal').on("click",'.saveActivity',function () {
         var aid = $('#activityModal').attr('data-aid');
         var content = $('#activityModal').find('.modal_content textarea').val();
-        $('.activity_card[data-aid='+aid+']').find('.activity_textDiv').html(content);
-        $('#activityModal').find('.modal_content').html(content);
+
+        $.ajax({
+            type: "post",
+            url: "/modifyActivity",
+            data:JSON.stringify({"id":aid,"name":content}),
+            contentType: "application/json; charset=utf-8",
+            async: false,
+            success: function (data) {
+                $('.activity_card[data-aid='+aid+']').find('.activity_textDiv').html(content);
+                $('#activityModal').find('.modal_content').html(content);
+
+            }, error: function (XMLHttpRequest, textStatus, errorThrown) {
+                alert(XMLHttpRequest.status);
+                alert(XMLHttpRequest.readyState);
+                alert(textStatus);
+            }
+        });
+
     });
 
     $('#activityModal').on("click",'.cancelModifyAct',function () {
@@ -300,8 +494,8 @@ function removeTaskCard() {
     });
 }
 
-function createTaskCard() {
-    var tcard = '<div class="task_card" data-tid="'+tindex+'">\n' +
+function createTaskCard(tid) {
+    var tcard = '<div class="task_card" data-tid="'+tid+'">\n' +
         '                        <div class="activity_textDiv">text</div>\n' +
         '                        <div class="task_estimation"></div>\n' +
         '                        <div class="activity_card_operation" style="display: none;">\n' +
@@ -310,26 +504,68 @@ function createTaskCard() {
         '                            <img src="../icons/right-arrow.png" class="add_right_icon addTaskRight"/>\n' +
         '                        </div>\n' +
         '                    </div>';
-    tindex+=1;
+
     return tcard;
 }
 
 function addTaskCard() {
     $('body').on("click",'.addTaskLeft',function () {
-        $(this).parent().parent().before(createTaskCard());
-        $(this).parent().parent().parent().find('.task_card').find('.removeTask').show();
-
         var aid = $(this).parent().parent().parent().parent().find('.activity_card').attr('data-aid');
-        var tid = tindex-1;
-        addStoryPlusCard(aid,tid);
+        var tcard = $(this).parent().parent();
+        var tnode = this.parentNode.parentNode;
+        var position_R = $(tcard).attr('data-position')
+        var position_L = 0;
+        if(tnode.previousSibling!=null)
+            position_L = tnode.previousSibling.getAttribute('data-position');
+
+        $.ajax({
+            type: "post",
+            url: "/createTask",
+            data:JSON.stringify({"mapId":mapId,"name":'text',"creatorId":userId,"position":(position_L+position_R)/2,"parent":aid}),
+            contentType: "application/json; charset=utf-8",
+            async: false,
+            success: function (task) {
+                var tid = task['data']['id'];
+                $(tcard).before(createTaskCard(tid));
+                $(tcard).parent().find('.task_card').find('.removeTask').show();
+                addStoryPlusCard(aid,tid);
+
+            }, error: function (XMLHttpRequest, textStatus, errorThrown) {
+                alert(XMLHttpRequest.status);
+                alert(XMLHttpRequest.readyState);
+                alert(textStatus);
+            }
+        });
+
     });
-    $('body').on("click",'.addTaskRight',function () {
-        $(this).parent().parent().after(createTaskCard());
-        $(this).parent().parent().parent().find('.task_card').find('.removeTask').show();
 
+    $('body').on("click",'.addTaskRight',function () {
         var aid = $(this).parent().parent().parent().parent().find('.activity_card').attr('data-aid');
-        var tid = tindex-1;
-        addStoryPlusCard(aid,tid);
+        var tcard = $(this).parent().parent();
+        var tnode = this.parentNode.parentNode;
+        var position_L = $(tcard).attr('data-position');
+        var position_R = position_L*3;
+        if(tnode.nextSibling!=null)
+            position_R = tnode.nextSibling.getAttribute('data-position');
+
+        $.ajax({
+            type: "post",
+            url: "/createTask",
+            data:JSON.stringify({"mapId":mapId,"name":'text',"creatorId":userId,"position":(position_L+position_R)/2,"roles":[],"parent":aid}),
+            contentType: "application/json; charset=utf-8",
+            async: false,
+            success: function (task) {
+                var tid = task['data']['id'];
+                $(tcard).after(createTaskCard(tid));
+                $(tcard).parent().find('.task_card').find('.removeTask').show();
+                addStoryPlusCard(aid,tid);
+
+            }, error: function (XMLHttpRequest, textStatus, errorThrown) {
+                alert(XMLHttpRequest.status);
+                alert(XMLHttpRequest.readyState);
+                alert(textStatus);
+            }
+        });
     });
 }
 
@@ -346,6 +582,10 @@ function modifyTaskCard() {
     $('body').on("dblclick",'.task_card',function () {
         var tid = $(this).attr('data-tid');
         var content = $(this).find('.activity_textDiv').html();
+        var creator = $(this).attr('data-creator');
+        var creatAt = $(this).attr('data-creatAt').split(' ')[0];
+        $('#taskCard_creator').text(creator);
+        $('#taskCard_creatAt').text(creatAt);
         $('#taskModal').find('.modal_content').html(content);
         $('#taskModal').attr('data-tid',tid);
 
@@ -373,8 +613,23 @@ function modifyTaskCard() {
     $('#taskModal').on("click",'.saveTask',function () {
         var tid = $('#taskModal').attr('data-tid');
         var content = $('#taskModal').find('.modal_content textarea').val();
-        $('.task_card[data-tid='+tid+']').find('.activity_textDiv').html(content);
-        $('#taskModal').find('.modal_content').html(content);
+
+        $.ajax({
+            type: "post",
+            url: "/modifyTask",
+            data:JSON.stringify({"id":tid,"name":content}),
+            contentType: "application/json; charset=utf-8",
+            async: false,
+            success: function (data) {
+                $('.task_card[data-tid='+tid+']').find('.activity_textDiv').html(content);
+                $('#taskModal').find('.modal_content').html(content);
+
+            }, error: function (XMLHttpRequest, textStatus, errorThrown) {
+                alert(XMLHttpRequest.status);
+                alert(XMLHttpRequest.readyState);
+                alert(textStatus);
+            }
+        });
     });
 
     $('#taskModal').on("click",'.cancelModifyTask',function () {
@@ -394,8 +649,9 @@ function storyCardBind() {
     });
 }
 
-function createStoryCard() {
-    var s = '<div class="story_card" data-sid="'+sindex+'">\n' +
+function createStoryCard(story) {
+    var s = '<div class="story_card" data-sid="'+story['id']+'" data-position="'+story['position']+'" data-creator="' +
+                story['creator']+'" data-creatAt="'+story['createAt']+'">\n' +
         '                            <div class="activity_textDiv">text</div>\n' +
         '                            <div class="story_state todo">Todo</div>\n' +
         '                            <div class="story_estimation"></div>\n' +
@@ -405,13 +661,30 @@ function createStoryCard() {
         '                            <img src="../icons/down-arrow.png" class="add_right_icon addStoryDown"/>\n' +
         '                        </div>' +
         '                        </div>';
-    sindex+=1;
+
     return s;
 }
 
 function addFirstStoryCard() {
     $('body').on("click",'.add_story',function () {
-        $(this).parent().parent().parent().html(createStoryCard());
+        var pdiv = $(this).parent().parent().parent();
+        var tid = $(pdiv).attr('data-tid');
+        var rid = $(pdiv).parent().parent().parent().attr('data-rid');
+
+        $.ajax({
+            type: "post",
+            url: "/createStory",
+            data:JSON.stringify({"mapId":mapId,"name":'text',"creatorId":userId,"position":1,"parent":tid,"status":1,"worktime":2,"release":rid}),
+            contentType: "application/json; charset=utf-8",
+            async: false,
+            success: function (data) {
+                $(pdiv).html(createStoryCard(data));
+            }, error: function (XMLHttpRequest, textStatus, errorThrown) {
+                alert(XMLHttpRequest.status);
+                alert(XMLHttpRequest.readyState);
+                alert(textStatus);
+            }
+        });
     });
 }
 
@@ -419,7 +692,6 @@ function removeStoryCard() {
     $('body').on("click",'.removeStory',function () {
         var slist = $(this).parent().parent().parent()
         var num = $(slist).find('.story_card').length;
-        // var tid = $(this).parent().parent().parent().attr('data-tid');
         $(this).parent().parent().remove();
         if(num==1){
             $(slist).html('<div class="story_plus_card">\n' +
@@ -432,11 +704,55 @@ function removeStoryCard() {
 
 function addNextStoryCard() {
     $('body').on("click",'.addStoryDown',function () {
-        $(this).parent().parent().after(createStoryCard());
+        var tid = $(this).parent().parent().parent().attr('data-tid');
+        var rid = $(this).parent().parent().parent().parent().parent().parent().attr('data-rid');
+        var scard = $(this).parent().parent();
+        var snode = this.parentNode.parentNode;
+        var pUp = $(scard).attr('data-position');
+        var pDown = pUp*3;
+        if(snode.nextSibling!=null)
+            pDown = snode.nextSibling.getAttribute('data-position');
+
+        $.ajax({
+            type: "post",
+            url: "/createStory",
+            data:JSON.stringify({"mapId":mapId,"name":'text',"creatorId":userId,"position":(pUp+pDown)/2,"parent":tid,"status":1,"worktime":2,"release":rid}),
+            contentType: "application/json; charset=utf-8",
+            async: false,
+            success: function (data) {
+                $(scard).after(createStoryCard(data));
+            }, error: function (XMLHttpRequest, textStatus, errorThrown) {
+                alert(XMLHttpRequest.status);
+                alert(XMLHttpRequest.readyState);
+                alert(textStatus);
+            }
+        });
     });
 
     $('body').on("click",'.addStoryUp',function () {
-        $(this).parent().parent().before(createStoryCard());
+        var tid = $(this).parent().parent().parent().attr('data-tid');
+        var rid = $(this).parent().parent().parent().parent().parent().parent().attr('data-rid');
+        var scard = $(this).parent().parent();
+        var snode = this.parentNode.parentNode;
+        var pDown = $(scard).attr('data-position');
+        var pUp = 0;
+        if(snode.previousSibling!=null)
+            pUp = snode.previousSibling.getAttribute('data-position');
+        console.log((pUp+pDown)/2)
+        $.ajax({
+            type: "post",
+            url: "/createStory",
+            data:JSON.stringify({"mapId":mapId,"name":'text',"creatorId":userId,"position":(pUp+pDown)/2,"parent":tid,"status":1,"worktime":2,"release":rid,"roles":[]}),
+            contentType: "application/json; charset=utf-8",
+            async: false,
+            success: function (data) {
+                $(scard).before(createStoryCard(data));
+            }, error: function (XMLHttpRequest, textStatus, errorThrown) {
+                alert(XMLHttpRequest.status);
+                alert(XMLHttpRequest.readyState);
+                alert(textStatus);
+            }
+        });
     });
 }
 
@@ -446,6 +762,10 @@ function modifyStoryCard() {
         var estimation = $(this).find('.story_estimation').html();
         var state = $(this).find('.story_state').html();
         var content = $(this).find('.activity_textDiv').html();
+        var creator = $(this).attr('data-creator');
+        var creatAt = $(this).attr('data-creatAt').split(' ')[0];
+        $('#storyCard_creator').text(creator);
+        $('#storyCard_creatAt').text(creatAt);
 
         $('#storyModal').attr('data-sid',sid);
         $('#story_estimation').val(estimation);
@@ -459,37 +779,52 @@ function modifyStoryCard() {
         var sid = $('#storyModal').attr('data-sid');
         var estimation = $('#story_estimation').val();
         var state = $('#story_state_select').val();
+        var status = story_states.indexOf(state);
         var content = $('#story_content').val();
 
-        var scard = $('.story_card[data-sid='+sid+']');
-        $(scard).find('.story_estimation').html(estimation);
-        $(scard).find('.story_state').html(state);
-        $(scard).find('.story_state').attr('class','story_state '+state.toLowerCase());
-        $(scard).find('.activity_textDiv').html(content);
+        $.ajax({
+            type: "post",
+            url: "/modifyStory",
+            data:JSON.stringify({"id":sid,"name":content,"status":status,"worktime":estimation}),
+            contentType: "application/json; charset=utf-8",
+            async: false,
+            success: function (data) {
+                var scard = $('.story_card[data-sid='+sid+']');
+                $(scard).find('.story_estimation').html(estimation);
+                $(scard).find('.story_state').html(state);
+                $(scard).find('.story_state').attr('class','story_state '+state.toLowerCase());
+                $(scard).find('.activity_textDiv').html(content);
 
-        var tid = $(scard).parent().attr('data-tid');
-        var aid = $(scard).parent().parent().attr('data-aid');
-        var t_estimation = 0;
-        var a_estimation = 0;
-        var sList = $('.story_list[data-tid='+tid+']').find('.story_card');
-        for(var i = 0;i<sList.length;i++){
-            t_estimation+=parseInt(sList.eq(i).find('.story_estimation').html());
-        }
-        sList = $('.story_panel[data-aid='+aid+']').find('.story_card');
-        for(var i = 0;i<sList.length;i++){
-            a_estimation+=parseInt(sList.eq(i).find('.story_estimation').html());
-        }
-        $('.task_card[data-tid='+tid+']').find('.task_estimation').html(t_estimation);
-        $('.activity_card[data-aid='+aid+']').find('.activity_estimation').html(a_estimation);
+                var tid = $(scard).parent().attr('data-tid');
+                var aid = $(scard).parent().parent().attr('data-aid');
+                var t_estimation = 0;
+                var a_estimation = 0;
+                var sList = $('.story_list[data-tid='+tid+']').find('.story_card');
+                for(var i = 0;i<sList.length;i++){
+                    t_estimation+=parseInt(sList.eq(i).find('.story_estimation').html());
+                }
+                sList = $('.story_panel[data-aid='+aid+']').find('.story_card');
+                for(var i = 0;i<sList.length;i++){
+                    a_estimation+=parseInt(sList.eq(i).find('.story_estimation').html());
+                }
 
-        $('#storyModal').modal('hide');
+                $('.task_card[data-tid='+tid+']').find('.task_estimation').html(t_estimation);
+                $('.activity_card[data-aid='+aid+']').find('.activity_estimation').html(a_estimation);
+                $('#storyModal').modal('hide');
+
+            }, error: function (XMLHttpRequest, textStatus, errorThrown) {
+                alert(XMLHttpRequest.status);
+                alert(XMLHttpRequest.readyState);
+                alert(textStatus);
+            }
+        });
     });
 }
 
 
 function addReleaseDiv() {
     $('body').on("click",'.add_release_icon',function () {
-        $(this).parent().before('<div style="margin-top: 15px;" class="release_label" data-rid="'+rindex+'"><span>——Release '+(rindex+1) +
+        $(this).parent().before('<div style="margin-top: 15px;" class="release_label" data-rid="'+rindex+'"><span>——Release '+rindex +
             '            </span><div style="display: inline-block;width: 20px;height: 20px;">\n' +
             '                <img src="../icons/trash.png" class="remove_release"/>\n' +
             '            </div>\n' +
@@ -532,13 +867,200 @@ function removeReleaseDiv() {
 
         var rList = $('.release_div');
         rindex = rList.length;
-        for(var i = 0;i<rindex;i++){
-            var rid_tmp_old = rList.eq(i).attr('data-rid');
-            rList.eq(i).attr('data-rid',i);
-            $('.release_label[data-rid='+rid_tmp_old+']').find('span').text('——Release '+(i+1));
+        for(var i = 1;i<=rindex;i++){
+            var rid_tmp_old = rList.eq(i-1).attr('data-rid');
+            rList.eq(i-1).attr('data-rid',i);
+            $('.release_label[data-rid='+rid_tmp_old+']').find('span').text('——Release '+i);
         }
         if(rindex==1){
             $('.remove_release').hide();
+        }
+    });
+}
+
+
+function getQueryString(name) {
+    var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
+    var reg_rewrite = new RegExp("(^|/)" + name + "/([^/]*)(/|$)", "i");
+    var r = window.location.search.substr(1).match(reg);
+    var q = window.location.pathname.substr(1).match(reg_rewrite);
+    if(r != null){
+        return unescape(r[2]);
+    }else if(q != null){
+        return unescape(q[2]);
+    }else{
+        return null;
+    }
+}
+
+function init() {
+    mapId = getQueryString('mapId');
+
+    $.ajax({
+        type: "get",
+        url: "/getMapCards",
+        data:{"mapId":parseInt(mapId)},
+        async: false,
+        success: function (data) {
+            var dList = data['data'];
+            var rslist = {};
+            var bdiv = '';
+            var rdiv = '';
+            for(var i = 0;i<dList.length;i++){
+                bdiv += '<div class="backlog_div">';
+                var pList = dList[i]['roles'];
+                var aid = dList[i]['id'];
+                var aposition = dList[i]['position'];
+                var aname = dList[i]['name'];
+                var aestimation = dList[i]['worktime'];
+                var acreator = dList[i]['creator'];
+                var acreatAt = dList[i]['createAt'];
+                var tList = dList[i]['tasks'];
+
+                var pdiv = '<div><div style="display: inline-block;" class="person_panel">';
+                for(var j = 0;j<pList.length;j++){
+                    var role = pList[j];
+                    pdiv+='<div class="person_card" data-name="'+role['name']+'" title="'+role['name']+'" data-pid="'+role['id']+'" data-creator="'+role['creatorId']+'" data-creatAt="'+role['createAt']+'">\n' +
+                        '                            <img src="../portraits/'+role['avatar']+'.png" width="30" height="30" class="person_img"/>\n' +
+                        '                            <div class="person_card_operation" style="display: none;">\n' +
+                        '                                <img src="../icons/trash.png" class="remove_person_icon removePerson"/>\n' +
+                        '                            </div>\n' +
+                        '                        </div>';
+                }
+                pdiv+='</div><img class="add_person_card" src="../icons/add_large.png" />\n' +
+                    '                </div>';
+                bdiv+=pdiv;
+
+                bdiv+='<div class="activity_card" data-aid="'+aid+'" data-position="'+aposition+'" data-creator="'+acreator+'" data-creatAt="'+acreatAt+'">\n' +
+                    '                    <div class="activity_textDiv">'+aname+'</div>\n' +
+                    '                    <div class="activity_estimation">'+aestimation+'</div>\n' +
+                    '                    <div class="activity_card_operation" style="display: none;">\n' +
+                    '                    <img src="../icons/left-arrow.png" class="add_left_icon addActivityLeft"/>\n' +
+                    '                    <img src="../icons/trash.png" class="remove_icon removeActivity"/>\n' +
+                    '                    <img src="../icons/right-arrow.png" class="add_right_icon addActivityRight"/>\n' +
+                    '                    </div>\n' +
+                    '                </div>';
+
+                for(var t in rslist){
+                    rslist[t]+= '<div class="backlog_div"><div class="story_panel"  data-aid="'+aid+'" style="margin-left: -5px;">';
+                }
+
+                var tdiv ='<div style="margin-left: -5px;">';
+                for(var k = 0;k<tList.length;k++){
+                    var task = tList[k];
+                    var tid = task['id'];
+                    tdiv+='<div class="task_card" data-tid="'+tid+'" data-position="'+task['position']+'" data-creator="'+task['creator']+'" data-creatAt="'+task['createAt']+'">\n' +
+                        '                        <div class="activity_textDiv">'+task['name']+'</div>\n' +
+                        '                        <div class="task_estimation">'+task['worktime']+'</div>\n' +
+                        '                        <div class="activity_card_operation" style="display: none;">\n' +
+                        '                            <img src="../icons/left-arrow.png" class="add_left_icon addTaskLeft"/>\n' +
+                        '                            <img src="../icons/trash.png" class="remove_icon removeTask" style="display: none;"/>\n' +
+                        '                            <img src="../icons/right-arrow.png" class="add_right_icon addTaskRight"/>\n' +
+                        '                        </div>\n' +
+                        '                    </div>';
+
+                    for(var t in rslist){
+                        rslist[t]+='<div class="story_list" data-tid="'+tid+'">';
+                    }
+
+                    var sList = task['storys'];
+                    for(var m = 0;m<sList.length;m++){
+                        var story = sList[m];
+                        var rid = story['release'];
+                        // var sid = story['id'];
+                        var state = story_states[story['status']];
+
+                        if(rslist[rid]==undefined){
+                            rslist[rid] = '<div style="margin-top: 15px;" data-rid="'+rid+'" class="release_label"><span>——Release '+rid+'</span>\n' +
+                                '            <div style="display: inline-block;width: 20px;height: 20px;">\n' +
+                                '                <img src="../icons/trash.png" class="remove_release" style="display: none;"/>\n' +
+                                '            </div>\n' +
+                                '        </div>\n' +
+                                '        <div class="release_div" data-rid="'+rid+'">'+
+                                '<div class="backlog_div"><div class="story_panel"  data-aid="'+aid+'" style="margin-left: -5px;">'+
+                                '<div class="story_list" data-tid="'+tid+'">';
+                        }
+
+                        rslist[rid]+='<div class="story_card" data-sid="'+story['id']+'" data-position="'+story['position']+'" data-creator="' +
+                            story['creator']+'" data-creatAt="'+story['createAt']+'">\n' +
+                            '                            <div class="activity_textDiv">'+story['name']+'</div>\n' +
+                            '                            <div class="story_state '+state+'">'+state+'</div>\n' +
+                            '                            <div class="story_estimation">'+story['worktime']+'</div>\n' +
+                            '                            <div class="activity_card_operation" style="display: none;">\n' +
+                            '                                <img src="../icons/up-arrow.png" class="add_up_icon addStoryUp"/>\n' +
+                            '                                <img src="../icons/trash.png" class="remove_icon removeStory"/>\n' +
+                            '                                <img src="../icons/down-arrow.png" class="add_right_icon addStoryDown"/>\n' +
+                            '                            </div>\n' +
+                            '                        </div>';
+                    }
+                    for(var t in rslist){
+                        rslist[t]+='</div>';
+                    }
+                }
+                for(var t in rslist){
+                    rslist[t]+='</div></div>';
+                }
+                tdiv+='</div>';
+                bdiv+=tdiv;
+                bdiv+='</div>';
+            }
+            for(var t in rslist){
+                rslist[t]+='</div>';
+                rdiv+=rslist[t];
+                rindex = parseInt(t)+1;
+            }
+            $('.add_backlog').parent().parent().before(bdiv);
+            $('.add_release_icon').parent().before(rdiv);
+
+            var actList = $('.activity_card');
+            for(var i = 0;i<actList.length;i++){
+                var aid = actList.eq(i).attr('data-aid');
+                var tList = actList.eq(i).parent().find('.task_card');
+
+                $('.release_div').each(function () {
+                    var spanel = $(this).find('.story_panel[data-aid='+aid+']');
+                    if(spanel.length<=0){
+                        $(this).append(s);
+                    }
+                });
+
+                for(var j = 0;j<tList.length;j++){
+                    var tid = tList.eq(j).attr('data-tid');
+                    $('.release_div').each(function () {
+                        var sListdiv = $(this).find('.story_list[data-tid='+tid+']');
+                        if(sListdiv.length<=0){
+                            $(this).find('.story_panel[data-aid='+aid+']').append('<div class="story_list" data-tid="'+tid+'"><div class="story_plus_card">' +
+                                '                                <div style="margin-top: 2px;text-align: center;">' +
+                                '                                <img class="add_story" src="../icons/add_large.png" /></div>' +
+                                '                                </div>' +
+                                '                                 </div>')
+                        }
+
+                        if($(sListdiv).find('.story_card').length<=0&&$(sListdiv).find('.story_plus_card').length<=0){
+                            $(sListdiv).html('<div class="story_plus_card">' +
+                                '                                <div style="margin-top: 2px;text-align: center;">' +
+                                '                                <img class="add_story" src="../icons/add_large.png" /></div>' +
+                                '                                </div>');
+                        }
+                    });
+                }
+            }
+
+            $('.release_div').each(function () {
+                var rh = $(this).height() - 20;
+                var s = '<div class="backlog_div">\n' +
+                    '                <div class="story_panel" style="height: '+rh+'px;" style="margin-left: -5px;">\n' +
+                    '                    <div class="story_plus_card" style="margin-left: 5px;">\n' +
+                    '                    </div>\n' +
+                    '                </div>\n' +
+                    '            </div>';
+                $(this).append(s);
+            });
+
+        }, error: function (XMLHttpRequest, textStatus, errorThrown) {
+            alert(XMLHttpRequest.status);
+            alert(XMLHttpRequest.readyState);
+            alert(textStatus);
         }
     });
 }
