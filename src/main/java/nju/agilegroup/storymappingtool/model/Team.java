@@ -27,6 +27,7 @@ public class Team {
 //    private Set<User> users;
 
     @ManyToMany(cascade=CascadeType.ALL,fetch=FetchType.LAZY)
+    @JoinTable(name = "team_users")
     private Set<User> users = new HashSet<>();
 
 
@@ -58,9 +59,7 @@ public class Team {
         return leader_id;
     }
 
-    public void setLeader(int leader_id) {
-        this.leader_id = leader_id;
-    }
+
 
     public String getDescription() {
         return description;
