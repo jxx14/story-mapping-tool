@@ -1,7 +1,6 @@
 package nju.agilegroup.storymappingtool.view;
 
 import nju.agilegroup.storymappingtool.model.Team;
-import nju.agilegroup.storymappingtool.model.User;
 
 import java.util.Set;
 
@@ -13,6 +12,7 @@ public class TeamInfo {
     private int leader;
     private String leader_name;
     private Set<AccountInfo> accountInfos;
+    private Set<MapInfo> mapInfos;
 
 
     public TeamInfo() {
@@ -71,12 +71,21 @@ public class TeamInfo {
         this.accountInfos = accountInfos;
     }
 
-    public TeamInfo(int id, String name, String description, int leader, String leader_name, Set<AccountInfo> accountInfos) {
+    public Set<MapInfo> getMapInfos() {
+        return mapInfos;
+    }
+
+    public void setMapInfos(Set<MapInfo> mapInfos) {
+        this.mapInfos = mapInfos;
+    }
+
+    public TeamInfo(int id, String name, String description, int leader, String leader_name, Set<AccountInfo> accountInfos, Set<MapInfo> mapInfos) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.leader = leader;
         this.leader_name = leader_name;
         this.accountInfos = accountInfos;
+        this.mapInfos = mapInfos;
     }
 }
