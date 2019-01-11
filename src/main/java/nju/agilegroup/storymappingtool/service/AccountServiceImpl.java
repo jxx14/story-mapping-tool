@@ -63,9 +63,44 @@ public class AccountServiceImpl implements AccountService {
         }if (!usersGetByName.isEmpty()) {
             return new ResultInfo<>(false, "Username already exists", null);
         }
+
         accountDAO.save(account.toUser());
 
+        User user = accountDAO.getUserByEmail(email);
+
+        Team team = new Team();
+        team.setName(account.getName()+"'s team");
+        team.setDescription(account.getName()+"'s team");
+        team.setLeader_id(user.getId());
+        teamDAO.saveAndFlush(team);
+
+//        user.getTeams().add(team);
+//        accountDAO.saveAndFlush(user);
+        team.getUsers().add(user);
+        teamDAO.saveAndFlush(team);
         return new ResultInfo<>(true, "Registered successfully", null);
+
+
+    }
+
+    @Override
+    public ResultInfo<Object> joinTeam(String userName, String teamName) {
+        Team team = teamDAO.getTeamByName(teamName);
+        User user = accountDAO.getUserByName(userName);
+
+        user.getTeams().add(team);
+        accountDAO.saveAndFlush(user);
+        return new ResultInfo<>(true, "success",user.getTeams());
+    }
+
+
+    @Override
+    public ResultInfo<Object> leaveTeam(String userName, String teamName) {
+        Team team = teamDAO.getTeamByName(teamName);
+        User user = accountDAO.getUserByName(userName);
+        user.getTeams().remove(team);
+        accountDAO.saveAndFlush(user);
+        return new ResultInfo<>(true, "success",user);
     }
 
     @Override
@@ -122,23 +157,4 @@ public class AccountServiceImpl implements AccountService {
         return new ResultInfo<>(true, "success",ifs);
     }
 
-    @Override
-    public ResultInfo<Object> joinTeam(String userName, String teamName) {
-        Team team = teamDAO.getTeamByName(teamName);
-        User user = accountDAO.getUserByName(userName);
-
-        user.getTeams().add(team);
-        accountDAO.saveAndFlush(user);
-        return new ResultInfo<>(true, "success",user.getTeams());
-    }
-
-
-    @Override
-    public ResultInfo<Object> deleteUser(String userName, String teamName) {
-        Team team = teamDAO.getTeamByName(teamName);
-        User user = accountDAO.getUserByName(userName);
-        user.getTeams().remove(team);
-        accountDAO.saveAndFlush(user);
-        return new ResultInfo<>(true, "success",user);
-    }
 }

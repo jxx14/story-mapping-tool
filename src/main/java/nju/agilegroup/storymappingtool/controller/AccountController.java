@@ -61,10 +61,10 @@ public class AccountController {
     }
 
 
-    //删除成员
-    @RequestMapping(value = "/deleteUser", method = RequestMethod.POST)
-    public ResultInfo<Object> deleteUser(@RequestParam String userName,@RequestParam String teamName) {
-        return accountService.deleteUser(userName,teamName);
+    //离开团队
+    @RequestMapping(value = "/leaveTeam", method = RequestMethod.POST)
+    public ResultInfo<Object> leaveTeam(@RequestParam String userName,@RequestParam String teamName) {
+        return accountService.leaveTeam(userName,teamName);
     }
 
     //未实现

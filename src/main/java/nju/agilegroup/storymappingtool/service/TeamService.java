@@ -22,5 +22,8 @@ public interface TeamService {
     //参数团队信息，修改团队
     ResultInfo<Object> modifyTeamInfo(HttpSession session, TeamInfo teamInfo,int teamID);
 
-    ResultInfo<Object> addUser(String userName, String teamName);
+    ResultInfo<Object> addMember(String userName, String teamName);
+
+    ResultInfo<Object> deleteMember(String userName, String teamName);
+
 }
