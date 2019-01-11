@@ -94,7 +94,7 @@ public class CardServiceImpl implements CardService{
                             storyInfo.setPosition(story.getPosition());
                             storyInfo.setRelease(story.getRelease());
                             storyInfo.setStatus(story.getStatus());
-                            story.setWorktime(story.getWorktime());
+                            storyInfo.setWorktime(story.getWorktime());
                             storys.add(storyInfo);
                             taskWorktime += storyInfo.getWorktime();
                         }

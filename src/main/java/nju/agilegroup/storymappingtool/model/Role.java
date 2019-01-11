@@ -26,7 +26,7 @@ public class Role {
     @Column(name = "activity_id")
     private int activityId;
 
-    @ManyToOne(optional = false, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(optional = false, fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @JoinColumn(name = "creator_id")
     private User creator;
 
