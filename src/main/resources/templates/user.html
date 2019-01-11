@@ -31,11 +31,11 @@
             <img th:src="@{icons/user.svg}" alt="">
             <div class="item">
                 <img th:src="@{icons/name.svg}" alt="" th:title="name">
-                <span>Agile</span>
+                <span id="userName"></span>
             </div>
             <div class="item">
                 <img th:src="@{icons/email.svg}" alt="" th:title="email">
-                <span>1290000000@qq.com</span>
+                <span id="userEmail"></span>
             </div>
         </div>
 
@@ -57,8 +57,8 @@
                                     Edit<b class="caret"></b>
                                 </a>
                                 <ul class="dropdown-menu">
-                                    <li><a data-toggle="modal" data-target="#mapCreateModal" href="javascript:void(0)">New a map</a></li>
-                                    <li><a data-toggle="tab" href="#">Invite a member</a></li>
+                                    <li><a href="map-create">New a map</a></li>
+                                    <li><a data-toggle="tab">Invite a member</a></li>
                                 </ul>
                             </li>
                         </ul>
@@ -124,33 +124,6 @@
     </div>
 </div>
 
-<div class="modal fade" id="mapCreateModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
-                    &times;
-                </button>
-                <h4 class="modal-title" id="myModalLabel">
-                    New a map
-                </h4>
-            </div>
-            <div class="modal-body">
-                <form class="input-container">
-                    <input type="text" name="name" class="form-control text-input name" placeholder="Input the name of the map">
-                    <span class="help-block has-error" id="nameCheckMessage"></span>
-                    <textarea name="description" class="form-control text-input description" placeholder="Input the description of the map"></textarea>
-                    <span class="help-block has-error" id="descCheckMessage"></span>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-                <button type="button" class="btn btn-primary">提交更改</button>
-            </div>
-        </div>
-    </div>
-</div>
-
 <div id="tip"></div>
 
 <script th:src="@{js/jquery-3.2.1.min.js}"></script>
@@ -159,9 +132,32 @@
 <script th:src="@{js/account.js}"></script>
 
 <script>
-    function toMapCreatePage() {
-        window.location = '/map-create';
-    }
+    $.ajax({
+        url: '/listUserInfo',
+        method: 'post',
+        success : function (result) {
+            if (result.success) {
+                const info = result.data;
+                $('#userName').text(info.name);
+                $('#userEmail').text(info.email);
+            } else {
+                showTip($('#tip'), result.message);
+                $('#userName').text('UNKNOWN');
+                $('#userEmail').text('UNKNOWN');
+            }
+        },
+        error: function (result) {
+            showTip($('#tip'), result);
+        }
+    });
+
+    $.ajax({
+        url: '/getTeams',
+        method: 'post',
+        success: function (result) {
+            console.log(result);
+        }
+    })
 </script>
 
 
