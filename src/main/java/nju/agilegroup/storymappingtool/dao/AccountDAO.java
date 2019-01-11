@@ -3,9 +3,10 @@ package nju.agilegroup.storymappingtool.dao;
 import nju.agilegroup.storymappingtool.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
-
+@Repository
 public interface AccountDAO  extends JpaRepository<User, Integer> {
 
     List<User> findAllByEmailAndPassword(String email, String password);
@@ -13,6 +14,8 @@ public interface AccountDAO  extends JpaRepository<User, Integer> {
     List<User> findAllByEmail(String email);
 
     List<User> findAllByName(String name);
+
+    User getUserById(int id);
 
     User getUserByEmail(String email);
 

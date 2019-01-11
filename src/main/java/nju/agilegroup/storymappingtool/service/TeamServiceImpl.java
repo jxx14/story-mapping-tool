@@ -4,15 +4,12 @@ import nju.agilegroup.storymappingtool.dao.AccountDAO;
 import nju.agilegroup.storymappingtool.dao.TeamDAO;
 import nju.agilegroup.storymappingtool.model.Team;
 import nju.agilegroup.storymappingtool.model.User;
-import nju.agilegroup.storymappingtool.view.AccountInfo;
 import nju.agilegroup.storymappingtool.view.ResultInfo;
 import nju.agilegroup.storymappingtool.view.TeamInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpSession;
-import java.util.ArrayList;
-import java.util.List;
 
 @Service
 public class TeamServiceImpl implements TeamService{
@@ -29,7 +26,12 @@ public class TeamServiceImpl implements TeamService{
 
     @Override
     public ResultInfo<Object> getTeamInfo(HttpSession session, int id) {
-        return new ResultInfo<>(true,"team information",teamDAO.getTeamById(id));
+        Team team =teamDAO.getTeamById(id);
+
+        TeamInfo info =new TeamInfo();
+        info.setDescription(team.getDescription());
+        info.setName(team.getName());
+        return new ResultInfo<>(true,"team information",info);
     }
 
 //    @Override
@@ -41,7 +43,11 @@ public class TeamServiceImpl implements TeamService{
 
     @Override
     public ResultInfo<Object> addTeam(HttpSession session, TeamInfo teamInfo) {
-        return new ResultInfo<>(true,"create team",teamDAO.save(teamInfo.toTeam()));
+        Team team = new Team();
+        team.setDescription(teamInfo.getDescription());
+        team.setName(teamInfo.getName());
+        teamDAO.saveAndFlush(team);
+        return new ResultInfo<>(true,"create team",Tool.teamToInfo(team));
     }
 
     @Override
@@ -49,7 +55,9 @@ public class TeamServiceImpl implements TeamService{
         Team team = teamDAO.getTeamById(TeamID);
         team.setDescription(teamInfo.getDescription());
         team.setName(teamInfo.getName());
-        return new ResultInfo<>(true,"modify team information", teamDAO.saveAndFlush(team));
+        teamDAO.saveAndFlush(team);
+
+        return new ResultInfo<>(true,"modify team information", Tool.teamToInfo(team));
     }
 
     @Override
@@ -60,7 +68,7 @@ public class TeamServiceImpl implements TeamService{
         team.getUsers().add(user);
         teamDAO.saveAndFlush(team);
 
-        return new ResultInfo<>(true, "success",userToInfo(team));
+        return new ResultInfo<>(true, "success",Tool.usersToInfos(team));
     }
 
 
@@ -72,19 +80,8 @@ public class TeamServiceImpl implements TeamService{
         team.getUsers().remove(user);
         teamDAO.saveAndFlush(team);
 
-        return new ResultInfo<>(true, "success",userToInfo(team));
+        return new ResultInfo<>(true, "success",Tool.usersToInfos(team));
     }
 
-
-    private static List<AccountInfo> userToInfo(Team team){
-        List<AccountInfo> ifs = new ArrayList<>();
-        for (User user1 : team.getUsers()) {
-            AccountInfo info = new AccountInfo();
-            info.setName(user1.getName());
-            info.setEmail(user1.getEmail());
-            ifs.add(info);
-        }
-        return ifs;
-    }
 
 }
