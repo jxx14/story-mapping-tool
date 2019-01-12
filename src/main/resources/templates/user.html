@@ -79,7 +79,7 @@
                             Edit<b class="caret"></b>
                         </a>
                         <ul class="dropdown-menu">
-                            <li><a href="map-create">New a map</a></li>
+                            <li><a href="map-create?leaderId={{team.leader}}&teamId={{team.id}}">New a map</a></li>
                             <!--<li><a data-toggle="tab">Invite a member</a></li>-->
                         </ul>
                     </li>
@@ -137,6 +137,8 @@
                             }
                             team['members'] = members;
                         }
+
+                        console.log(teams);
 
                         let myTeams = [];
                         let joinTeams = [];
