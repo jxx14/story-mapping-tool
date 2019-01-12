@@ -60,6 +60,7 @@
 <div id="tip"></div>
 
 <script th:src="@{js/jquery-3.2.1.min.js}"></script>
+<script th:src="@{js/jquerysession.js}"></script>
 <script th:src="@{js/bootstrap.min.js}"></script>
 <script th:src="@{js/template-web.js}"></script>
 <script th:src="@{js/util.js}"></script>
@@ -101,7 +102,7 @@
                 <img src="../icons/map.svg" alt="" title="story mappings">
                 <div class="map-list">
                     {{each team.mapInfos map}}
-                        <a href="/storymap">{{map.name}}</a>
+                        <a href="javascript:showMap({{map.id}})">{{map.name}}</a>
                     {{/each}}
                 </div>
             </div>
@@ -138,8 +139,6 @@
                             team['members'] = members;
                         }
 
-                        console.log(teams);
-
                         let myTeams = [];
                         let joinTeams = [];
                         for (let i = 0; i < teams.length; ++i) {
@@ -165,6 +164,11 @@
             showTip($('#tip'), result);
         }
     });
+
+    function showMap(mapId) {
+        $.session.set("mapId", mapId);
+        window.location = "/storymap";
+    }
 </script>
 
 
