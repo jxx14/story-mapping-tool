@@ -289,7 +289,11 @@ public class CardServiceImpl implements CardService{
 
     @Override
     public ResultInfo<Object> removeRoleFromActivity(HttpSession session, RoleInfo roleInfo, int activiyId) {
-        roleDAO.delete(roleInfo.getId());
+        try{
+            roleDAO.delete(roleInfo.getId());
+        } catch (Exception e){
+            return new ResultInfo<>(true, "fail", "角色不存在");
+        }
 
         ActivityCard card = activityCardDAO.findOne(activiyId);
         List<Role> roles = roleDAO.findByActivtiyId(activiyId);

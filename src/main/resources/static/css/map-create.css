@@ -1,0 +1,42 @@
+.title {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.text-input {
+    margin-bottom: 2rem;
+}
+
+.map-container {
+    margin-top: 10rem;
+}
+
+.input-container {
+    position: relative;
+    width: 50%;
+    left: 25%;
+}
+
+.input-container .name {
+    background: url("../icons/name.svg") no-repeat 0.7rem center;
+    background-size: 1.5rem;
+    padding-left: 3rem;
+}
+
+.input-container .description {
+    background: url("../icons/description.svg") no-repeat 0.7rem 1rem;
+    background-size: 1.5rem;
+    padding-left: 3rem;
+}
+
+.button-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 2rem;
+}
+
+.button {
+    margin: 0 2rem 2rem 0;
+    width: 8rem;
+}
+

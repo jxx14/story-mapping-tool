@@ -17,6 +17,11 @@ public class ViewController {
         return "user";
     }
 
+    @RequestMapping(value = "/map-create")
+    public String getMapCreateView() {
+        return "map_create";
+    }
+
     @RequestMapping(value = "/login")
     public String getLoginView(){
         return "login";
