@@ -280,7 +280,12 @@ public class CardServiceImpl implements CardService{
         User creator = accountDAO.findOne(roleInfo.getCreatorId());
         role.setCreator(creator);
         role.setCreateAt(new Timestamp(System.currentTimeMillis()));
-        roleDAO.save(role);
+        try{
+            roleDAO.save(role);
+        } catch (Exception e){
+            return new ResultInfo<>(false, "fail", "保存失败，请检查字段是否填写完整");
+        }
+
 
         List<Role> roles = roleDAO.findByActivtiyId(activiyId);
 

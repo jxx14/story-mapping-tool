@@ -75,7 +75,7 @@ public class MapServiceImpl implements MapService{
 
             return new ResultInfo<>(true, "success", info);
         } catch (Exception e){
-            e.printStackTrace();
+//            e.printStackTrace();
         }
 
         return new ResultInfo<>(false, "保存失败", "错误信息");
