@@ -44,81 +44,14 @@
                 <h3 class="container-title">My Team</h3>
                 <div class="bar"></div>
                 <hr>
-
-                <div class="team-info">
-                    <div class="title-container">
-                        <div class="item">
-                            <img th:src="@{icons/star.svg}" alt="" title="team name">
-                            <span><strong>Agile Team</strong></span>
-                        </div>
-                        <ul class="nav nav-pills">
-                            <li class="dropdown all-camera-dropdown">
-                                <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                                    Edit<b class="caret"></b>
-                                </a>
-                                <ul class="dropdown-menu">
-                                    <li><a href="map-create">New a map</a></li>
-                                    <li><a data-toggle="tab">Invite a member</a></li>
-                                </ul>
-                            </li>
-                        </ul>
-                    </div>
-                    <div class="item">
-                        <img th:src="@{icons/leader.svg}" alt="" title="leader">
-                        <span>Agile</span>
-                    </div>
-                    <div class="item">
-                        <img th:src="@{icons/team.svg}" alt="" title="team members">
-                        <span>Agile, Zhang San, Li Si</span>
-                    </div>
-                    <div class="item">
-                        <img th:src="@{icons/description.svg}" alt="" title="description">
-                        <span>An Agile Team</span>
-                    </div>
-                    <div class="item">
-                        <img th:src="@{icons/map.svg}" alt="" title="story mappings">
-                        <div class="map-list">
-                            <a href="/storymap">Story Map 1</a>
-                            <a href="/storymap">Story Map 2</a>
-                            <a href="/storymap">Story Map 3</a>
-                        </div>
-                    </div>
-                </div>
+                <div id="myTeamList"></div>
             </div>
 
             <div class="row team-container">
                 <h3 class="container-title">Join Team</h3>
                 <div class="bar"></div>
                 <hr>
-
-                <div class="team-info col-md-5 col-sm-11">
-                    <div class="title-container">
-                        <div class="item">
-                            <img th:src="@{icons/star.svg}" alt="" title="team name">
-                            <span><strong>Agile Team</strong></span>
-                        </div>
-                    </div>
-                    <div class="item">
-                        <img th:src="@{icons/leader.svg}" alt="" title="leader">
-                        <span>Agile</span>
-                    </div>
-                    <div class="item">
-                        <img th:src="@{icons/team.svg}" alt="" title="team members">
-                        <span>Agile, Zhang San, Li Si</span>
-                    </div>
-                    <div class="item">
-                        <img th:src="@{icons/description.svg}" alt="" title="description">
-                        <span>An Agile Team</span>
-                    </div>
-                    <div class="item">
-                        <img th:src="@{icons/map.svg}" alt="" title="story mappings">
-                        <div class="map-list">
-                            <a href="/storymap">Story Map 1</a>
-                            <a href="/storymap">Story Map 2</a>
-                            <a href="/storymap">Story Map 3</a>
-                        </div>
-                    </div>
-                </div>
+                <div id="joinTeamList"></div>
             </div>
         </div>
     </div>
@@ -128,8 +61,53 @@
 
 <script th:src="@{js/jquery-3.2.1.min.js}"></script>
 <script th:src="@{js/bootstrap.min.js}"></script>
+<script th:src="@{js/template-web.js}"></script>
 <script th:src="@{js/util.js}"></script>
 <script th:src="@{js/account.js}"></script>
+
+<script id="teamListTpl" type="text/html">
+    {{each teamList team}}
+        <div class="team-info">
+            <div class="title-container">
+                <div class="item">
+                    <img src="../icons/star.svg" alt="" title="team name">
+                    <span><strong>{{team.name}}</strong></span>
+                </div>
+                <ul class="nav nav-pills">
+                    <li class="dropdown all-camera-dropdown">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                            Edit<b class="caret"></b>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a href="map-create">New a map</a></li>
+                            <!--<li><a data-toggle="tab">Invite a member</a></li>-->
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+            <div class="item">
+                <img src="../icons/leader.svg" alt="" title="leader">
+                <span>{{team.leader_name}}</span>
+            </div>
+            <div class="item">
+                <img src="../icons/team.svg" alt="" title="team members">
+                <span>{{team.members}}</span>
+            </div>
+            <div class="item">
+                <img src="../icons/description.svg" alt="" title="description">
+                <span>{{team.description}}</span>
+            </div>
+            <div class="item">
+                <img src="../icons/map.svg" alt="" title="story mappings">
+                <div class="map-list">
+                    {{each team.mapInfos map}}
+                        <a href="/storymap">{{map.name}}</a>
+                    {{/each}}
+                </div>
+            </div>
+        </div>
+    {{/each}}
+</script>
 
 <script>
     $.ajax({
@@ -140,6 +118,41 @@
                 const info = result.data;
                 $('#userName').text(info.name);
                 $('#userEmail').text(info.email);
+
+                $.ajax({
+                    url: '/getTeams',
+                    method: 'post',
+                    success: function (result) {
+                        const teams = result.data;
+                        for (let i = 0; i < teams.length; ++i) {
+                            let team = teams[i];
+                            let members = '';
+
+                            let accounts = team['accountInfos'];
+                            for (let j = 0; j < accounts.length - 1; ++j) {
+                                members += accounts[j].name + ', ';
+                            }
+                            if (accounts.length > 0) {
+                                members += accounts[accounts.length - 1].name;
+                            }
+                            team['members'] = members;
+                        }
+
+                        let myTeams = [];
+                        let joinTeams = [];
+                        for (let i = 0; i < teams.length; ++i) {
+                            let team = teams[i];
+                            if (team['leader_name'] === info.name) {
+                                myTeams.push(team);
+                            } else {
+                                joinTeams.push(team);
+                            }
+                        }
+
+                        document.getElementById('myTeamList').innerHTML = template('teamListTpl', {teamList: myTeams});
+                        document.getElementById('joinTeamList').innerHTML = template('teamListTpl', {teamList: joinTeams});
+                    }
+                });
             } else {
                 showTip($('#tip'), result.message);
                 $('#userName').text('UNKNOWN');
@@ -150,14 +163,6 @@
             showTip($('#tip'), result);
         }
     });
-
-    $.ajax({
-        url: '/getTeams',
-        method: 'post',
-        success: function (result) {
-            console.log(result);
-        }
-    })
 </script>
 
 
