@@ -55,6 +55,7 @@ public class Tool {
         Set<TeamInfo> ifs = new HashSet<>();
         for (Team team : teams) {
             TeamInfo info = new TeamInfo();
+            info.setId(team.getId());
             info.setName(team.getName());
             info.setDescription(team.getDescription());
 
