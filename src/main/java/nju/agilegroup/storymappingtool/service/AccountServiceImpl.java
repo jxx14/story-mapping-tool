@@ -12,20 +12,20 @@ import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class AccountServiceImpl implements AccountService {
 
     private static final String USER_KEY = "USER_NAME";
 
-    private final AccountDAO accountDAO;
-    private final TeamDAO teamDAO;
     @Autowired
-    public AccountServiceImpl(AccountDAO accountDAO, TeamDAO teamDAO) {
-        this.accountDAO = accountDAO;
-        this.teamDAO = teamDAO;
-    }
+    private  AccountDAO accountDAO;
+    @Autowired
+    private TeamDAO teamDAO;
+
 
     @Override
     public ResultInfo<Object> login(HttpSession session, AccountInfo account) {
@@ -90,7 +90,8 @@ public class AccountServiceImpl implements AccountService {
 
         user.getTeams().add(team);
         accountDAO.saveAndFlush(user);
-        return new ResultInfo<>(true, "success",user.getTeams());
+
+        return new ResultInfo<>(true, "success",Tool.teamsToInfos(user.getTeams()));
     }
 
 
@@ -100,17 +101,15 @@ public class AccountServiceImpl implements AccountService {
         User user = accountDAO.getUserByName(userName);
         user.getTeams().remove(team);
         accountDAO.saveAndFlush(user);
-        return new ResultInfo<>(true, "success",user);
+
+        return new ResultInfo<>(true, "success", Tool.teamsToInfos(user.getTeams()));
     }
 
     @Override
     public ResultInfo<Object> getUserInfo(HttpSession session) {
         String email=(String)session.getAttribute(USER_KEY);
         User user = accountDAO.getUserByEmail(email);
-        AccountInfo accountInfo = new AccountInfo();
-        accountInfo.setEmail(email);
-        accountInfo.setName(user.getName());
-        return new ResultInfo<>(true,"user information",accountInfo );
+        return new ResultInfo<>(true,"user information",Tool.userToInfo(user) );
     }
 
     @Override
@@ -119,7 +118,9 @@ public class AccountServiceImpl implements AccountService {
         User user = accountDAO.getUserByEmail(email);
         user.setEmail(account.getEmail());
         user.setName(account.getName());
-        return new ResultInfo<>(true,"modify user information", accountDAO.saveAndFlush(user));
+        accountDAO.saveAndFlush(user);
+
+        return new ResultInfo<>(true,"modify user information", Tool.userToInfo(user));
     }
 
     @Override
@@ -129,32 +130,17 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public ResultInfo<Object> getTeamMembers(HttpSession session, int id) {
-        List<User> users = accountDAO.getTeamMembers(id);
-        List<AccountInfo> ifs = new ArrayList<>();
-        for (User user : users) {
-            AccountInfo info = new AccountInfo();
-            info.setName(user.getName());
-            info.setEmail(user.getEmail());
-            ifs.add(info);
-        }
-        return new ResultInfo<>(true, "success", ifs);
+        Team team = teamDAO.getTeamById(id);
+        return new ResultInfo<>(true, "success",Tool.usersToInfos(team));
     }
 
     @Override
     public ResultInfo<Object> getTeams(HttpSession session) {
         String email=(String)session.getAttribute(USER_KEY);
         User user =  accountDAO.getUserByEmail(email);
-        List<Team> teams = teamDAO.getTeamsByUserId(user.getId());
+        Set<Team> teams = teamDAO.getTeamsByUserId(user.getId());
 
-        List<TeamInfo> ifs = new ArrayList<>();
-        for (Team team : teams) {
-            TeamInfo info = new TeamInfo();
-            info.setName(team.getName());
-            info.setDescription(team.getDescription());
-            info.setLeader(team.getLeader_id());
-            ifs.add(info);
-        }
-        return new ResultInfo<>(true, "success",ifs);
+        return new ResultInfo<>(true, "success",Tool.teamsToInfos(teams));
     }
 
 }

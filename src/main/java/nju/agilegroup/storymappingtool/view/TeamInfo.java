@@ -2,24 +2,33 @@ package nju.agilegroup.storymappingtool.view;
 
 import nju.agilegroup.storymappingtool.model.Team;
 
+import java.util.Set;
+
 public class TeamInfo {
 
+    private int id;
     private String name;
-    private int leader;
     private String description;
+    private int leader;
+    private String leader_name;
+    private Set<AccountInfo> accountInfos;
+    private Set<MapInfo> mapInfos;
+
 
     public TeamInfo() {
     }
 
 
-    public TeamInfo(String name, int leader, String description) {
-        this.name = name;
-        this.leader = leader;
-        this.description = description;
-    }
-
     public Team toTeam() {
         return new Team(name, leader,description);
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getName() {
@@ -30,6 +39,14 @@ public class TeamInfo {
         this.name = name;
     }
 
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
     public int getLeader() {
         return leader;
     }
@@ -38,11 +55,37 @@ public class TeamInfo {
         this.leader = leader;
     }
 
-    public String getDescription() {
-        return description;
+    public String getLeader_name() {
+        return leader_name;
     }
 
-    public void setDescription(String description) {
+    public void setLeader_name(String leader_name) {
+        this.leader_name = leader_name;
+    }
+
+    public Set<AccountInfo> getAccountInfos() {
+        return accountInfos;
+    }
+
+    public void setAccountInfos(Set<AccountInfo> accountInfos) {
+        this.accountInfos = accountInfos;
+    }
+
+    public Set<MapInfo> getMapInfos() {
+        return mapInfos;
+    }
+
+    public void setMapInfos(Set<MapInfo> mapInfos) {
+        this.mapInfos = mapInfos;
+    }
+
+    public TeamInfo(int id, String name, String description, int leader, String leader_name, Set<AccountInfo> accountInfos, Set<MapInfo> mapInfos) {
+        this.id = id;
+        this.name = name;
         this.description = description;
+        this.leader = leader;
+        this.leader_name = leader_name;
+        this.accountInfos = accountInfos;
+        this.mapInfos = mapInfos;
     }
 }
