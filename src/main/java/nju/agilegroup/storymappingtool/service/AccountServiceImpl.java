@@ -30,7 +30,7 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public ResultInfo<Object> login(HttpSession session, AccountInfo account) {
         if (session.getAttribute(USER_KEY) != null) {
-            return new ResultInfo<>(true, "You are already logged in,no need to repeat login", null);
+            return new ResultInfo<>(true, "You are already logged in,no need to repeat login", Tool.userToInfo(accountDAO.getUserByEmail((String)session.getAttribute(USER_KEY))) );
         }
 
         String email = account.getEmail();
@@ -38,9 +38,10 @@ public class AccountServiceImpl implements AccountService {
         List<User> accounts = accountDAO.findAllByEmailAndPassword(email, password);
         boolean isAccountValid = accounts != null && accounts.size() == 1;
 
+
         if (isAccountValid) {
             session.setAttribute(USER_KEY, email);
-            return new ResultInfo<>(true, "Login successfully", null);
+            return new ResultInfo<>(true, "Login successfully", Tool.userToInfo(accounts.get(0)) );
         } else {
             return new ResultInfo<>(false, "Account and password do not match", null);
         }

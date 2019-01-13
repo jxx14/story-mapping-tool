@@ -10,6 +10,17 @@
     <link rel="stylesheet" th:href="@{css/bootstrap.min.css}"/>
     <link rel="stylesheet" th:href="@{css/bootstrapValidator.min.css}"/>
     <link rel="stylesheet" th:href="@{css/login.css}">
+
+    <script th:src="@{js/jquery-3.2.1.min.js}"></script>
+    <script th:src="@{js/jquerysession.js}"></script>
+
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        if($.session.get('userId')!=null){
+            window.location.href="/user";
+        }
+        /*]]>*/
+    </script>
 </head>
 <body>
 <div class="container login-container">
@@ -37,7 +48,6 @@
 <img th:src="@{portraits/background.jpg}" class="background"/>
 <div id="tip"></div>
 
-<script th:src="@{js/jquery-3.2.1.min.js}"></script>
 <script th:src="@{js/bootstrap.min.js}"></script>
 <script th:src="@{js/bootstrapValidator.min.js}"></script>
 <script th:src="@{js/util.js}"></script>
@@ -83,13 +93,17 @@
                 contentType: 'application/json',
                 data: JSON.stringify({ "email": email, "password": pwd }),
                 success: function (result) {
+                    console.log(result.data)
                     if (result.success) {
+                        $.session.set("userId", result.data['id']);
+                        $.session.set("username", result.data['name']);
                         window.location= '/user';
                     } else {
                         showTip($('#tip'), result.message, 'white');
                     }
                 },
                 error: function (message) {
+
                     showTip($('#tip'), message, 'white');
                 }
             })

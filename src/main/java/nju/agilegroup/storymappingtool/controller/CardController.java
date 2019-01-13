@@ -30,7 +30,7 @@ public class CardController {
      * @param mapId
      * @return
      */
-    @RequestMapping(value = "/getMapCards", method = RequestMethod.GET)
+    @RequestMapping(value = "/getMapCards", method = RequestMethod.POST)
     public ResultInfo<Object> getMap(HttpServletRequest request, @RequestParam int mapId){
         HttpSession session = request.getSession();
         return cardService.getCardsOfMap(session, mapId);

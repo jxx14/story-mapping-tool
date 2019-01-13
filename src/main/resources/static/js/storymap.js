@@ -7,13 +7,22 @@ var edit_activity = false;
 var edit_task = false;
 var story_states = ['ready','todo','doing','done'];
 var mapId;
-var userId = 1;
+var userId;
+var username;
 
 $(function(){
     init();
+
     $('#back_icon').click(function () {
         window.history.go(-1);
     });
+    $('#nav_logout_li').click(function () {
+        logout();
+    });
+
+    userId = $.session.get('userId');
+    username = $.session.get('username');
+    $('#nav_user_li').html(username);
     
     $('.add_backlog').on("click",function () {
         var tcard = $(this).parent().parent();
@@ -894,10 +903,11 @@ function getQueryString(name) {
 }
 
 function init() {
-    mapId = getQueryString('mapId');
+    // mapId = getQueryString('mapId');
+    mapId =  $.session.get("mapId");
 
     $.ajax({
-        type: "get",
+        type: "post",
         url: "/getMapCards",
         data:{"mapId":parseInt(mapId)},
         async: false,
