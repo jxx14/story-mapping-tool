@@ -4,6 +4,7 @@ import nju.agilegroup.storymappingtool.model.User;
 
 public class AccountInfo {
 
+    private int id;
     private String name;
     private String email;
     private String password;
@@ -11,7 +12,8 @@ public class AccountInfo {
     public AccountInfo() {
     }
 
-    public AccountInfo(String name, String email, String password) {
+    public AccountInfo(int id, String name, String email, String password) {
+        this.id = id;
         this.name = name;
         this.email = email;
         this.password = password;
@@ -19,6 +21,14 @@ public class AccountInfo {
 
     public User toUser() {
         return new User(name, email, password);
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getName() {
