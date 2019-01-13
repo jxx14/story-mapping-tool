@@ -60,6 +60,7 @@
 <div id="tip"></div>
 
 <script th:src="@{js/jquery-3.2.1.min.js}"></script>
+<script th:src="@{js/jquerysession.js}"></script>
 <script th:src="@{js/bootstrap.min.js}"></script>
 <script th:src="@{js/template-web.js}"></script>
 <script th:src="@{js/util.js}"></script>
@@ -79,7 +80,7 @@
                             Edit<b class="caret"></b>
                         </a>
                         <ul class="dropdown-menu">
-                            <li><a href="map-create">New a map</a></li>
+                            <li><a href="map-create?leaderId={{team.leader}}&teamId={{team.id}}">New a map</a></li>
                             <!--<li><a data-toggle="tab">Invite a member</a></li>-->
                         </ul>
                     </li>
@@ -101,7 +102,7 @@
                 <img src="../icons/map.svg" alt="" title="story mappings">
                 <div class="map-list">
                     {{each team.mapInfos map}}
-                        <a href="/storymap">{{map.name}}</a>
+                        <a href="javascript:showMap({{map.id}})">{{map.name}}</a>
                     {{/each}}
                 </div>
             </div>
@@ -163,6 +164,11 @@
             showTip($('#tip'), result);
         }
     });
+
+    function showMap(mapId) {
+        $.session.set("mapId", mapId);
+        window.location = "/storymap";
+    }
 </script>
 
 

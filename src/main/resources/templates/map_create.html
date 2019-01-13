@@ -36,7 +36,7 @@
 
     <div class="button-container">
         <button type="submit" class="btn btn-primary button">New</button>
-        <button type="button" class="btn btn-default button" id="cancel">Cancel</button>
+        <a class="btn btn-default button" href="/user">Cancel</a>
     </div>
 </form>
 
@@ -45,6 +45,7 @@
 <script th:src="@{js/jquery-3.2.1.min.js}"></script>
 <script th:src="@{js/bootstrap.min.js}"></script>
 <script th:src="@{js/bootstrapValidator.min.js}"></script>
+<script th:src="@{js/util.js}"></script>
 <script th:src="@{js/account.js}"></script>
 
 <script>
@@ -77,29 +78,31 @@
             const validator = form.data('bootstrapValidator');
             const name = validator.getFieldElements("name").val();
             const description = validator.getFieldElements("description").val();
-            alert(name + "," + description);
+            const params = parseQueryString(window.location.search.substring(1));
 
-            // $.ajax({
-            //     url: '/login',
-            //     type: 'post',
-            //     contentType: 'application/json',
-            //     data: JSON.stringify({ "email": email, "password": pwd }),
-            //     success: function (result) {
-            //         if (result.success) {
-            //             window.location= '/user';
-            //         } else {
-            //             showTip($('#tip'), result.message, 'white');
-            //         }
-            //     },
-            //     error: function (message) {
-            //         showTip($('#tip'), message, 'white');
-            //     }
-            // })
+            $.ajax({
+                url: '/createMap',
+                type: 'post',
+                contentType: 'application/json',
+                data: JSON.stringify({
+                    name: name,
+                    description: description,
+                    creator: params['leaderId'],
+                    release: 1,
+                    team: params['teamId']
+                }),
+                success: function (result) {
+                    if (result.success) {
+                        showTip($('#tip'), 'Create a new map successfully', '#5DD259');
+                    } else {
+                        showTip($('#tip'), result.message);
+                    }
+                },
+                error: function (message) {
+                    showTip($('#tip'), message);
+                }
+            });
         });
-    });
-
-    $('#cancel').click(function () {
-        window.location = '/user';
     });
 </script>
 
