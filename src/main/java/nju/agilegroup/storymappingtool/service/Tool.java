@@ -28,6 +28,7 @@ public class Tool {
         Set<AccountInfo> ifs = new HashSet<>();
         for (User user1 : team.getUsers()) {
             AccountInfo info = new AccountInfo();
+            info.setId(user1.getId());
             info.setName(user1.getName());
             info.setEmail(user1.getEmail());
             ifs.add(info);
@@ -37,6 +38,7 @@ public class Tool {
 
     public static AccountInfo userToInfo(User user){
         AccountInfo info = new AccountInfo();
+        info.setId(user.getId());
         info.setName(user.getName());
         info.setEmail(user.getEmail());
         return info;
