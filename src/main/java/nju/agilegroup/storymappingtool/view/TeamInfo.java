@@ -10,7 +10,7 @@ public class TeamInfo {
     private String name;
     private String description;
     private int leader;
-    private String leader_name;
+    private String leaderName;
     private Set<AccountInfo> accountInfos;
     private Set<MapInfo> mapInfos;
 
@@ -55,12 +55,12 @@ public class TeamInfo {
         this.leader = leader;
     }
 
-    public String getLeader_name() {
-        return leader_name;
+    public String getLeaderName() {
+        return leaderName;
     }
 
-    public void setLeader_name(String leader_name) {
-        this.leader_name = leader_name;
+    public void setLeader_name(String leaderName) {
+        this.leaderName = leaderName;
     }
 
     public Set<AccountInfo> getAccountInfos() {
@@ -79,12 +79,12 @@ public class TeamInfo {
         this.mapInfos = mapInfos;
     }
 
-    public TeamInfo(int id, String name, String description, int leader, String leader_name, Set<AccountInfo> accountInfos, Set<MapInfo> mapInfos) {
+    public TeamInfo(int id, String name, String description, int leader, String leaderName, Set<AccountInfo> accountInfos, Set<MapInfo> mapInfos) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.leader = leader;
-        this.leader_name = leader_name;
+        this.leaderName = leaderName;
         this.accountInfos = accountInfos;
         this.mapInfos = mapInfos;
     }

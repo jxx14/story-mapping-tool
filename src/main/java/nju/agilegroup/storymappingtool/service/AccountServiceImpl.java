@@ -6,13 +6,10 @@ import nju.agilegroup.storymappingtool.model.Team;
 import nju.agilegroup.storymappingtool.model.User;
 import nju.agilegroup.storymappingtool.view.AccountInfo;
 import nju.agilegroup.storymappingtool.view.ResultInfo;
-import nju.agilegroup.storymappingtool.view.TeamInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpSession;
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -42,7 +39,7 @@ public class AccountServiceImpl implements AccountService {
         if (isAccountValid) {
             session.setAttribute(USER_KEY, email);
             return new ResultInfo<>(true, "Login successfully", Tool.userToInfo(accounts.get(0)) );
-        } else {
+        } else{
             return new ResultInfo<>(false, "Account and password do not match", null);
         }
     }
@@ -61,7 +58,7 @@ public class AccountServiceImpl implements AccountService {
         List<User> usersGetByName = accountDAO.findAllByName(name);
         if (!usersGetByEmail.isEmpty()) {
             return new ResultInfo<>(false, "The mailbox has been registered", null);
-        }if (!usersGetByName.isEmpty()) {
+        }else if (!usersGetByName.isEmpty()) {
             return new ResultInfo<>(false, "Username already exists", null);
         }
 
@@ -75,8 +72,6 @@ public class AccountServiceImpl implements AccountService {
         team.setLeader_id(user.getId());
         teamDAO.saveAndFlush(team);
 
-//        user.getTeams().add(team);
-//        accountDAO.saveAndFlush(user);
         team.getUsers().add(user);
         teamDAO.saveAndFlush(team);
         return new ResultInfo<>(true, "Registered successfully", null);

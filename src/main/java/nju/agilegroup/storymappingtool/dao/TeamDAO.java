@@ -15,7 +15,7 @@ public interface TeamDAO extends JpaRepository<Team, Integer> {
 
     //查看用户参加的所有团队
     @Query(value = "SELECT DISTINCT t.* FROM  user u join team_users tu join team t WHERE tu.users_id =?1 and tu.teams_id =t.id",nativeQuery = true)
-    Set<Team> getTeamsByUserId(int user_id);
+    Set<Team> getTeamsByUserId(int userId);
 
    Team getTeamByName(String name);
 

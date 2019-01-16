@@ -21,22 +21,15 @@ public class TeamController {
     }
 
     //参数id，查看团队信息
-    @RequestMapping(value = "/getTeamInfo", method = RequestMethod.POST)
+    @RequestMapping(value = "/getTeamInfo")
     public ResultInfo<Object> getTeamInfo(HttpServletRequest request, @RequestParam int teamID) {
         HttpSession session = request.getSession();
         return teamService.getTeamInfo(session,teamID);
     }
 
-//    //参数id，查看团队所拥有的storyMap
-//    @RequestMapping(value = "/getTeamStoryMaps", method = RequestMethod.POST)
-//    public ResultInfo<Objecet> getTeamStoryMaps(HttpServletRequest request, @RequestParam int teamID) {
-//        HttpSession session = request.getSession();
-//        return teamService.getTeamStoryMaps(session,teamID);
-//    }
-
 
     //参数团队信息，增加团队
-    @RequestMapping(value = "/addTeam", method = RequestMethod.POST)
+    @RequestMapping(value = "/addTeam")
     public ResultInfo<Object> addTeam(HttpServletRequest request, @RequestBody TeamInfo teamInfo) {
         HttpSession session = request.getSession();
         return teamService.addTeam(session, teamInfo);
@@ -44,7 +37,7 @@ public class TeamController {
 
 
     //参数id，查看团队成员
-    @RequestMapping(value = "/getTeamMembers", method = RequestMethod.POST)
+    @RequestMapping(value = "/getTeamMembers")
     public ResultInfo<Object> getTeamMembers(HttpServletRequest request, @RequestParam int teamID) {
         HttpSession session = request.getSession();
         return accountService.getTeamMembers(session, teamID);
@@ -52,7 +45,7 @@ public class TeamController {
 
 
     //参数团队信息，修改团队
-    @RequestMapping(value = "/modifyTeamInfo", method = RequestMethod.POST)
+    @RequestMapping(value = "/modifyTeamInfo")
     public ResultInfo<Object> modifyTeamInfo(HttpServletRequest request, @RequestBody TeamInfo teamInfo, @RequestParam int teamId) {
         HttpSession session = request.getSession();
         return teamService.modifyTeamInfo(session, teamInfo,teamId);
@@ -60,13 +53,13 @@ public class TeamController {
 
 
     //新增成员，data里最是新团队的成员列表
-    @RequestMapping(value = "/addMember", method = RequestMethod.POST)
+    @RequestMapping(value = "/addMember")
     public ResultInfo<Object> addMember(@RequestParam String userName,@RequestParam String teamName) {
         return teamService.addMember(userName,teamName);
     }
 
-    //删除成员,data里是最新团队成员列表是
-    @RequestMapping(value = "/deleteMember", method = RequestMethod.POST)
+    //删除成员,data里是最新团队成员列表
+    @RequestMapping(value = "/deleteMember")
     public ResultInfo<Object> deleteMember(@RequestParam String userName,@RequestParam String teamName) {
         return teamService.deleteMember(userName,teamName);
     }

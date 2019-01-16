@@ -34,12 +34,6 @@ public class TeamServiceImpl implements TeamService{
         return new ResultInfo<>(true,"team information",info);
     }
 
-//    @Override
-//    public ResultInfo<List<StoryMap>> getTeamStoryMaps(HttpSession session, int id) {
-//        return new ResultInfo<>(true, "团队storyMap", teamDAO.getStoryMaps(id));
-//    }
-
-
 
     @Override
     public ResultInfo<Object> addTeam(HttpSession session, TeamInfo teamInfo) {
@@ -51,8 +45,8 @@ public class TeamServiceImpl implements TeamService{
     }
 
     @Override
-    public ResultInfo<Object> modifyTeamInfo(HttpSession session, TeamInfo teamInfo,int TeamID) {
-        Team team = teamDAO.getTeamById(TeamID);
+    public ResultInfo<Object> modifyTeamInfo(HttpSession session, TeamInfo teamInfo,int TeamId) {
+        Team team = teamDAO.getTeamById(TeamId);
         team.setDescription(teamInfo.getDescription());
         team.setName(teamInfo.getName());
         teamDAO.saveAndFlush(team);

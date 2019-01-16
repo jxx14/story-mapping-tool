@@ -13,13 +13,12 @@ import javax.servlet.http.HttpSession;
 public class AccountController {
 
     private final AccountService accountService;
-
     @Autowired
     public AccountController(AccountService accountService) {
         this.accountService = accountService;
     }
 
-    @RequestMapping(value = "/login", method = RequestMethod.POST)
+    @RequestMapping(value = "/user/login")
     public ResultInfo<Object> login(HttpServletRequest request, @RequestBody AccountInfo account) {
         HttpSession session = request.getSession();
         return accountService.login(session, account);
@@ -36,39 +35,39 @@ public class AccountController {
         return accountService.signUp(account);
     }
 
-    @RequestMapping(value = "/listUserInfo", method = RequestMethod.POST)
+    @RequestMapping(value = "/listUserInfo")
     public ResultInfo<Object> listUserInfo(HttpServletRequest request) {
         HttpSession session = request.getSession();
         return accountService.getUserInfo(session);
     }
 
-    @RequestMapping(value = "/modifyUserInfo", method = RequestMethod.POST)
+    @RequestMapping(value = "/modifyUserInfo")
     public ResultInfo<Object> modifyUserInfo(HttpServletRequest request, @RequestBody AccountInfo accountInfo) {
         HttpSession session = request.getSession();
         return accountService.modify(session, accountInfo);
     }
 
-    @RequestMapping(value = "/getTeams", method = RequestMethod.POST)
+    @RequestMapping(value = "/getTeams")
     public ResultInfo<Object> getTeams(HttpServletRequest request) {
         HttpSession session = request.getSession();
         return accountService.getTeams(session);
     }
 
     //加入团队，返回值data里是所加入的所有团队
-    @RequestMapping(value = "/joinTeam", method = RequestMethod.POST)
+    @RequestMapping(value = "/joinTeam")
     public ResultInfo<Object> joinTeam(@RequestParam String userName,@RequestParam String teamName) {
         return accountService.joinTeam(userName,teamName);
     }
 
 
     //离开团队
-    @RequestMapping(value = "/leaveTeam", method = RequestMethod.POST)
+    @RequestMapping(value = "/leaveTeam")
     public ResultInfo<Object> leaveTeam(@RequestParam String userName,@RequestParam String teamName) {
         return accountService.leaveTeam(userName,teamName);
     }
 
     //未实现
-    @RequestMapping(value = "/resetPwd", method = RequestMethod.POST)
+    @RequestMapping(value = "/resetPwd")
     public ResultInfo<Object> resetPwd(HttpServletRequest request,@RequestParam int userId) {
         HttpSession session = request.getSession();
         String password = request.getParameter("password");

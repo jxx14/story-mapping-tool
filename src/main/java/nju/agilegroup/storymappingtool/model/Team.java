@@ -17,14 +17,10 @@ public class Team {
     private String name;
 
     @Column(name = "leader_id")
-    private int leader_id;
+    private int leaderId;
 
     @Column(name = "description")
     private String description;
-
-
-//    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "teams")
-//    private Set<User> users;
 
     @ManyToMany(cascade=CascadeType.ALL,fetch=FetchType.LAZY)
     @JoinTable(name = "team_users")
@@ -33,9 +29,9 @@ public class Team {
 
     public Team(){}
 
-    public Team(String name, int leader_id, String description) {
+    public Team(String name, int leaderId, String description) {
         this.name = name;
-        this.leader_id = leader_id;
+        this.leaderId = leaderId;
         this.description = description;
     }
 
@@ -56,7 +52,7 @@ public class Team {
     }
 
     public int getLeader_id() {
-        return leader_id;
+        return leaderId;
     }
 
 
@@ -74,13 +70,13 @@ public class Team {
         return "Team{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
-                ", leader_id=" + leader_id +
+                ", leader_id=" + leaderId +
                 ", description='" + description + '\'' +
                 '}';
     }
 
-    public void setLeader_id(int leader_id) {
-        this.leader_id = leader_id;
+    public void setLeader_id(int leaderId) {
+        this.leaderId = leaderId;
     }
 
     public Set<User> getUsers() {
