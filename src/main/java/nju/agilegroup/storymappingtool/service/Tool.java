@@ -16,10 +16,11 @@ import java.util.Set;
 
 @Component
 public class Tool {
+
     private static AccountDAO accountDAO;
     private static MapDAO mapDAO;
     @Autowired
-    public Tool(AccountDAO accountDAO,MapDAO mapDAO) {
+    private Tool(AccountDAO accountDAO,MapDAO mapDAO) {
         Tool.accountDAO = accountDAO;
         Tool.mapDAO = mapDAO;
     }
@@ -61,12 +62,12 @@ public class Tool {
             info.setName(team.getName());
             info.setDescription(team.getDescription());
 
-            int leader_id = team.getLeader_id();
-            User leader = accountDAO.getUserById(leader_id);
-            String leader_name = leader.getName();
+            int leaderId = team.getLeader_id();
+            User leader = accountDAO.getUserById(leaderId);
+            String leaderName = leader.getName();
 
-            info.setLeader_name(leader_name);
-            info.setLeader(leader_id);
+            info.setLeader_name(leaderName);
+            info.setLeader(leaderId);
 
             info.setMapInfos(mapToInfos(mapDAO.findTeamMaps(team.getId())));
             info.setAccountInfos(Tool.usersToInfos(team));

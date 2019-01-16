@@ -1,7 +1,6 @@
 package nju.agilegroup.storymappingtool.service;
 
 
-import nju.agilegroup.storymappingtool.model.User;
 import nju.agilegroup.storymappingtool.view.AccountInfo;
 import nju.agilegroup.storymappingtool.view.ResultInfo;
 

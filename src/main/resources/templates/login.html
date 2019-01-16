@@ -88,7 +88,7 @@
             const pwd = validator.getFieldElements("password").val();
 
             $.ajax({
-                url: '/login',
+                url: '/user/login',
                 type: 'post',
                 contentType: 'application/json',
                 data: JSON.stringify({ "email": email, "password": pwd }),
