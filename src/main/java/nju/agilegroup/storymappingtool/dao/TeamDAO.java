@@ -3,10 +3,11 @@ package nju.agilegroup.storymappingtool.dao;
 import nju.agilegroup.storymappingtool.model.Team;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Set;
-
+@Repository
 public interface TeamDAO extends JpaRepository<Team, Integer> {
 
 //    List<Team> findAllByLeader(int leader);//根据leader查询Team

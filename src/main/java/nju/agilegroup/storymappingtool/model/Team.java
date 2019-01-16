@@ -51,7 +51,7 @@ public class Team {
         this.name = name;
     }
 
-    public int getLeader_id() {
+    public int getLeaderId() {
         return leaderId;
     }
 
@@ -75,7 +75,7 @@ public class Team {
                 '}';
     }
 
-    public void setLeader_id(int leaderId) {
+    public void setLeaderId(int leaderId) {
         this.leaderId = leaderId;
     }
 

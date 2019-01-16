@@ -2,6 +2,7 @@ package nju.agilegroup.storymappingtool.service;
 
 import nju.agilegroup.storymappingtool.dao.AccountDAO;
 import nju.agilegroup.storymappingtool.dao.MapDAO;
+import nju.agilegroup.storymappingtool.dao.TeamDAO;
 import nju.agilegroup.storymappingtool.model.StoryMap;
 import nju.agilegroup.storymappingtool.model.Team;
 import nju.agilegroup.storymappingtool.model.User;
@@ -62,11 +63,11 @@ public class Tool {
             info.setName(team.getName());
             info.setDescription(team.getDescription());
 
-            int leaderId = team.getLeader_id();
+            int leaderId = team.getLeaderId();
             User leader = accountDAO.getUserById(leaderId);
             String leaderName = leader.getName();
 
-            info.setLeader_name(leaderName);
+            info.setLeaderName(leaderName);
             info.setLeader(leaderId);
 
             info.setMapInfos(mapToInfos(mapDAO.findTeamMaps(team.getId())));
