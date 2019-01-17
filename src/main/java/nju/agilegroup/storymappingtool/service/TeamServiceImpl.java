@@ -14,14 +14,10 @@ import javax.servlet.http.HttpSession;
 @Service
 public class TeamServiceImpl implements TeamService{
 
-    private final TeamDAO teamDAO;
-    private final AccountDAO accountDAO;
-
     @Autowired
-       public TeamServiceImpl(TeamDAO teamDAO, AccountDAO accountDAO) {
-        this.teamDAO = teamDAO;
-        this.accountDAO = accountDAO;
-    }
+    private TeamDAO teamDAO;
+    @Autowired
+    private AccountDAO accountDAO;
 
 
     @Override
@@ -45,8 +41,8 @@ public class TeamServiceImpl implements TeamService{
     }
 
     @Override
-    public ResultInfo<Object> modifyTeamInfo(HttpSession session, TeamInfo teamInfo,int TeamId) {
-        Team team = teamDAO.getTeamById(TeamId);
+    public ResultInfo<Object> modifyTeamInfo(HttpSession session, TeamInfo teamInfo,int teamId) {
+        Team team = teamDAO.getTeamById(teamId);
         team.setDescription(teamInfo.getDescription());
         team.setName(teamInfo.getName());
         teamDAO.saveAndFlush(team);

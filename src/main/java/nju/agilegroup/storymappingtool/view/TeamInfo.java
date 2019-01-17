@@ -59,7 +59,7 @@ public class TeamInfo {
         return leaderName;
     }
 
-    public void setLeader_name(String leaderName) {
+    public void setLeaderName(String leaderName) {
         this.leaderName = leaderName;
     }
 

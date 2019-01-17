@@ -69,7 +69,7 @@ public class AccountServiceImpl implements AccountService {
         Team team = new Team();
         team.setName(account.getName()+"'s team");
         team.setDescription(account.getName()+"'s team");
-        team.setLeader_id(user.getId());
+        team.setLeaderId(user.getId());
         teamDAO.saveAndFlush(team);
 
         team.getUsers().add(user);
@@ -87,7 +87,7 @@ public class AccountServiceImpl implements AccountService {
         user.getTeams().add(team);
         accountDAO.saveAndFlush(user);
 
-        return new ResultInfo<>(true, "success",Tool.teamsToInfos(user.getTeams()));
+        return new ResultInfo<>(true, "join team successfully",Tool.teamsToInfos(user.getTeams()));
     }
 
 
@@ -98,7 +98,7 @@ public class AccountServiceImpl implements AccountService {
         user.getTeams().remove(team);
         accountDAO.saveAndFlush(user);
 
-        return new ResultInfo<>(true, "success", Tool.teamsToInfos(user.getTeams()));
+        return new ResultInfo<>(true, "leave team successfully", Tool.teamsToInfos(user.getTeams()));
     }
 
     @Override
@@ -127,7 +127,7 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public ResultInfo<Object> getTeamMembers(HttpSession session, int id) {
         Team team = teamDAO.getTeamById(id);
-        return new ResultInfo<>(true, "success",Tool.usersToInfos(team));
+        return new ResultInfo<>(true, "teamMembers",Tool.usersToInfos(team));
     }
 
     @Override
@@ -136,7 +136,7 @@ public class AccountServiceImpl implements AccountService {
         User user =  accountDAO.getUserByEmail(email);
         Set<Team> teams = teamDAO.getTeamsByUserId(user.getId());
 
-        return new ResultInfo<>(true, "success",Tool.teamsToInfos(teams));
+        return new ResultInfo<>(true, "teams",Tool.teamsToInfos(teams));
     }
 
 }

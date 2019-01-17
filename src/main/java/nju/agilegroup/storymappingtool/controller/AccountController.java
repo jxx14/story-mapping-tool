@@ -9,19 +9,18 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import static com.sun.xml.internal.ws.spi.db.BindingContextFactory.LOGGER;
+
 @RestController
 public class AccountController {
-
-    private final AccountService accountService;
     @Autowired
-    public AccountController(AccountService accountService) {
-        this.accountService = accountService;
-    }
+    private  AccountService accountService;
 
     @RequestMapping(value = "/user/login")
     public ResultInfo<Object> login(HttpServletRequest request, @RequestBody AccountInfo account) {
         HttpSession session = request.getSession();
         return accountService.login(session, account);
+
     }
 
     @RequestMapping(value = "/logout")

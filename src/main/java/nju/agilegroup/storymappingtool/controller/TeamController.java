@@ -11,14 +11,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 @RestController
 public class TeamController {
-    private final TeamService teamService;
-    private final AccountService accountService;
-
     @Autowired
-    public TeamController(TeamService teamService, AccountService accountService) {
-        this.teamService = teamService;
-        this.accountService = accountService;
-    }
+    private TeamService teamService;
+    @Autowired
+    private AccountService accountService;
 
     //参数id，查看团队信息
     @RequestMapping(value = "/getTeamInfo")
