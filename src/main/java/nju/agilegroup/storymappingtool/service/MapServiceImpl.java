@@ -20,8 +20,8 @@ import java.util.List;
 
 @Service
 public class MapServiceImpl implements MapService{
-    private static final String USER_KEY = "USER_NAME";
-    private static final DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+//    private static final String USER_KEY = "USER_NAME";
+    private final DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 
     private final MapDAO mapDAO;
     private final TeamDAO teamDAO;
@@ -81,7 +81,7 @@ public class MapServiceImpl implements MapService{
         return new ResultInfo<>(false, "保存失败", "错误信息");
     }
 
-    private static MapInfo mapToInfo(StoryMap map){
+    private MapInfo mapToInfo(StoryMap map){
         MapInfo info = new MapInfo();
         String createTime = sdf.format(map.getCreateAt());
 

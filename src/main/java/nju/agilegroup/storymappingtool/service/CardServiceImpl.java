@@ -16,7 +16,7 @@ import java.util.List;
 
 @Service
 public class CardServiceImpl implements CardService{
-    private static final DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+    private final DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 
     private final ActivityCardDAO activityCardDAO;
     private final TaskCardDAO taskCardDAO;
@@ -305,7 +305,7 @@ public class CardServiceImpl implements CardService{
         return new ResultInfo<>(true, "success", activityCardToInfo(card, roles));
     }
 
-    private static List<RoleInfo> rolesToInfo(List<Role> activityRoles){
+    private List<RoleInfo> rolesToInfo(List<Role> activityRoles){
         List<RoleInfo> roleInfos = new ArrayList<>();
 
         for(int i=0; i<activityRoles.size(); i++){
@@ -324,7 +324,7 @@ public class CardServiceImpl implements CardService{
         return roleInfos;
     }
 
-    private static ActivityCardInfo activityCardToInfo(ActivityCard card, List<Role> activityRoles){
+    private ActivityCardInfo activityCardToInfo(ActivityCard card, List<Role> activityRoles){
         ActivityCardInfo activityCardInfo = new ActivityCardInfo();
         activityCardInfo.setId(card.getId());
         activityCardInfo.setName(card.getName());
@@ -340,7 +340,7 @@ public class CardServiceImpl implements CardService{
         return activityCardInfo;
     }
 
-    private static TaskCardInfo taskCardToInfo(TaskCard card){
+    private TaskCardInfo taskCardToInfo(TaskCard card){
         TaskCardInfo taskCardInfo = new TaskCardInfo();
         taskCardInfo.setId(card.getId());
         taskCardInfo.setName(card.getName());
@@ -353,7 +353,7 @@ public class CardServiceImpl implements CardService{
         return taskCardInfo;
     }
 
-    private static StoryCardInfo storyCardToInfo(StoryCard card){
+    private StoryCardInfo storyCardToInfo(StoryCard card){
         StoryCardInfo storyCardInfo = new StoryCardInfo();
         storyCardInfo.setId(card.getId());
         storyCardInfo.setName(card.getName());
