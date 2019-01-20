@@ -122,8 +122,8 @@
                 <version>0.8.2</version>
                 <configuration>
                     <skip>false</skip>
-                    <destFile>E:/jacoco.exec</destFile>
-                    <!--<destFile>target/jacoco.exec</destFile>-->
+                    <!--<destFile>E:/jacoco.exec</destFile>-->
+                    <destFile>target/jacoco.exec</destFile>
                 </configuration>
                 <executions>
                     <execution>
