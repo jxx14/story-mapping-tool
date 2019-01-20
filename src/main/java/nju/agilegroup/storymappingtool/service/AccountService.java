@@ -18,8 +18,6 @@ public interface AccountService {
 
     ResultInfo<Object> modify(HttpSession session,AccountInfo account);
 
-    ResultInfo<Object> resetPWd(HttpSession session,String password,int id);
-
     //参数id，查看团队成员
     ResultInfo<Object> getTeamMembers(HttpSession session, int id);
 

@@ -66,12 +66,6 @@ public class AccountController {
         return accountService.leaveTeam(userName,teamName);
     }
 
-    //未实现
-    @RequestMapping(value = "/resetPwd")
-    public ResultInfo<Object> resetPwd(HttpServletRequest request,@RequestParam int userId) {
-        HttpSession session = request.getSession();
-        String password = request.getParameter("password");
-        return accountService.resetPWd(session,password,userId);
-    }
+
 
 }

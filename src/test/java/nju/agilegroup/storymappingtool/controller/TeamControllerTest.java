@@ -36,7 +36,7 @@ public class TeamControllerTest {
 
     @Test
     public void getTeamInfo ()  throws Exception{
-        MvcResult result1 = mockMvc.perform(post("http://localhost:8090/getTeamMembers")
+        MvcResult result1 = mockMvc.perform(post("http://localhost:8090/getTeamInfo")
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .param("teamID","1"))
                 .andExpect(status().isOk())

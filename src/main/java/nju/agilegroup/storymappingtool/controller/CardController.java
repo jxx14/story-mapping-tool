@@ -30,7 +30,7 @@ public class CardController {
      * @param mapId
      * @return
      */
-    @RequestMapping(value = "/getMapCards", method = RequestMethod.POST)
+    @RequestMapping(value = "/getMapCards")
     public ResultInfo<Object> getMap(HttpServletRequest request, @RequestParam int mapId){
         HttpSession session = request.getSession();
         return cardService.getCardsOfMap(session, mapId);
@@ -45,19 +45,19 @@ public class CardController {
      * @param cardInfo
      * @return
      */
-    @RequestMapping(value = "/createActivity", method = RequestMethod.POST)
+    @RequestMapping(value = "/createActivity")
     public ResultInfo<Object> createActivityCard(HttpServletRequest request, @RequestBody CardInfo cardInfo){
         HttpSession session = request.getSession();
         return cardService.createActivityCard(session, cardInfo);
     }
 
-    @RequestMapping(value = "/createTask", method = RequestMethod.POST)
+    @RequestMapping(value = "/createTask")
     public ResultInfo<Object> createTaskCard(HttpServletRequest request, @RequestBody CardInfo cardInfo){
         HttpSession session = request.getSession();
         return cardService.createTaskCard(session, cardInfo);
     }
 
-    @RequestMapping(value = "/createStory", method = RequestMethod.POST)
+    @RequestMapping(value = "/createStory")
     public ResultInfo<Object> createStoryCard(HttpServletRequest request, @RequestBody CardInfo cardInfo){
         HttpSession session = request.getSession();
         return cardService.createStoryCard(session, cardInfo);
@@ -71,19 +71,19 @@ public class CardController {
      * @param cardInfo
      * @return
      */
-    @RequestMapping(value = "/modifyActivity", method = RequestMethod.POST)
+    @RequestMapping(value = "/modifyActivity")
     public ResultInfo<Object> modifyActivityCard(HttpServletRequest request, @RequestBody CardInfo cardInfo){
         HttpSession session = request.getSession();
         return cardService.modifyActivityCard(session, cardInfo);
     }
 
-    @RequestMapping(value = "/modifyTask", method = RequestMethod.POST)
+    @RequestMapping(value = "/modifyTask")
     public ResultInfo<Object> modifyTaskCard(HttpServletRequest request, @RequestBody CardInfo cardInfo){
         HttpSession session = request.getSession();
         return cardService.modifyTaskCard(session, cardInfo);
     }
 
-    @RequestMapping(value = "/modifyStory", method = RequestMethod.POST)
+    @RequestMapping(value = "/modifyStory")
     public ResultInfo<Object> modifyStoryCard(HttpServletRequest request, @RequestBody CardInfo cardInfo){
         HttpSession session = request.getSession();
         return cardService.modifyStoryCard(session, cardInfo);
@@ -96,7 +96,7 @@ public class CardController {
      * @param mapId
      * @return
      */
-    @RequestMapping(value = "/getRoles", method = RequestMethod.GET)
+    @RequestMapping(value = "/getRoles")
     public ResultInfo<Object> getRoles(HttpServletRequest request, @RequestParam int mapId){
         HttpSession session = request.getSession();
         return cardService.getRoles(session, mapId);
@@ -110,7 +110,7 @@ public class CardController {
      * @param roleInfo
      * @return
      */
-    @RequestMapping(value = "/modifyRole", method = RequestMethod.POST)
+    @RequestMapping(value = "/modifyRole")
     public ResultInfo<Object> modifyRole(HttpServletRequest request, @RequestBody RoleInfo roleInfo){
         HttpSession session = request.getSession();
         return cardService.modifyRole(session, roleInfo);
@@ -124,7 +124,7 @@ public class CardController {
      * @param roleInfo
      * @return
      */
-    @RequestMapping(value = "/addRoleToActivity", method = RequestMethod.POST)
+    @RequestMapping(value = "/addRoleToActivity")
     public ResultInfo<Object> addRoleToActivity(HttpServletRequest request, @RequestParam int activity, @RequestBody RoleInfo roleInfo){
         HttpSession session = request.getSession();
         return cardService.addRoleToActivity(session, roleInfo, activity);
@@ -138,7 +138,7 @@ public class CardController {
      * @param roleInfo
      * @return
      */
-    @RequestMapping(value = "/removeRoleFromActivity", method = RequestMethod.POST)
+    @RequestMapping(value = "/removeRoleFromActivity")
     public ResultInfo<Object> removeRoleFromActivity(HttpServletRequest request, @RequestParam int activity, @RequestBody RoleInfo roleInfo){
         HttpSession session = request.getSession();
         return cardService.removeRoleFromActivity(session, roleInfo, activity);

@@ -50,11 +50,31 @@ public class AccountTest {
 
 
         Map<String, Object> map2 = new HashMap<>();
-        map2.put("email", "1483809252@qq.com");
+        map2.put("email", "19252@qq.com");
         map2.put("password", "njuagile");
         MvcResult result2 = mockMvc.perform(post("http://localhost:8090/user/login")
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .content(JSONObject.toJSONString(map2)))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        Map<String, Object> map3 = new HashMap<>();
+        map3.put("email", "1483809252@qq.com");
+        map3.put("password", "njua");
+        MvcResult result3 = mockMvc.perform(post("http://localhost:8090/user/login")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(JSONObject.toJSONString(map3)))
+                .andExpect(status().isOk())
+                .andReturn();
+
+
+        Map<String, Object> map4 = new HashMap<>();
+        map4.put("email", "1483809252@qq.com");
+        map4.put("password", "njua");
+        MvcResult result4 = mockMvc.perform(post("http://localhost:8090/user/login")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(JSONObject.toJSONString(map4))
+                .session((MockHttpSession) result3.getRequest().getSession()))
                 .andExpect(status().isOk())
                 .andReturn();
 
@@ -71,6 +91,38 @@ public class AccountTest {
                 .content(JSONObject.toJSONString(map1)))
                 .andExpect(status().isOk())
                 .andReturn();
+
+        Map<String, Object> map2 = new HashMap<>();
+        map2.put("name", "modify3");
+        map2.put("email", "09252@qq.com");
+        map2.put("password", "njuagile123");
+        MvcResult result2 = mockMvc.perform(post("http://localhost:8090/signUp")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(JSONObject.toJSONString(map2)))
+                .andExpect(status().isOk())
+                .andReturn();
+
+
+        Map<String, Object> map3 = new HashMap<>();
+        map3.put("name", "mfy3");
+        map3.put("email", "zhangsan@qq.com");
+        map3.put("password", "njuagile123");
+        MvcResult result3 = mockMvc.perform(post("http://localhost:8090/signUp")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(JSONObject.toJSONString(map3)))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        Map<String, Object> map4 = new HashMap<>();
+        map4.put("name", "mfy3");
+        map4.put("email", "my3@qq.com");
+        map4.put("password", "njuagile123");
+        MvcResult result4 = mockMvc.perform(post("http://localhost:8090/signUp")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(JSONObject.toJSONString(map4)))
+                .andExpect(status().isOk())
+                .andReturn();
+
     }
 
     @Test

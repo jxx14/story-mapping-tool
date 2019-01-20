@@ -2,7 +2,6 @@ package nju.agilegroup.storymappingtool.service;
 
 import nju.agilegroup.storymappingtool.dao.AccountDAO;
 import nju.agilegroup.storymappingtool.dao.MapDAO;
-import nju.agilegroup.storymappingtool.dao.TeamDAO;
 import nju.agilegroup.storymappingtool.model.StoryMap;
 import nju.agilegroup.storymappingtool.model.Team;
 import nju.agilegroup.storymappingtool.model.User;
