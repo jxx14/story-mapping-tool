@@ -1,0 +1,3 @@
+1.jacoco为maven插件，配置均在pom中
+2.jacoco.exec为生成的覆盖率报告，sonarqube要读取的话默认要放在target文件夹下。target/coverage-reports/index.html为网页版的报告
+3.由于jacoco包的问题，项目路径（从ABCDE盘开始）不能有中文。如果有的话用注释的绝对路径生成后，运行完放到target文件夹下面，再运行sonarqube也是可以读取到的
