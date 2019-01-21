@@ -844,6 +844,21 @@ function modifyEstimation(tid,aid) {
 
 function addReleaseDiv() {
     $('body').on("click",'.add_release_icon',function () {
+        rindex=parseInt(rindex)+1;
+        $.ajax({
+            type: "post",
+            url: "/modifyMap",
+            data:JSON.stringify({"id":mapId,"release":rindex}),
+            contentType: "application/json; charset=utf-8",
+            async: false,
+            success: function (data) {
+            }, error: function (XMLHttpRequest, textStatus, errorThrown) {
+                alert(XMLHttpRequest.status);
+                alert(XMLHttpRequest.readyState);
+                alert(textStatus);
+            }
+        });
+
         $(this).parent().before('<div style="margin-top: 15px;" class="release_label" data-rid="'+rindex+'"><span>——Release '+rindex +
             '            </span><div style="display: inline-block;width: 20px;height: 20px;">\n' +
             '                <img src="../icons/trash.png" class="remove_release"/>\n' +
@@ -874,13 +889,31 @@ function addReleaseDiv() {
             '            </div>';
 
         $('.release_div[data-rid='+rindex+']').html(s);
-        rindex+=1;
         $('.remove_release').show();
+
     });
 }
 
 function removeReleaseDiv() {
     $('body').on("click",'.remove_release',function () {
+        var rNum = $('.release_div').length - 1;
+        if(rNum==0){
+            rNum=-1;
+        }
+        $.ajax({
+            type: "post",
+            url: "/modifyMap",
+            data:JSON.stringify({"id":mapId,"release":rNum}),
+            contentType: "application/json; charset=utf-8",
+            async: false,
+            success: function (data) {
+            }, error: function (XMLHttpRequest, textStatus, errorThrown) {
+                alert(XMLHttpRequest.status);
+                alert(XMLHttpRequest.readyState);
+                alert(textStatus);
+            }
+        });
+
         var rid = $(this).parent().parent().attr('data-rid');
         $(this).parent().parent().remove();
         $('.release_div[data-rid='+rid+']').remove();
@@ -1079,6 +1112,7 @@ function init() {
                 $(this).append(s);
             });
             $('.remove_release').show();
+            $('.release_label[data-rid="1"]').find('.remove_release').hide();
 
         }, error: function (XMLHttpRequest, textStatus, errorThrown) {
             alert(XMLHttpRequest.status);
