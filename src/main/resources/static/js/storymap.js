@@ -28,7 +28,7 @@ $(function(){
         var tcard = $(this).parent().parent();
         var position = 1;
         if($('.activity_card').length>0)
-            position = $('.activity_card:last').attr('data-position')+1;
+            position = parseFloat($('.activity_card:last').attr('data-position'))+1;
 
         $.ajax({
             type: "post",
@@ -222,13 +222,14 @@ function modifyPersonCard() {
 
 
 function createBacklogDiv(acardInfo,tcardInfo) {
+
     var bdiv = '<div class="backlog_div">\n' +
         '                <div>\n' +
         '<div style="display: inline-block;" class="person_panel">\n' +
         '                    </div>' +
         '                    <img class="add_person_card" src="../icons/add_large.png" />\n' +
         '                </div>\n' +
-        '                <div class="activity_card" data-aid="'+acardInfo['id']+'" data-position="'+acardInfo['position']+'" data-creator="'+acardInfo['creator']+'" data-creatAt="'+acardInfo['creatAt']+'">\n' +
+        '                <div class="activity_card" data-aid="'+acardInfo['id']+'" data-position="'+acardInfo['position']+'" data-creator="'+acardInfo['creator']+'" data-creatAt="'+acardInfo['createAt']+'">\n' +
         '                    <div class="activity_textDiv">text</div>\n' +
         '                    <div class="activity_estimation">0</div>\n' +
         '                    <div class="activity_card_operation" style="display: none;">\n' +
@@ -238,7 +239,7 @@ function createBacklogDiv(acardInfo,tcardInfo) {
         '                    </div>\n' +
         '                </div>\n' +
         '                <div style="margin-left: -5px;">\n' +
-        '                    <div class="task_card" data-tid="'+tcardInfo['id']+'" data-position="'+tcardInfo['position']+'" data-creator="'+tcardInfo['creator']+'" data-creatAt="'+tcardInfo['creatAt']+'">\n' +
+        '                    <div class="task_card" data-tid="'+tcardInfo['id']+'" data-position="'+tcardInfo['position']+'" data-creator="'+tcardInfo['creator']+'" data-creatAt="'+tcardInfo['createAt']+'">\n' +
         '                        <div class="activity_textDiv">text</div>\n' +
         '                        <div class="task_estimation">0</div>\n' +
         '                        <div class="activity_card_operation" style="display: none;">\n' +
@@ -262,7 +263,7 @@ function addActivityCard() {
 
         var position_R = $(acard).attr('data-position');
         var position_L = 0;
-        if(bnode.previousSibling!=null)
+        if(bnode.previousSibling!=null&&bnode.previousSibling!==undefined&&bnode.previousSibling.childNodes.length>0)
             position_L = bnode.previousSibling.childNodes[1].getAttribute('data-position');
 
         $.ajax({
@@ -319,7 +320,7 @@ function addActivityCard() {
         var bnode = this.parentNode.parentNode.parentNode;
         var position_L = $(acard).attr('data-position');
         var position_R = position_L*3;
-        if(bnode.nextSibling!=null)
+        if(bnode.nextSibling!=null&&bnode.nextSibling!==undefined&&bnode.nextSibling.childNodes.length>0)
             position_R = bnode.nextSibling.childNodes[1].getAttribute('data-position');
 
         $.ajax({
@@ -503,8 +504,8 @@ function removeTaskCard() {
     });
 }
 
-function createTaskCard(tid) {
-    var tcard = '<div class="task_card" data-tid="'+tid+'">\n' +
+function createTaskCard(tcard) {
+    var tcard = '<div class="task_card" data-tid="'+tcard['id']+'" data-position="'+tcard['position']+'" data-creator="'+tcard['creator']+'" data-creatAt="'+tcard['createAt']+'">\n' +
         '                        <div class="activity_textDiv">text</div>\n' +
         '                        <div class="task_estimation">0</div>\n' +
         '                        <div class="activity_card_operation" style="display: none;">\n' +
@@ -525,7 +526,7 @@ function addTaskCard() {
         var tnode = this.parentNode.parentNode;
         var position_R = $(tcard).attr('data-position')
         var position_L = 0;
-        if(tnode.previousSibling!=null)
+        if(tnode.previousSibling!=null&&tnode.previousSibling!==undefined)
             position_L = tnode.previousSibling.getAttribute('data-position');
 
         $.ajax({
@@ -536,7 +537,7 @@ function addTaskCard() {
             async: false,
             success: function (task) {
                 var tid = task['data']['id'];
-                $(tcard).before(createTaskCard(tid));
+                $(tcard).before(createTaskCard(task['data']));
                 $(tcard).parent().find('.task_card').find('.removeTask').show();
 
                 $('.release_div').find('.story_panel[data-aid='+aid+']').find('.story_list[data-tid='+tid_old+']').before('<div class="story_list" data-tid="'+tid+'"><div class="story_plus_card">\n' +
@@ -560,7 +561,7 @@ function addTaskCard() {
         var tnode = this.parentNode.parentNode;
         var position_L = $(tcard).attr('data-position');
         var position_R = position_L*3;
-        if(tnode.nextSibling!=null)
+        if(tnode.nextSibling!=null&&tnode.nextSibling!==undefined)
             position_R = tnode.nextSibling.getAttribute('data-position');
 
         $.ajax({
@@ -571,7 +572,7 @@ function addTaskCard() {
             async: false,
             success: function (task) {
                 var tid = task['data']['id'];
-                $(tcard).after(createTaskCard(tid));
+                $(tcard).after(createTaskCard(task['data']));
                 $(tcard).parent().find('.task_card').find('.removeTask').show();
 
                 $('.release_div').find('.story_panel[data-aid='+aid+']').find('.story_list[data-tid='+tid_old+']').after('<div class="story_list" data-tid="'+tid+'"><div class="story_plus_card">\n' +
@@ -690,7 +691,7 @@ function addFirstStoryCard() {
             contentType: "application/json; charset=utf-8",
             async: false,
             success: function (data) {
-                $(pdiv).html(createStoryCard(data));
+                $(pdiv).html(createStoryCard(data['data']));
                 modifyEstimation(tid,aid);
             }, error: function (XMLHttpRequest, textStatus, errorThrown) {
                 alert(XMLHttpRequest.status);
@@ -734,7 +735,7 @@ function addNextStoryCard() {
             contentType: "application/json; charset=utf-8",
             async: false,
             success: function (data) {
-                $(scard).after(createStoryCard(data));
+                $(scard).after(createStoryCard(data['data']));
                 modifyEstimation(tid,aid);
             }, error: function (XMLHttpRequest, textStatus, errorThrown) {
                 alert(XMLHttpRequest.status);
@@ -761,7 +762,7 @@ function addNextStoryCard() {
             contentType: "application/json; charset=utf-8",
             async: false,
             success: function (data) {
-                $(scard).before(createStoryCard(data));
+                $(scard).before(createStoryCard(data['data']));
             }, error: function (XMLHttpRequest, textStatus, errorThrown) {
                 alert(XMLHttpRequest.status);
                 alert(XMLHttpRequest.readyState);
@@ -929,7 +930,7 @@ function init() {
             if(dList.length>0){
                 var rNum = dList[0]['maxRelease'];
                 for(var rr = 1;rr<=rNum;rr++){
-                    rslist[rr] = '<div style="margin-top: 15px;" data-rid="'+rid+'" class="release_label"><span>——Release '+rid+'</span>\n' +
+                    rslist[rr] = '<div style="margin-top: 15px;" data-rid="'+rr+'" class="release_label"><span>——Release '+rr+'</span>\n' +
                         '            <div style="display: inline-block;width: 20px;height: 20px;">\n' +
                         '                <img src="../icons/trash.png" class="remove_release" style="display: none;"/>\n' +
                         '            </div>\n' +
@@ -1027,8 +1028,9 @@ function init() {
             for(var t in rslist){
                 rslist[t]+='</div>';
                 rdiv+=rslist[t];
-                rindex = parseInt(t)+1;
+                rindex = parseInt(t);
             }
+
             $('.add_backlog').parent().parent().before(bdiv);
             $('.add_release_icon').parent().before(rdiv);
 
