@@ -23,14 +23,16 @@ public class CardServiceImpl implements CardService{
     private final StoryCardDAO storyCardDAO;
     private final RoleDAO roleDAO;
     private final AccountDAO accountDAO;
+    private final MapDAO mapDAO;
 
     @Autowired
-    public CardServiceImpl(ActivityCardDAO activityCardDAO, TaskCardDAO taskCardDAO, StoryCardDAO storyCardDAO, RoleDAO roleDAO, AccountDAO accountDAO){
+    public CardServiceImpl(ActivityCardDAO activityCardDAO, TaskCardDAO taskCardDAO, StoryCardDAO storyCardDAO, RoleDAO roleDAO, AccountDAO accountDAO, MapDAO mapDAO){
         this.activityCardDAO = activityCardDAO;
         this.taskCardDAO = taskCardDAO;
         this.storyCardDAO = storyCardDAO;
         this.roleDAO = roleDAO;
         this.accountDAO = accountDAO;
+        this.mapDAO = mapDAO;
     }
 
     @Override
@@ -39,6 +41,11 @@ public class CardServiceImpl implements CardService{
         List<ActivityCard> activityCards = activityCardDAO.findByStoryMapId(id);
         List<TaskCard> taskCards = taskCardDAO.findByStoryMapId(id);
         List<StoryCard> storyCards = storyCardDAO.findByStoryMapId(id);
+        StoryMap map = mapDAO.findOne(id);
+        if(map == null){
+            return new ResultInfo<>(false, "fail", "地图不存在");
+        }
+        int maxRelease = map.getRelease();
 
         //按照position排序，这样后面遍历就会自动按照position进行排序，无需特别处理
         activityCards.sort(new ActivityCardInfo.ActivityComparator());
@@ -57,6 +64,7 @@ public class CardServiceImpl implements CardService{
             activityCardInfo.setCreator(activityCard.getCreator().getName());
             activityCardInfo.setCreateAt(sdf.format(activityCard.getCreateAt()));
             activityCardInfo.setPosition(activityCard.getPosition());
+            activityCardInfo.setMaxRelease(maxRelease);
 
             List<Role> roles = roleDAO.findByActivtiyId(activityCard.getId());
             List<RoleInfo> roleInfos = rolesToInfo(roles);

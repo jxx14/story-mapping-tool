@@ -18,6 +18,7 @@ public class ActivityCardInfo {
 
     private List<TaskCardInfo> tasks;
     private int worktime;
+    private int maxRelease;
 
     public int getId() {
         return id;
@@ -97,6 +98,14 @@ public class ActivityCardInfo {
 
     public void setWorktime(int worktime) {
         this.worktime = worktime;
+    }
+
+    public int getMaxRelease() {
+        return maxRelease;
+    }
+
+    public void setMaxRelease(int maxRelease) {
+        this.maxRelease = maxRelease;
     }
 
 
