@@ -65,16 +65,6 @@ public class Team {
         this.description = description;
     }
 
-    @Override
-    public String toString() {
-        return "Team{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", leader_id=" + leaderId +
-                ", description='" + description + '\'' +
-                '}';
-    }
-
     public void setLeaderId(int leaderId) {
         this.leaderId = leaderId;
     }
