@@ -2,6 +2,7 @@ package nju.agilegroup.storymappingtool.view;
 
 
 public class MapInfo {
+    //修改时只需要传入id和要修改的字段
     //创建传入时不填
     private int id;
     //必填
@@ -13,6 +14,7 @@ public class MapInfo {
     //必填
     private int creator;
     //必填
+    //如果修改时要把release设为0，请传入-1
     private int release;
     //不填
     private String teamName;

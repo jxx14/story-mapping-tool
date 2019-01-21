@@ -81,6 +81,30 @@ public class MapServiceImpl implements MapService{
         return new ResultInfo<>(false, "保存失败", "错误信息");
     }
 
+    @Override
+    public ResultInfo<Object> modifyMap(HttpSession session, MapInfo mapInfo) {
+        StoryMap map = mapDAO.findOne(mapInfo.getId());
+        if(mapInfo.getName() != null)
+            map.setName(mapInfo.getName());
+        if(mapInfo.getDescription() != null)
+            map.setDescription(mapInfo.getDescription());
+        if(mapInfo.getRelease() != 0) {
+            map.setRelease(mapInfo.getRelease());
+            if(mapInfo.getRelease() == -1)
+                map.setRelease(0);
+        }
+
+        try {
+            map = mapDAO.save(map);
+            MapInfo info = mapToInfo(map);
+            return new ResultInfo<>(true, "success", info);
+        }catch (Exception e){
+//            e.printStackTrace();
+        }
+
+        return new ResultInfo<>(false, "保存失败", "错误信息");
+    }
+
     private MapInfo mapToInfo(StoryMap map){
         MapInfo info = new MapInfo();
         String createTime = sdf.format(map.getCreateAt());

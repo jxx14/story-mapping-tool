@@ -46,4 +46,16 @@ public class MapController {
         HttpSession session = request.getSession();
         return mapService.createMap(session, map);
     }
+
+    /**
+     * 修改故事地图
+     * @param request
+     * @param map
+     * @return
+     */
+    @RequestMapping(value = "/modifyMap", method = RequestMethod.POST)
+    public ResultInfo<Object> modifyMap(HttpServletRequest request, @RequestBody MapInfo map){
+        HttpSession session = request.getSession();
+        return mapService.modifyMap(session, map);
+    }
 }
