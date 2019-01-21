@@ -802,7 +802,7 @@ function modifyStoryCard() {
         $.ajax({
             type: "post",
             url: "/modifyStory",
-            data:JSON.stringify({"id":sid,"name":content,"status":status,"worktime":estimation}),
+            data:JSON.stringify({"id":sid,"name":content,"status":parseInt(status)+1,"worktime":estimation}),
             contentType: "application/json; charset=utf-8",
             async: false,
             success: function (data) {
@@ -1035,7 +1035,7 @@ function init() {
                         var story = sList[m];
                         var rid = story['release'];
                         // var sid = story['id'];
-                        var state = story_states[story['status']];
+                        var state = story_states[story['status']-1];
 
                         rslist[rid]+='<div class="story_card" data-sid="'+story['id']+'" data-position="'+story['position']+'" data-creator="' +
                             story['creator']+'" data-creatAt="'+story['createAt']+'">\n' +
