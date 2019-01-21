@@ -1,7 +1,7 @@
 // var aindex = 1;
 // var tindex = 1;
 // var sindex = 1;
-var rindex = 1;
+var rindex = 0;
 // var pindex = 1;
 var edit_activity = false;
 var edit_task = false;
@@ -861,7 +861,7 @@ function addReleaseDiv() {
 
         $(this).parent().before('<div style="margin-top: 15px;" class="release_label" data-rid="'+rindex+'"><span>——Release '+rindex +
             '            </span><div style="display: inline-block;width: 20px;height: 20px;">\n' +
-            '                <img src="../icons/trash.png" class="remove_release"/>\n' +
+            '                <img src="../icons/trash.png" class="remove_release"  style="display: none;"/>\n' +
             '            </div>\n' +
             '        </div><div class="release_div" data-rid="'+rindex+'"></div>');
 
@@ -889,7 +889,8 @@ function addReleaseDiv() {
             '            </div>';
 
         $('.release_div[data-rid='+rindex+']').html(s);
-        $('.remove_release').show();
+        if(rindex>1)
+            $('.remove_release').show();
 
     });
 }
