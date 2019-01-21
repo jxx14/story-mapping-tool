@@ -688,7 +688,7 @@ function addFirstStoryCard() {
         $.ajax({
             type: "post",
             url: "/createStory",
-            data:JSON.stringify({"mapId":mapId,"name":'text',"creatorId":userId,"position":1,"parent":tid,"status":1,"worktime":2,"release":rid}),
+            data:JSON.stringify({"mapId":mapId,"name":'text',"creatorId":userId,"position":1,"parent":tid,"status":2,"worktime":2,"release":rid}),
             contentType: "application/json; charset=utf-8",
             async: false,
             success: function (data) {
@@ -732,7 +732,7 @@ function addNextStoryCard() {
         $.ajax({
             type: "post",
             url: "/createStory",
-            data:JSON.stringify({"mapId":mapId,"name":'text',"creatorId":userId,"position":(parseFloat(pUp)+parseFloat(pDown))/2,"parent":tid,"status":1,"worktime":2,"release":rid}),
+            data:JSON.stringify({"mapId":mapId,"name":'text',"creatorId":userId,"position":(parseFloat(pUp)+parseFloat(pDown))/2,"parent":tid,"status":2,"worktime":2,"release":rid}),
             contentType: "application/json; charset=utf-8",
             async: false,
             success: function (data) {
@@ -759,7 +759,7 @@ function addNextStoryCard() {
         $.ajax({
             type: "post",
             url: "/createStory",
-            data:JSON.stringify({"mapId":mapId,"name":'text',"creatorId":userId,"position":(parseFloat(pUp)+parseFloat(pDown))/2,"parent":tid,"status":1,"worktime":2,"release":rid,"roles":[]}),
+            data:JSON.stringify({"mapId":mapId,"name":'text',"creatorId":userId,"position":(parseFloat(pUp)+parseFloat(pDown))/2,"parent":tid,"status":2,"worktime":2,"release":rid,"roles":[]}),
             contentType: "application/json; charset=utf-8",
             async: false,
             success: function (data) {
@@ -781,13 +781,14 @@ function modifyStoryCard() {
         var content = $(this).find('.activity_textDiv').html();
         var creator = $(this).attr('data-creator');
         var creatAt = $(this).attr('data-creatAt').split(' ')[0];
+        console.log(content)
         $('#storyCard_creator').text(creator);
         $('#storyCard_creatAt').text(creatAt);
 
         $('#storyModal').attr('data-sid',sid);
         $('#story_estimation').val(estimation);
         $('#story_state_select').val(state);
-        $('#story_content').html(content);
+        $('#story_content').val(content);
 
         $('#storyModal').modal('show');
     });
