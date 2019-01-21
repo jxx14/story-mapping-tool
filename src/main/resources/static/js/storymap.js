@@ -263,8 +263,8 @@ function addActivityCard() {
 
         var position_R = $(acard).attr('data-position');
         var position_L = 0;
-        if(bnode.previousSibling!=null&&bnode.previousSibling!==undefined&&bnode.previousSibling.childNodes.length>0)
-            position_L = bnode.previousSibling.childNodes[1].getAttribute('data-position');
+        if(bnode.previousElementSibling!=null&&bnode.previousElementSibling!==undefined&&bnode.previousElementSibling.children.length>0)
+            position_L = bnode.previousElementSibling.children[1].getAttribute('data-position');
 
         $.ajax({
             type: "post",
@@ -319,9 +319,10 @@ function addActivityCard() {
         var acard = $(this).parent().parent();
         var bnode = this.parentNode.parentNode.parentNode;
         var position_L = $(acard).attr('data-position');
-        var position_R = position_L*3;
-        if(bnode.nextSibling!=null&&bnode.nextSibling!==undefined&&bnode.nextSibling.childNodes.length>0)
-            position_R = bnode.nextSibling.childNodes[1].getAttribute('data-position');
+        var position_R = parseFloat(position_L)*3;
+
+        if(bnode.nextElementSibling!=null&&bnode.nextElementSibling!==undefined&&bnode.nextElementSibling.children.length>1)
+            position_R = bnode.nextElementSibling.children[1].getAttribute('data-position');
 
         $.ajax({
             type: "post",
@@ -524,10 +525,10 @@ function addTaskCard() {
         var tid_old = $(this).parent().parent().attr('data-tid');
         var tcard = $(this).parent().parent();
         var tnode = this.parentNode.parentNode;
-        var position_R = $(tcard).attr('data-position')
+        var position_R = $(tcard).attr('data-position');
         var position_L = 0;
-        if(tnode.previousSibling!=null&&tnode.previousSibling!==undefined)
-            position_L = tnode.previousSibling.getAttribute('data-position');
+        if(tnode.previousElementSibling!=null&&tnode.previousElementSibling!==undefined)
+            position_L = tnode.previousElementSibling.getAttribute('data-position');
 
         $.ajax({
             type: "post",
@@ -560,9 +561,9 @@ function addTaskCard() {
         var tcard = $(this).parent().parent();
         var tnode = this.parentNode.parentNode;
         var position_L = $(tcard).attr('data-position');
-        var position_R = position_L*3;
-        if(tnode.nextSibling!=null&&tnode.nextSibling!==undefined)
-            position_R = tnode.nextSibling.getAttribute('data-position');
+        var position_R = parseFloat(position_L)*3;
+        if(tnode.nextElementSibling!=null&&tnode.nextElementSibling!==undefined)
+            position_R = tnode.nextElementSibling.getAttribute('data-position');
 
         $.ajax({
             type: "post",
@@ -725,8 +726,8 @@ function addNextStoryCard() {
         var snode = this.parentNode.parentNode;
         var pUp = $(scard).attr('data-position');
         var pDown = parseFloat(pUp)*3;
-        if(snode.nextSibling!=null)
-            pDown = snode.nextSibling.getAttribute('data-position');
+        if(snode.nextElementSibling!=null)
+            pDown = snode.nextElementSibling.getAttribute('data-position');
 
         $.ajax({
             type: "post",
@@ -752,8 +753,8 @@ function addNextStoryCard() {
         var snode = this.parentNode.parentNode;
         var pDown = $(scard).attr('data-position');
         var pUp = 0;
-        if(snode.previousSibling!=null)
-            pUp = snode.previousSibling.getAttribute('data-position');
+        if(snode.previousElementSibling!=null)
+            pUp = snode.previousElementSibling.getAttribute('data-position');
 
         $.ajax({
             type: "post",
