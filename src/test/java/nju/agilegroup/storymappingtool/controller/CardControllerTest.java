@@ -19,6 +19,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -39,97 +40,133 @@ public class CardControllerTest {
 
     @Test
     public void getMap() throws Exception{
-           MvcResult result1 = mockMvc.perform(post("http://localhost:8090/getMap")
-                   .contentType(MediaType.APPLICATION_JSON_UTF8)
-                   .param("mapId", "1"))
-                   .andExpect(status().isOk())
+           MvcResult result = mockMvc.perform(post("/getMapCards?mapId=1"))
                    .andReturn();
+        System.out.println(result.getResponse().getContentAsString());
     }
 
     @Test
     public void createActivityCard() throws Exception{
         Map<String, Object> map1 = new HashMap<>();
-        map1.put("name", "agilegroup");
-        MvcResult result1 = mockMvc.perform(post("http://localhost:8090/createActivityCard")
+        map1.put("name", "test");
+        map1.put("content", "");
+        map1.put("creatorId", 1);
+        map1.put("mapId", 10);
+        map1.put("position", 100);
+        MvcResult result = mockMvc.perform(post("/createActivity")
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .content(JSONObject.toJSONString(map1)))
-                .andExpect(status().isOk())
                 .andReturn();
+        System.out.println(result.getResponse().getContentAsString());
     }
 
     @Test
     public void createTaskCard() throws Exception{
-           Map<String, Object> map1 = new HashMap<>();
-           map1.put("name", "agilegroup");
-           MvcResult result1 = mockMvc.perform(post("http://localhost:8090/createTaskCard")
-                   .contentType(MediaType.APPLICATION_JSON_UTF8)
-                   .content(JSONObject.toJSONString(map1)))
-                   .andExpect(status().isOk())
-                   .andReturn();
+        Map<String, Object> map1 = new HashMap<>();
+        map1.put("name", "test");
+        map1.put("content", "");
+        map1.put("creatorId", 1);
+        map1.put("mapId", 10);
+        map1.put("position", 100);
+        map1.put("parent", 30);
+        MvcResult result = mockMvc.perform(post("/createTask")
+               .contentType(MediaType.APPLICATION_JSON_UTF8)
+               .content(JSONObject.toJSONString(map1)))
+               .andReturn();
+        System.out.println(result.getResponse().getContentAsString());
     }
 
     @Test
     public void createStoryCard() throws Exception{
         Map<String, Object> map1 = new HashMap<>();
-        map1.put("name", "agilegroup");
-        MvcResult result1 = mockMvc.perform(post("http://localhost:8090/createStoryCard")
+        map1.put("name", "test");
+        map1.put("content", "");
+        map1.put("creatorId", 1);
+        map1.put("mapId", 10);
+        map1.put("position", 100);
+        map1.put("parent", 29);
+        map1.put("worktime", 5);
+        map1.put("status", 0);
+        map1.put("release", 1);
+        MvcResult result = mockMvc.perform(post("/createStory")
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .content(JSONObject.toJSONString(map1)))
-                .andExpect(status().isOk())
                 .andReturn();
+        System.out.println(result.getResponse().getContentAsString());
     }
 
    @Test
     public void modifyActivityCard() throws Exception{
         Map<String, Object> map1 = new HashMap<>();
-        map1.put("name", "agilegroup");
-        MvcResult result1 = mockMvc.perform(post("http://localhost:8090/modifyActivityCard")
+        map1.put("id", 30);
+        map1.put("name", "test");
+        map1.put("content", "");
+        map1.put("creatorId", 1);
+        map1.put("mapId", 10);
+        map1.put("position", 100);
+        MvcResult result = mockMvc.perform(post("/modifyActivity")
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .content(JSONObject.toJSONString(map1)))
-                .andExpect(status().isOk())
                 .andReturn();
+       System.out.println(result.getResponse().getContentAsString());
     }
 
     @Test
     public void modifyTaskCard() throws Exception{
         Map<String, Object> map1 = new HashMap<>();
-        map1.put("name", "agilegroup");
-        MvcResult result1 = mockMvc.perform(post("http://localhost:8090/modifyTaskCard")
+        map1.put("id", 29);
+        map1.put("name", "test");
+        map1.put("content", "");
+        map1.put("creatorId", 1);
+        map1.put("mapId", 10);
+        map1.put("position", 100);
+        map1.put("parent", 30);
+        MvcResult result = mockMvc.perform(post("modifyTask")
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .content(JSONObject.toJSONString(map1)))
-                .andExpect(status().isOk())
                 .andReturn();
+        System.out.println(result.getResponse().getContentAsString());
     }
 
 
     @Test
     public void modifyStoryCard() throws Exception {
-         Map<String, Object> map1 = new HashMap<>();
-         map1.put("name", "agilegroup");
-         MvcResult result1 = mockMvc.perform(post("http://localhost:8090/modifyStoryCard")
+        Map<String, Object> map1 = new HashMap<>();
+        map1.put("id", 27);
+        map1.put("name", "test");
+        map1.put("content", "");
+        map1.put("creatorId", 1);
+        map1.put("mapId", 10);
+        map1.put("position", 100);
+        map1.put("parent", 29);
+        map1.put("worktime", 5);
+        map1.put("status", 0);
+        map1.put("release", 1);
+        MvcResult result = mockMvc.perform(post("/modifyStory")
                  .contentType(MediaType.APPLICATION_JSON_UTF8)
                  .content(JSONObject.toJSONString(map1)))
                  .andExpect(status().isOk())
                  .andReturn();
+        System.out.println(result.getResponse().getContentAsString());
     }
 
 
     @Test
     public void getRoles() throws Exception{
-        Map<String, Object> map1 = new HashMap<>();
-        map1.put("name", "agilegroup");
-        MvcResult result1 = mockMvc.perform(post("http://localhost:8090/getRoles")
-                .contentType(MediaType.APPLICATION_JSON_UTF8)
-                .param("mapId", "1"))
-                .andExpect(status().isOk())
+        MvcResult result = mockMvc.perform(get("/getRoles?mapId=1"))
                 .andReturn();
+        System.out.println(result.getResponse().getContentAsString());
     }
 
     @Test
     public void modifyRole() throws Exception{
          Map<String, Object> map1 = new HashMap<>();
-         map1.put("name", "agilegroup");
-         MvcResult result1 = mockMvc.perform(post("http://localhost:8090/modifyRole")
+         map1.put("mapId", 10);
+         map1.put("name", "test");
+         map1.put("avatar", "1");
+         map1.put("creatorId", 1);
+         map1.put("id", 10);
+         MvcResult result1 = mockMvc.perform(post("/modifyRole")
                  .contentType(MediaType.APPLICATION_JSON_UTF8)
                  .content(JSONObject.toJSONString(map1)))
                  .andExpect(status().isOk())

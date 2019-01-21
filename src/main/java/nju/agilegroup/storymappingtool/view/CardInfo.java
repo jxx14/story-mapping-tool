@@ -25,6 +25,7 @@ public class CardInfo {
     private int release;
 
     //创建时输入角色名称的列表即可，activity以外的卡片请将该字段设为roles:[]，否则可能会报错
+    //该字段现已废弃
     private List<Integer> roles;
 
     public int getId() {
