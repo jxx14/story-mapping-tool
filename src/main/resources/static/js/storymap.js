@@ -926,6 +926,17 @@ function init() {
             var rslist = {};
             var bdiv = '';
             var rdiv = '';
+            if(dList.length>0){
+                var rNum = dList[0]['maxRelease'];
+                for(var rr = 1;rr<=rNum;rr++){
+                    rslist[rr] = '<div style="margin-top: 15px;" data-rid="'+rid+'" class="release_label"><span>——Release '+rid+'</span>\n' +
+                        '            <div style="display: inline-block;width: 20px;height: 20px;">\n' +
+                        '                <img src="../icons/trash.png" class="remove_release" style="display: none;"/>\n' +
+                        '            </div>\n' +
+                        '        </div>\n' +
+                        '        <div class="release_div" data-rid="'+rr+'">';
+                }
+            }
             for(var i = 0;i<dList.length;i++){
                 bdiv += '<div class="backlog_div">';
                 var pList = dList[i]['roles'];
@@ -989,17 +1000,6 @@ function init() {
                         var rid = story['release'];
                         // var sid = story['id'];
                         var state = story_states[story['status']];
-
-                        if(rslist[rid]==undefined){
-                            rslist[rid] = '<div style="margin-top: 15px;" data-rid="'+rid+'" class="release_label"><span>——Release '+rid+'</span>\n' +
-                                '            <div style="display: inline-block;width: 20px;height: 20px;">\n' +
-                                '                <img src="../icons/trash.png" class="remove_release" style="display: none;"/>\n' +
-                                '            </div>\n' +
-                                '        </div>\n' +
-                                '        <div class="release_div" data-rid="'+rid+'">'+
-                                '<div class="backlog_div"><div class="story_panel"  data-aid="'+aid+'" style="margin-left: -5px;">'+
-                                '<div class="story_list" data-tid="'+tid+'">';
-                        }
 
                         rslist[rid]+='<div class="story_card" data-sid="'+story['id']+'" data-position="'+story['position']+'" data-creator="' +
                             story['creator']+'" data-creatAt="'+story['createAt']+'">\n' +
