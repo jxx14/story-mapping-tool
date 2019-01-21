@@ -38,6 +38,7 @@ public class AccountTest {
 
     @Test
     public void testLogin() throws Exception {
+        //正确登陆
         Map<String, Object> map1 = new HashMap<>();
         map1.put("email", "modify2@qq.com");
         map1.put("password", "njuagile123");
@@ -48,7 +49,7 @@ public class AccountTest {
                 .andReturn();
 
 
-
+        //邮箱不正确
         Map<String, Object> map2 = new HashMap<>();
         map2.put("email", "19252@qq.com");
         map2.put("password", "njuagile");
@@ -58,6 +59,7 @@ public class AccountTest {
                 .andExpect(status().isOk())
                 .andReturn();
 
+        //密码不正确
         Map<String, Object> map3 = new HashMap<>();
         map3.put("email", "1483809252@qq.com");
         map3.put("password", "njua");
@@ -68,12 +70,14 @@ public class AccountTest {
                 .andReturn();
 
 
+
+        //用户已经登陆
         Map<String, Object> map4 = new HashMap<>();
-        map4.put("email", "1483809252@qq.com");
-        map4.put("password", "njua");
+        map4.put("email", "modify2@qq.com");
+        map4.put("password", "njuagile123");
         MvcResult result4 = mockMvc.perform(post("http://localhost:8090/user/login")
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
-                .content(JSONObject.toJSONString(map4))
+                .content(JSONObject.toJSONString(map1))
                 .session((MockHttpSession) result3.getRequest().getSession()))
                 .andExpect(status().isOk())
                 .andReturn();
@@ -82,9 +86,10 @@ public class AccountTest {
 
     @Test
     public void testSignUp() throws Exception {
+        //用户名存在，邮箱不存在
         Map<String, Object> map1 = new HashMap<>();
-        map1.put("name", "agilegroup");
-        map1.put("email", "1483809252@qq.com");
+        map1.put("name", "Agile7");
+        map1.put("email", "1@qq.com");
         map1.put("password", "njuagile123");
         MvcResult result1 = mockMvc.perform(post("http://localhost:8090/signUp")
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
@@ -92,9 +97,10 @@ public class AccountTest {
                 .andExpect(status().isOk())
                 .andReturn();
 
+        //用户名不存在，邮箱存在
         Map<String, Object> map2 = new HashMap<>();
-        map2.put("name", "modify3");
-        map2.put("email", "09252@qq.com");
+        map2.put("name", "mo");
+        map2.put("email", "1234567897@qq.com");
         map2.put("password", "njuagile123");
         MvcResult result2 = mockMvc.perform(post("http://localhost:8090/signUp")
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
@@ -103,9 +109,11 @@ public class AccountTest {
                 .andReturn();
 
 
+
+        //用户名和邮箱都已经存在
         Map<String, Object> map3 = new HashMap<>();
-        map3.put("name", "mfy3");
-        map3.put("email", "zhangsan@qq.com");
+        map3.put("name", "Agile7");
+        map3.put("email", "1234567897@qq.com");
         map3.put("password", "njuagile123");
         MvcResult result3 = mockMvc.perform(post("http://localhost:8090/signUp")
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
@@ -113,9 +121,10 @@ public class AccountTest {
                 .andExpect(status().isOk())
                 .andReturn();
 
+        //用户名和邮箱都不存在
         Map<String, Object> map4 = new HashMap<>();
-        map4.put("name", "mfy3");
-        map4.put("email", "my3@qq.com");
+        map4.put("name", "testName");
+        map4.put("email", "testName@qq.com");
         map4.put("password", "njuagile123");
         MvcResult result4 = mockMvc.perform(post("http://localhost:8090/signUp")
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
@@ -210,8 +219,8 @@ public class AccountTest {
     public void testJoinTeam()throws Exception{
         MvcResult result1 = mockMvc.perform(post("http://localhost:8090/joinTeam")
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
-                .param("userName", "modify3")
-                .param("teamName","jx's team"))
+                .param("userName", "zhangsan")
+                .param("teamName","abc"))
                 .andExpect(status().isOk())
                 .andReturn();
     }
@@ -220,8 +229,8 @@ public class AccountTest {
     public void testLeaveTeam()throws Exception{
         MvcResult result1 = mockMvc.perform(post("http://localhost:8090/leaveTeam")
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
-                .param("userName", "modify3")
-                .param("teamName","jx's team"))
+                .param("userName", "zhangsan")
+                .param("teamName","abc"))
                 .andExpect(status().isOk())
                 .andReturn();
     }

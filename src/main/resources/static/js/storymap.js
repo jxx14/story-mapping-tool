@@ -230,7 +230,7 @@ function createBacklogDiv(acardInfo,tcardInfo) {
         '                </div>\n' +
         '                <div class="activity_card" data-aid="'+acardInfo['id']+'" data-position="'+acardInfo['position']+'" data-creator="'+acardInfo['creator']+'" data-creatAt="'+acardInfo['creatAt']+'">\n' +
         '                    <div class="activity_textDiv">text</div>\n' +
-        '                    <div class="activity_estimation"></div>\n' +
+        '                    <div class="activity_estimation">0</div>\n' +
         '                    <div class="activity_card_operation" style="display: none;">\n' +
         '                    <img src="../icons/left-arrow.png" class="add_left_icon addActivityLeft"/>\n' +
         '                    <img src="../icons/trash.png" class="remove_icon removeActivity"/>\n' +
@@ -240,7 +240,7 @@ function createBacklogDiv(acardInfo,tcardInfo) {
         '                <div style="margin-left: -5px;">\n' +
         '                    <div class="task_card" data-tid="'+tcardInfo['id']+'" data-position="'+tcardInfo['position']+'" data-creator="'+tcardInfo['creator']+'" data-creatAt="'+tcardInfo['creatAt']+'">\n' +
         '                        <div class="activity_textDiv">text</div>\n' +
-        '                        <div class="task_estimation"></div>\n' +
+        '                        <div class="task_estimation">0</div>\n' +
         '                        <div class="activity_card_operation" style="display: none;">\n' +
         '                            <img src="../icons/left-arrow.png" class="add_left_icon addTaskLeft"/>\n' +
         '                            <img src="../icons/trash.png" class="remove_icon removeTask" style="display: none;"/>\n' +
@@ -268,7 +268,7 @@ function addActivityCard() {
         $.ajax({
             type: "post",
             url: "/createActivity",
-            data:JSON.stringify({"mapId":mapId,"name":'text',"creatorId":userId,"position":(position_L+position_R)/2}),
+            data:JSON.stringify({"mapId":mapId,"name":'text',"creatorId":userId,"position":(parseFloat(position_L)+parseFloat(position_R))/2}),
             contentType: "application/json; charset=utf-8",
             async: false,
             success: function (act) {
@@ -325,7 +325,7 @@ function addActivityCard() {
         $.ajax({
             type: "post",
             url: "/createActivity",
-            data:JSON.stringify({"mapId":mapId,"name":'text',"creatorId":userId,"position":(position_L+position_R)/2,"roles":[]}),
+            data:JSON.stringify({"mapId":mapId,"name":'text',"creatorId":userId,"position":(parseFloat(position_L)+parseFloat(position_R))/2,"roles":[]}),
             contentType: "application/json; charset=utf-8",
             async: false,
             success: function (act) {
@@ -506,7 +506,7 @@ function removeTaskCard() {
 function createTaskCard(tid) {
     var tcard = '<div class="task_card" data-tid="'+tid+'">\n' +
         '                        <div class="activity_textDiv">text</div>\n' +
-        '                        <div class="task_estimation"></div>\n' +
+        '                        <div class="task_estimation">0</div>\n' +
         '                        <div class="activity_card_operation" style="display: none;">\n' +
         '                            <img src="../icons/left-arrow.png" class="add_left_icon addTaskLeft"/>\n' +
         '                            <img src="../icons/trash.png" class="remove_icon removeTask"/>\n' +
@@ -520,6 +520,7 @@ function createTaskCard(tid) {
 function addTaskCard() {
     $('body').on("click",'.addTaskLeft',function () {
         var aid = $(this).parent().parent().parent().parent().find('.activity_card').attr('data-aid');
+        var tid_old = $(this).parent().parent().attr('data-tid');
         var tcard = $(this).parent().parent();
         var tnode = this.parentNode.parentNode;
         var position_R = $(tcard).attr('data-position')
@@ -530,14 +531,18 @@ function addTaskCard() {
         $.ajax({
             type: "post",
             url: "/createTask",
-            data:JSON.stringify({"mapId":mapId,"name":'text',"creatorId":userId,"position":(position_L+position_R)/2,"parent":aid}),
+            data:JSON.stringify({"mapId":mapId,"name":'text',"creatorId":userId,"position":(parseFloat(position_L)+parseFloat(position_R))/2,"parent":aid}),
             contentType: "application/json; charset=utf-8",
             async: false,
             success: function (task) {
                 var tid = task['data']['id'];
                 $(tcard).before(createTaskCard(tid));
                 $(tcard).parent().find('.task_card').find('.removeTask').show();
-                addStoryPlusCard(aid,tid);
+
+                $('.release_div').find('.story_panel[data-aid='+aid+']').find('.story_list[data-tid='+tid_old+']').before('<div class="story_list" data-tid="'+tid+'"><div class="story_plus_card">\n' +
+                    '                    <div style="margin-top: 2px;text-align: center;">\n' +
+                    '                        <img class="add_story" src="../icons/add_large.png" /></div>\n' +
+                    '                </div></div>');
 
             }, error: function (XMLHttpRequest, textStatus, errorThrown) {
                 alert(XMLHttpRequest.status);
@@ -550,6 +555,7 @@ function addTaskCard() {
 
     $('body').on("click",'.addTaskRight',function () {
         var aid = $(this).parent().parent().parent().parent().find('.activity_card').attr('data-aid');
+        var tid_old = $(this).parent().parent().attr('data-tid');
         var tcard = $(this).parent().parent();
         var tnode = this.parentNode.parentNode;
         var position_L = $(tcard).attr('data-position');
@@ -560,14 +566,19 @@ function addTaskCard() {
         $.ajax({
             type: "post",
             url: "/createTask",
-            data:JSON.stringify({"mapId":mapId,"name":'text',"creatorId":userId,"position":(position_L+position_R)/2,"roles":[],"parent":aid}),
+            data:JSON.stringify({"mapId":mapId,"name":'text',"creatorId":userId,"position":(parseFloat(position_L)+parseFloat(position_R))/2,"roles":[],"parent":aid}),
             contentType: "application/json; charset=utf-8",
             async: false,
             success: function (task) {
                 var tid = task['data']['id'];
                 $(tcard).after(createTaskCard(tid));
                 $(tcard).parent().find('.task_card').find('.removeTask').show();
-                addStoryPlusCard(aid,tid);
+
+                $('.release_div').find('.story_panel[data-aid='+aid+']').find('.story_list[data-tid='+tid_old+']').after('<div class="story_list" data-tid="'+tid+'"><div class="story_plus_card">\n' +
+                    '                    <div style="margin-top: 2px;text-align: center;">\n' +
+                    '                        <img class="add_story" src="../icons/add_large.png" /></div>\n' +
+                    '                </div></div>');
+
 
             }, error: function (XMLHttpRequest, textStatus, errorThrown) {
                 alert(XMLHttpRequest.status);
@@ -576,15 +587,6 @@ function addTaskCard() {
             }
         });
     });
-}
-
-function addStoryPlusCard(aid, tid) {
-    var op = '.story_panel[data-aid='+aid+']';
-    var sc = '<div class="story_list" data-tid="'+tid+'"><div class="story_plus_card">\n' +
-        '                    <div style="margin-top: 2px;text-align: center;">\n' +
-        '                        <img class="add_story" src="../icons/add_large.png" /></div>\n' +
-        '                </div></div>';
-    $('.release_div').find(op).append(sc);
 }
 
 function modifyTaskCard() {
@@ -662,8 +664,8 @@ function createStoryCard(story) {
     var s = '<div class="story_card" data-sid="'+story['id']+'" data-position="'+story['position']+'" data-creator="' +
                 story['creator']+'" data-creatAt="'+story['createAt']+'">\n' +
         '                            <div class="activity_textDiv">text</div>\n' +
-        '                            <div class="story_state todo">Todo</div>\n' +
-        '                            <div class="story_estimation"></div>\n' +
+        '                            <div class="story_state todo">todo</div>\n' +
+        '                            <div class="story_estimation">2</div>\n' +
         '                            <div class="activity_card_operation" style="display: none;">' +
         '                            <img src="../icons/up-arrow.png" class="add_up_icon addStoryUp"/>' +
         '                            <img src=" ../icons/trash.png" class="remove_icon removeStory"/>\n' +
@@ -679,6 +681,7 @@ function addFirstStoryCard() {
         var pdiv = $(this).parent().parent().parent();
         var tid = $(pdiv).attr('data-tid');
         var rid = $(pdiv).parent().parent().parent().attr('data-rid');
+        var aid = $(pdiv).parent().attr('data-aid');
 
         $.ajax({
             type: "post",
@@ -688,6 +691,7 @@ function addFirstStoryCard() {
             async: false,
             success: function (data) {
                 $(pdiv).html(createStoryCard(data));
+                modifyEstimation(tid,aid);
             }, error: function (XMLHttpRequest, textStatus, errorThrown) {
                 alert(XMLHttpRequest.status);
                 alert(XMLHttpRequest.readyState);
@@ -714,22 +718,24 @@ function removeStoryCard() {
 function addNextStoryCard() {
     $('body').on("click",'.addStoryDown',function () {
         var tid = $(this).parent().parent().parent().attr('data-tid');
+        var aid = $(this).parent().parent().parent().parent().attr('data-aid');
         var rid = $(this).parent().parent().parent().parent().parent().parent().attr('data-rid');
         var scard = $(this).parent().parent();
         var snode = this.parentNode.parentNode;
         var pUp = $(scard).attr('data-position');
-        var pDown = pUp*3;
+        var pDown = parseFloat(pUp)*3;
         if(snode.nextSibling!=null)
             pDown = snode.nextSibling.getAttribute('data-position');
 
         $.ajax({
             type: "post",
             url: "/createStory",
-            data:JSON.stringify({"mapId":mapId,"name":'text',"creatorId":userId,"position":(pUp+pDown)/2,"parent":tid,"status":1,"worktime":2,"release":rid}),
+            data:JSON.stringify({"mapId":mapId,"name":'text',"creatorId":userId,"position":(parseFloat(pUp)+parseFloat(pDown))/2,"parent":tid,"status":1,"worktime":2,"release":rid}),
             contentType: "application/json; charset=utf-8",
             async: false,
             success: function (data) {
                 $(scard).after(createStoryCard(data));
+                modifyEstimation(tid,aid);
             }, error: function (XMLHttpRequest, textStatus, errorThrown) {
                 alert(XMLHttpRequest.status);
                 alert(XMLHttpRequest.readyState);
@@ -747,11 +753,11 @@ function addNextStoryCard() {
         var pUp = 0;
         if(snode.previousSibling!=null)
             pUp = snode.previousSibling.getAttribute('data-position');
-        console.log((pUp+pDown)/2)
+
         $.ajax({
             type: "post",
             url: "/createStory",
-            data:JSON.stringify({"mapId":mapId,"name":'text',"creatorId":userId,"position":(pUp+pDown)/2,"parent":tid,"status":1,"worktime":2,"release":rid,"roles":[]}),
+            data:JSON.stringify({"mapId":mapId,"name":'text',"creatorId":userId,"position":(parseFloat(pUp)+parseFloat(pDown))/2,"parent":tid,"status":1,"worktime":2,"release":rid,"roles":[]}),
             contentType: "application/json; charset=utf-8",
             async: false,
             success: function (data) {
@@ -806,19 +812,7 @@ function modifyStoryCard() {
 
                 var tid = $(scard).parent().attr('data-tid');
                 var aid = $(scard).parent().parent().attr('data-aid');
-                var t_estimation = 0;
-                var a_estimation = 0;
-                var sList = $('.story_list[data-tid='+tid+']').find('.story_card');
-                for(var i = 0;i<sList.length;i++){
-                    t_estimation+=parseInt(sList.eq(i).find('.story_estimation').html());
-                }
-                sList = $('.story_panel[data-aid='+aid+']').find('.story_card');
-                for(var i = 0;i<sList.length;i++){
-                    a_estimation+=parseInt(sList.eq(i).find('.story_estimation').html());
-                }
-
-                $('.task_card[data-tid='+tid+']').find('.task_estimation').html(t_estimation);
-                $('.activity_card[data-aid='+aid+']').find('.activity_estimation').html(a_estimation);
+                modifyEstimation(tid,aid);
                 $('#storyModal').modal('hide');
 
             }, error: function (XMLHttpRequest, textStatus, errorThrown) {
@@ -828,6 +822,22 @@ function modifyStoryCard() {
             }
         });
     });
+}
+
+function modifyEstimation(tid,aid) {
+    var t_estimation = 0;
+    var a_estimation = 0;
+    var sList = $('.story_list[data-tid='+tid+']').find('.story_card');
+    for(var i = 0;i<sList.length;i++){
+        t_estimation+=parseInt(sList.eq(i).find('.story_estimation').html());
+    }
+    sList = $('.story_panel[data-aid='+aid+']').find('.story_card');
+    for(var i = 0;i<sList.length;i++){
+        a_estimation+=parseInt(sList.eq(i).find('.story_estimation').html());
+    }
+
+    $('.task_card[data-tid='+tid+']').find('.task_estimation').html(t_estimation);
+    $('.activity_card[data-aid='+aid+']').find('.activity_estimation').html(a_estimation);
 }
 
 
@@ -1027,12 +1037,12 @@ function init() {
                 var aid = actList.eq(i).attr('data-aid');
                 var tList = actList.eq(i).parent().find('.task_card');
 
-                $('.release_div').each(function () {
-                    var spanel = $(this).find('.story_panel[data-aid='+aid+']');
-                    if(spanel.length<=0){
-                        $(this).append(s);
-                    }
-                });
+                // $('.release_div').each(function () {
+                //     var spanel = $(this).find('.story_panel[data-aid='+aid+']');
+                //     if(spanel.length<=0){
+                //         $(this).append('');
+                //     }
+                // });
 
                 for(var j = 0;j<tList.length;j++){
                     var tid = tList.eq(j).attr('data-tid');
