@@ -27,7 +27,7 @@ public class StoryCard {
     @Column(name = "create_at")
     private Timestamp createAt;
 
-    @ManyToOne(optional = false, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(optional = false, fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @JoinColumn(name = "creator_id")
     private User creator;
 
