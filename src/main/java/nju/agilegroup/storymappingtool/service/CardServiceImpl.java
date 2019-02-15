@@ -340,6 +340,12 @@ public class CardServiceImpl implements CardService{
         storyCardDAO.deleteByRelease(release, mapId);
         storyCardDAO.updateRelease(release, mapId);
 
+        StoryMap map = mapDAO.findOne(mapId);
+        map.setRelease(map.getRelease()-1);
+        if(map.getRelease() < 0)
+            map.setRelease(0);
+        mapDAO.save(map);
+
         return new ResultInfo<>(true, "success", "删除成功");
     }
 
