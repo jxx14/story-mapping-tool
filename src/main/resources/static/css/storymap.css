@@ -78,7 +78,7 @@
     position: absolute;
     bottom: 1px;
     margin-left: 3px;
-    color: rgb(86,168,198)
+    color: rgb(86,168,198);
 }
 .activity_card_operation{
     background-color: rgba(0,0,0,0.1);
@@ -328,4 +328,12 @@
 }
 #nav_logout_li:hover{
     color: rgba(255,255,255,1);
+}
+
+.find_story_card{
+    border:deepskyblue 2px solid;
+    background-color: lightskyblue;
+}
+.find_estimation{
+    color:rgb(86,168,198);
 }

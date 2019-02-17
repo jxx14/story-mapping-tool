@@ -9,6 +9,7 @@ var story_states = ['ready','todo','doing','done'];
 var mapId;
 var userId;
 var username;
+var storyHighlight = false;
 
 $(function(){
     init();
@@ -23,6 +24,33 @@ $(function(){
     userId = $.session.get('userId');
     username = $.session.get('username');
     $('#nav_user_li').html(username);
+
+    $('#storySearch_button').click(function () {
+        var sname = $('#storyName').val();
+        var sList = $('.story_card');
+        for (var i = 0;i<sList.length;i++){
+            var scard = sList.eq(i);
+            if($(scard).find('.activity_textDiv').html()==sname){
+                $(scard).addClass('find_story_card');
+                $(scard).find('.story_estimation').addClass('find_estimation');
+                storyHighlight = true;
+                $('html, body').animate({
+                    scrollTop: $(scard).offset().top
+                }, 300);
+                break;
+            }
+        }
+    });
+
+    $('#container').click(function () {
+        if(storyHighlight){
+            $('.story_card').each(function () {
+                $(this).removeClass('find_story_card');
+                $(this).find('.story_estimation').removeClass('find_estimation');
+            });
+            storyHighlight = false;
+        }
+    });
     
     $('.add_backlog').on("click",function () {
         var tcard = $(this).parent().parent();
@@ -927,23 +955,23 @@ function removeReleaseDiv() {
     $('body').on("click",'.remove_release',function () {
         var rdiv = $(this).parent().parent();
         var rid = $(rdiv).attr('data-rid');
-        var rNum = $('.release_div').length - 1;
-        if(rNum==0){
-            rNum=-1;
-        }
-        $.ajax({
-            type: "post",
-            url: "/modifyMap",
-            data:JSON.stringify({"id":mapId,"release":rNum}),
-            contentType: "application/json; charset=utf-8",
-            async: false,
-            success: function (data) {
-            }, error: function (XMLHttpRequest, textStatus, errorThrown) {
-                alert(XMLHttpRequest.status);
-                alert(XMLHttpRequest.readyState);
-                alert(textStatus);
-            }
-        });
+        // var rNum = $('.release_div').length - 1;
+        // if(rNum==0){
+        //     rNum=-1;
+        // }
+        // $.ajax({
+        //     type: "post",
+        //     url: "/modifyMap",
+        //     data:JSON.stringify({"id":mapId,"release":rNum}),
+        //     contentType: "application/json; charset=utf-8",
+        //     async: false,
+        //     success: function (data) {
+        //     }, error: function (XMLHttpRequest, textStatus, errorThrown) {
+        //         alert(XMLHttpRequest.status);
+        //         alert(XMLHttpRequest.readyState);
+        //         alert(textStatus);
+        //     }
+        // });
 
         $.ajax({
             type: "post",
