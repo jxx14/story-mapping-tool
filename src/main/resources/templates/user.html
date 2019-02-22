@@ -48,6 +48,13 @@
                 <img th:src="@{icons/email.svg}" alt="" th:title="email">
                 <span id="userEmail"></span>
             </div>
+            <div class="item" id="prepareModify">
+                <button class="btn btn-default" onclick="makeInfoModifiable()">Update profile</button>
+            </div>
+            <div class="item" id="confirmModify" style="display: none">
+                <button class="btn btn-default" onclick="submitModify()">Modify</button>
+            </div>
+            <input id="oldName" type="text" hidden="hidden">
         </div>
 
         <div class="col-md-9 col-sm-8">
@@ -177,6 +184,52 @@
     function showMap(mapId) {
         $.session.set("mapId", mapId);
         window.location = "/storymap";
+    }
+
+    function makeInfoModifiable() {
+        const name = $('#userName');
+
+        $('#oldName').val(name.text());
+        name.html('<input type="text" placeholder="Input a new name" id="newName">');
+        $('#prepareModify').hide();
+        $('#confirmModify').show();
+    }
+
+    function submitModify() {
+        const newName = $('#newName').val();
+        const oldName = $('#oldName').val();
+
+        $.ajax({
+            url: '/modifyUserInfo',
+            method: 'post',
+            contentType: 'application/json',
+            data: JSON.stringify({
+                'name': newName,
+                'email': $('#userEmail').text()
+            }),
+            success: function (result) {
+                if (result.success) {
+                    renderUserInfo(newName);
+                    showTip($('#tip'), result.message, '#5DD259');
+                } else {
+                    showTip($('#tip'), result.message);
+                    renderUserInfo(oldName);
+                }
+            },
+            error: function (result) {
+                showTip($('#tip'), result);
+                renderUserInfo(oldName);
+            }
+        });
+    }
+
+    function renderUserInfo(name) {
+        const nameElement = $('#userName');
+        nameElement.html();
+        nameElement.text(name);
+
+        $('#confirmModify').hide();
+        $('#prepareModify').show();
     }
 </script>
 

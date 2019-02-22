@@ -44,6 +44,11 @@
     margin-left: 1rem;
 }
 
+.item button {
+    margin-left: 2.2rem;
+    margin-top: 1.2rem;
+}
+
 .team-container {
     margin-top: 3.6rem;
 }
