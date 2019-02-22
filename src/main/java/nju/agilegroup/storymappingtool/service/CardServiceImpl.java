@@ -159,8 +159,19 @@ public class CardServiceImpl implements CardService{
     }
 
     @Override
-    public ResultInfo<Object> deleteActivityCard(HttpSession session, CardInfo cardInfo) {
-        return null;
+    public ResultInfo<Object> deleteActivityCard(HttpSession session, int id) {
+        ActivityCard card = activityCardDAO.findOne(id);
+        if(card == null)
+            return new ResultInfo<>(false, "fail", "卡片不存在");
+
+        //需要删除下面的任务卡和活动卡，先查找要删除的task，然后根据task删掉story
+        activityCardDAO.delete(id);
+        List<TaskCard> tasks = taskCardDAO.findByActivityId(id);
+        for(int i=0; i<tasks.size(); i++){
+            storyCardDAO.deleteByTask(tasks.get(i).getId());
+        }
+        taskCardDAO.deleteByActivity(id);
+        return new ResultInfo<>(true, "success", "删除成功");
     }
 
     @Override
@@ -199,8 +210,14 @@ public class CardServiceImpl implements CardService{
     }
 
     @Override
-    public ResultInfo<Object> deleteTaskCard(HttpSession session, CardInfo cardInfo) {
-        return null;
+    public ResultInfo<Object> deleteTaskCard(HttpSession session, int id) {
+        TaskCard card = taskCardDAO.findOne(id);
+        if(card == null)
+            return new ResultInfo<>(false, "fail", "卡片不存在");
+
+        taskCardDAO.delete(id);
+        storyCardDAO.deleteByTask(id);
+        return new ResultInfo<>(true, "success", "删除成功");
     }
 
     @Override
@@ -242,8 +259,13 @@ public class CardServiceImpl implements CardService{
     }
 
     @Override
-    public ResultInfo<Object> deleteStoryCard(HttpSession session, CardInfo cardInfo) {
-        return null;
+    public ResultInfo<Object> deleteStoryCard(HttpSession session, int id) {
+        StoryCard card = storyCardDAO.findOne(id);
+        if(card == null)
+            return new ResultInfo<>(false, "fail", "卡片不存在");
+
+        storyCardDAO.delete(id);
+        return new ResultInfo<>(true, "success", "删除成功");
     }
 
     @Override
@@ -311,6 +333,20 @@ public class CardServiceImpl implements CardService{
         ActivityCard card = activityCardDAO.findOne(activiyId);
         List<Role> roles = roleDAO.findByActivtiyId(activiyId);
         return new ResultInfo<>(true, "success", activityCardToInfo(card, roles));
+    }
+
+    @Override
+    public ResultInfo<Object> deleteRelease(HttpSession session, int release, int mapId) {
+        storyCardDAO.deleteByRelease(release, mapId);
+        storyCardDAO.updateRelease(release, mapId);
+
+        StoryMap map = mapDAO.findOne(mapId);
+        map.setRelease(map.getRelease()-1);
+        if(map.getRelease() < 0)
+            map.setRelease(0);
+        mapDAO.save(map);
+
+        return new ResultInfo<>(true, "success", "删除成功");
     }
 
     private List<RoleInfo> rolesToInfo(List<Role> activityRoles){

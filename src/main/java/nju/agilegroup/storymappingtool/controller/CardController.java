@@ -90,6 +90,36 @@ public class CardController {
     }
 
     /**
+     * 删除一张卡片，需要传入卡片ID
+     * @param request
+     * @param id
+     * @return
+     */
+    @RequestMapping(value = "/deleteActivity")
+    public ResultInfo<Object> deleteActivityCard(HttpServletRequest request, @RequestParam int id){
+        HttpSession session = request.getSession();
+        return cardService.deleteActivityCard(session, id);
+    }
+
+    @RequestMapping(value = "/deleteTask")
+    public ResultInfo<Object> deleteTaskCard(HttpServletRequest request, @RequestParam int id){
+        HttpSession session = request.getSession();
+        return cardService.deleteTaskCard(session, id);
+    }
+
+    @RequestMapping(value = "/deleteStory")
+    public ResultInfo<Object> deleteStoryCard(HttpServletRequest request, @RequestParam int id){
+        HttpSession session = request.getSession();
+        return cardService.deleteStoryCard(session, id);
+    }
+
+    @RequestMapping(value = "/deleteRelease")
+    public ResultInfo<Object> deleteRelease(HttpServletRequest request, @RequestParam int id, @RequestParam int release){
+        HttpSession session = request.getSession();
+        return cardService.deleteRelease(session, release, id);
+    }
+
+    /**
      * 获取一个地图的所有角色
      * 返回List<RoleInfo>的json
      * @param request

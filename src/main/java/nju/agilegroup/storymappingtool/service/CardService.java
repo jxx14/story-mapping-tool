@@ -14,19 +14,19 @@ public interface CardService {
 
     ResultInfo<Object> modifyActivityCard(HttpSession session, CardInfo cardInfo);
 
-    ResultInfo<Object> deleteActivityCard(HttpSession session, CardInfo cardInfo);
+    ResultInfo<Object> deleteActivityCard(HttpSession session, int id);
 
     ResultInfo<Object> createTaskCard(HttpSession session, CardInfo cardInfo);
 
     ResultInfo<Object> modifyTaskCard(HttpSession session, CardInfo cardInfo);
 
-    ResultInfo<Object> deleteTaskCard(HttpSession session, CardInfo cardInfo);
+    ResultInfo<Object> deleteTaskCard(HttpSession session, int id);
 
     ResultInfo<Object> createStoryCard(HttpSession session, CardInfo cardInfo);
 
     ResultInfo<Object> modifyStoryCard(HttpSession session, CardInfo cardInfo);
 
-    ResultInfo<Object> deleteStoryCard(HttpSession session, CardInfo cardInfo);
+    ResultInfo<Object> deleteStoryCard(HttpSession session, int id);
 
     ResultInfo<Object> getRoles(HttpSession session, int mapId);
 
@@ -35,4 +35,6 @@ public interface CardService {
     ResultInfo<Object> addRoleToActivity(HttpSession session, RoleInfo roleInfo, int activiyId);
 
     ResultInfo<Object> removeRoleFromActivity(HttpSession session, RoleInfo roleInfo, int activiyId);
+
+    ResultInfo<Object> deleteRelease(HttpSession session, int release, int mapId);
 }

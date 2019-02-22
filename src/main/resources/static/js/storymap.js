@@ -9,6 +9,7 @@ var story_states = ['ready','todo','doing','done'];
 var mapId;
 var userId;
 var username;
+var storyHighlight = false;
 
 $(function(){
     init();
@@ -23,6 +24,33 @@ $(function(){
     userId = $.session.get('userId');
     username = $.session.get('username');
     $('#nav_user_li').html(username);
+
+    $('#storySearch_button').click(function () {
+        var sname = $('#storyName').val();
+        var sList = $('.story_card');
+        for (var i = 0;i<sList.length;i++){
+            var scard = sList.eq(i);
+            if($(scard).find('.activity_textDiv').html()==sname){
+                $(scard).addClass('find_story_card');
+                $(scard).find('.story_estimation').addClass('find_estimation');
+                storyHighlight = true;
+                $('html, body').animate({
+                    scrollTop: $(scard).offset().top
+                }, 300);
+                break;
+            }
+        }
+    });
+
+    $('#container').click(function () {
+        if(storyHighlight){
+            $('.story_card').each(function () {
+                $(this).removeClass('find_story_card');
+                $(this).find('.story_estimation').removeClass('find_estimation');
+            });
+            storyHighlight = false;
+        }
+    });
     
     $('.add_backlog').on("click",function () {
         var tcard = $(this).parent().parent();
@@ -384,24 +412,24 @@ function activityCardBind() {
 
 function removeActivityCard() {
     $('body').on("click",'.removeActivity',function () {
-        var aid = $(this).parent().parent().attr('data-aid');
+        var acard = $(this).parent().parent();
+        var aid = $(acard).attr('data-aid');
 
-        // $.ajax({
-        //     type: "post",
-        //     url: "/createActivity",
-        //     data:{"mapId":mapId,"name":'text',"creatorId":userId,"position":(position_L+position_R)/2,"roles":[]},
-        //     async: false,
-        //     success: function (act) {
-        //
-        //     }, error: function (XMLHttpRequest, textStatus, errorThrown) {
-        //         alert(XMLHttpRequest.status);
-        //         alert(XMLHttpRequest.readyState);
-        //         alert(textStatus);
-        //     }
-        // });
-        $(this).parent().parent().parent().remove();
-        var op = '.story_panel[data-aid='+aid+']';
-        $(op).parent().remove();
+        $.ajax({
+            type: "post",
+            url: "/deleteActivity",
+            data:{'id':aid},
+            async: false,
+            success: function (data) {
+                $(acard).parent().remove();
+                var op = '.story_panel[data-aid='+aid+']';
+                $(op).parent().remove();
+            }, error: function (XMLHttpRequest, textStatus, errorThrown) {
+                alert(XMLHttpRequest.status);
+                alert(XMLHttpRequest.readyState);
+                alert(textStatus);
+            }
+        });
     });
 }
 
@@ -490,18 +518,30 @@ function taskCardBind() {
 
 function removeTaskCard() {
     $('body').on("click",'.removeTask',function () {
-        var tid = $(this).parent().parent().attr('data-tid');
-        var bdiv = $(this).parent().parent().parent();
-        $(bdiv).find('.task_card').find('.removeTask').show();
-        var num = $(bdiv).find('.task_card').length;
+        var tcard = $(this).parent().parent();
+        var tid = $(tcard).attr('data-tid');
+        var bdiv = $(tcard).parent();
 
-        if(num == 2){
-            $(bdiv).find('.task_card').eq(0).find('.removeTask').hide();
-        }
+        $.ajax({
+            type: "post",
+            url: "/deleteTask",
+            data:{'id':tid},
+            async: false,
+            success: function (data) {
+                $(bdiv).find('.task_card').find('.removeTask').show();
+                if($(bdiv).find('.task_card').length == 2){
+                    $(bdiv).find('.task_card').eq(0).find('.removeTask').hide();
+                }
 
-        $(this).parent().parent().remove();
-        var op = '.story_list[data-tid='+tid+']';
-        $(op).remove();
+                $(tcard).remove();
+                var op = '.story_list[data-tid='+tid+']';
+                $(op).remove();
+            }, error: function (XMLHttpRequest, textStatus, errorThrown) {
+                alert(XMLHttpRequest.status);
+                alert(XMLHttpRequest.readyState);
+                alert(textStatus);
+            }
+        });
     });
 }
 
@@ -688,7 +728,7 @@ function addFirstStoryCard() {
         $.ajax({
             type: "post",
             url: "/createStory",
-            data:JSON.stringify({"mapId":mapId,"name":'text',"creatorId":userId,"position":1,"parent":tid,"status":1,"worktime":2,"release":rid}),
+            data:JSON.stringify({"mapId":mapId,"name":'text',"creatorId":userId,"position":1,"parent":tid,"status":2,"worktime":2,"release":rid}),
             contentType: "application/json; charset=utf-8",
             async: false,
             success: function (data) {
@@ -705,15 +745,29 @@ function addFirstStoryCard() {
 
 function removeStoryCard() {
     $('body').on("click",'.removeStory',function () {
-        var slist = $(this).parent().parent().parent()
-        var num = $(slist).find('.story_card').length;
-        $(this).parent().parent().remove();
-        if(num==1){
-            $(slist).html('<div class="story_plus_card">\n' +
-                '                    <div style="margin-top: 2px;text-align: center;">\n' +
-                '                        <img class="add_story" src="../icons/add_large.png" /></div>\n' +
-                '                </div>');
-        }
+        var scard = $(this).parent().parent();
+        var sid = $(scard).attr('data-sid');
+        var slist = $(scard).parent();
+
+        $.ajax({
+            type: "post",
+            url: "/deleteStory",
+            data:{'id':sid},
+            async: false,
+            success: function (data) {
+                $(scard).remove();
+                if($(slist).find('.story_card').length<1){
+                    $(slist).html('<div class="story_plus_card">\n' +
+                        '                    <div style="margin-top: 2px;text-align: center;">\n' +
+                        '                        <img class="add_story" src="../icons/add_large.png" /></div>\n' +
+                        '                </div>');
+                }
+            }, error: function (XMLHttpRequest, textStatus, errorThrown) {
+                alert(XMLHttpRequest.status);
+                alert(XMLHttpRequest.readyState);
+                alert(textStatus);
+            }
+        });
     });
 }
 
@@ -732,7 +786,7 @@ function addNextStoryCard() {
         $.ajax({
             type: "post",
             url: "/createStory",
-            data:JSON.stringify({"mapId":mapId,"name":'text',"creatorId":userId,"position":(parseFloat(pUp)+parseFloat(pDown))/2,"parent":tid,"status":1,"worktime":2,"release":rid}),
+            data:JSON.stringify({"mapId":mapId,"name":'text',"creatorId":userId,"position":(parseFloat(pUp)+parseFloat(pDown))/2,"parent":tid,"status":2,"worktime":2,"release":rid}),
             contentType: "application/json; charset=utf-8",
             async: false,
             success: function (data) {
@@ -759,7 +813,7 @@ function addNextStoryCard() {
         $.ajax({
             type: "post",
             url: "/createStory",
-            data:JSON.stringify({"mapId":mapId,"name":'text',"creatorId":userId,"position":(parseFloat(pUp)+parseFloat(pDown))/2,"parent":tid,"status":1,"worktime":2,"release":rid,"roles":[]}),
+            data:JSON.stringify({"mapId":mapId,"name":'text',"creatorId":userId,"position":(parseFloat(pUp)+parseFloat(pDown))/2,"parent":tid,"status":2,"worktime":2,"release":rid,"roles":[]}),
             contentType: "application/json; charset=utf-8",
             async: false,
             success: function (data) {
@@ -781,13 +835,14 @@ function modifyStoryCard() {
         var content = $(this).find('.activity_textDiv').html();
         var creator = $(this).attr('data-creator');
         var creatAt = $(this).attr('data-creatAt').split(' ')[0];
+        console.log(content)
         $('#storyCard_creator').text(creator);
         $('#storyCard_creatAt').text(creatAt);
 
         $('#storyModal').attr('data-sid',sid);
         $('#story_estimation').val(estimation);
         $('#story_state_select').val(state);
-        $('#story_content').html(content);
+        $('#story_content').val(content);
 
         $('#storyModal').modal('show');
     });
@@ -898,38 +953,51 @@ function addReleaseDiv() {
 
 function removeReleaseDiv() {
     $('body').on("click",'.remove_release',function () {
-        var rNum = $('.release_div').length - 1;
-        if(rNum==0){
-            rNum=-1;
-        }
+        var rdiv = $(this).parent().parent();
+        var rid = $(rdiv).attr('data-rid');
+        // var rNum = $('.release_div').length - 1;
+        // if(rNum==0){
+        //     rNum=-1;
+        // }
+        // $.ajax({
+        //     type: "post",
+        //     url: "/modifyMap",
+        //     data:JSON.stringify({"id":mapId,"release":rNum}),
+        //     contentType: "application/json; charset=utf-8",
+        //     async: false,
+        //     success: function (data) {
+        //     }, error: function (XMLHttpRequest, textStatus, errorThrown) {
+        //         alert(XMLHttpRequest.status);
+        //         alert(XMLHttpRequest.readyState);
+        //         alert(textStatus);
+        //     }
+        // });
+
         $.ajax({
             type: "post",
-            url: "/modifyMap",
-            data:JSON.stringify({"id":mapId,"release":rNum}),
-            contentType: "application/json; charset=utf-8",
+            url: "/deleteRelease",
+            data:{"id":mapId,"release":rid},
             async: false,
             success: function (data) {
+                $(rdiv).remove();
+                $('.release_div[data-rid='+rid+']').remove();
+
+                var rList = $('.release_div');
+                rindex = rList.length;
+                for(var i = 1;i<=rindex;i++){
+                    var rid_tmp_old = rList.eq(i-1).attr('data-rid');
+                    rList.eq(i-1).attr('data-rid',i);
+                    $('.release_label[data-rid='+rid_tmp_old+']').find('span').text('——Release '+i);
+                }
+                if(rindex==1){
+                    $('.remove_release').hide();
+                }
             }, error: function (XMLHttpRequest, textStatus, errorThrown) {
                 alert(XMLHttpRequest.status);
                 alert(XMLHttpRequest.readyState);
                 alert(textStatus);
             }
         });
-
-        var rid = $(this).parent().parent().attr('data-rid');
-        $(this).parent().parent().remove();
-        $('.release_div[data-rid='+rid+']').remove();
-
-        var rList = $('.release_div');
-        rindex = rList.length;
-        for(var i = 1;i<=rindex;i++){
-            var rid_tmp_old = rList.eq(i-1).attr('data-rid');
-            rList.eq(i-1).attr('data-rid',i);
-            $('.release_label[data-rid='+rid_tmp_old+']').find('span').text('——Release '+i);
-        }
-        if(rindex==1){
-            $('.remove_release').hide();
-        }
     });
 }
 
@@ -1113,8 +1181,15 @@ function init() {
                     '            </div>';
                 $(this).append(s);
             });
-            $('.remove_release').show();
-            $('.release_label[data-rid="1"]').find('.remove_release').hide();
+
+            if($('.release_label').length>1)
+                $('.remove_release').show();
+
+            $('.activity_card').each(function () {
+                if($(this).parent().find('.task_card').length>1){
+                    $(this).parent().find('.task_card').find('.removeTask').show();
+                }
+            });
 
         }, error: function (XMLHttpRequest, textStatus, errorThrown) {
             alert(XMLHttpRequest.status);
