@@ -7,7 +7,7 @@
     margin-bottom: 2rem;
 }
 
-.map-container {
+.form-container {
     margin-top: 10rem;
 }
 
@@ -17,8 +17,14 @@
     left: 25%;
 }
 
-.input-container .name {
+.input-container .text {
     background: url("../icons/name.svg") no-repeat 0.7rem center;
+    background-size: 1.5rem;
+    padding-left: 3rem;
+}
+
+.input-container .password {
+    background: url("../icons/lock.svg") no-repeat 0.7rem center;
     background-size: 1.5rem;
     padding-left: 3rem;
 }
