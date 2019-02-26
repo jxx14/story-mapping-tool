@@ -11,6 +11,8 @@ import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpSession;
 
+import static nju.agilegroup.storymappingtool.service.AccountServiceImpl.USER_KEY;
+
 @Service
 public class TeamServiceImpl implements TeamService{
 
@@ -36,6 +38,11 @@ public class TeamServiceImpl implements TeamService{
         Team team = new Team();
         team.setDescription(teamInfo.getDescription());
         team.setName(teamInfo.getName());
+
+        String email=(String)session.getAttribute(USER_KEY);
+        User user = accountDAO.getUserByEmail(email);
+        team.setLeaderId(user.getId());
+
         teamDAO.saveAndFlush(team);
         return new ResultInfo<>(true,"create team",Tool.teamToInfo(team));
     }

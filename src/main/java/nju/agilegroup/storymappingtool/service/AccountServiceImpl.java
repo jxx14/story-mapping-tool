@@ -16,7 +16,7 @@ import java.util.Set;
 @Service
 public class AccountServiceImpl implements AccountService {
 
-    private static final String USER_KEY = "USER_NAME";
+    public static final String USER_KEY = "USER_NAME";
 
     @Autowired
     private  AccountDAO accountDAO;

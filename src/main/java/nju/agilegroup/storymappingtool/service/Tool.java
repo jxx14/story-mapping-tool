@@ -49,6 +49,8 @@ public class Tool {
         TeamInfo info =new TeamInfo();
         info.setDescription(team.getDescription());
         info.setName(team.getName());
+        info.setLeader(team.getLeaderId());
+        info.setLeaderName(accountDAO.getUserById(team.getLeaderId()).getName());
         return info;
     }
 
