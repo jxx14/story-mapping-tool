@@ -43,6 +43,7 @@ public class TeamServiceImpl implements TeamService{
         User user = accountDAO.getUserByEmail(email);
         team.setLeaderId(user.getId());
 
+        team.getUsers().add(user);
         teamDAO.saveAndFlush(team);
         return new ResultInfo<>(true,"create team",Tool.teamToInfo(team));
     }
@@ -79,6 +80,5 @@ public class TeamServiceImpl implements TeamService{
 
         return new ResultInfo<>(true, "success",Tool.usersToInfos(team));
     }
-
 
 }
