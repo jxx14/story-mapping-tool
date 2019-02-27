@@ -66,7 +66,7 @@ public class TeamServiceImpl implements TeamService{
         team.getUsers().add(user);
         teamDAO.saveAndFlush(team);
 
-        return new ResultInfo<>(true, "success",Tool.usersToInfos(team));
+        return new ResultInfo<>(true, "success",Tool.usersToInfos(team.getUsers()));
     }
 
 
@@ -78,7 +78,7 @@ public class TeamServiceImpl implements TeamService{
         team.getUsers().remove(user);
         teamDAO.saveAndFlush(team);
 
-        return new ResultInfo<>(true, "success",Tool.usersToInfos(team));
+        return new ResultInfo<>(true, "success",Tool.usersToInfos(team.getUsers()));
     }
 
 }

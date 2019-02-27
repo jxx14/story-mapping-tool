@@ -67,16 +67,16 @@ public class AccountController {
     }
 
 
-    //找回密码，发送验证邮件到用户邮箱
-    @RequestMapping("/sendMail")
-    public ResultInfo<Object> mail(HttpSession session,@RequestParam String mail) {
-        return accountService.sendMail(session,mail);
-    }
-
-    //重设密码，用户在邮箱中接受验证，完成找回密码
+    //重设密码
     @RequestMapping("/resetPassword")
-    public ResultInfo<Object> resetPassword(HttpSession session,@RequestParam String password) {
-        return accountService.resetPassword(session,password);
+    public ResultInfo<Object> resetPassword(@RequestParam String email,@RequestParam String password) {
+        return accountService.resetPassword(email,password);
     }
 
+
+    //得到所有用户的信息
+    @RequestMapping("/getUsers")
+    public ResultInfo<Object> getUsers() {
+        return accountService.getUsers();
+    }
 }
