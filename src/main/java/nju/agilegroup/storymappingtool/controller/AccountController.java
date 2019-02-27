@@ -53,20 +53,6 @@ public class AccountController {
         return accountService.getTeams(session);
     }
 
-    //加入团队，返回值data里是所加入的所有团队
-    @RequestMapping(value = "/joinTeam")
-    public ResultInfo<Object> joinTeam(@RequestParam String userName,@RequestParam String teamName) {
-        return accountService.joinTeam(userName,teamName);
-    }
-
-
-    //离开团队
-    @RequestMapping(value = "/leaveTeam")
-    public ResultInfo<Object> leaveTeam(@RequestParam String userName,@RequestParam String teamName) {
-        return accountService.leaveTeam(userName,teamName);
-    }
-
-
     //重设密码
     @RequestMapping("/resetPassword")
     public ResultInfo<Object> resetPassword(@RequestParam String email,@RequestParam String password) {

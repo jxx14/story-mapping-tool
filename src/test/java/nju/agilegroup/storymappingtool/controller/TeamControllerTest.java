@@ -84,7 +84,7 @@ public class TeamControllerTest {
         MvcResult result1 = mockMvc.perform(post("http://localhost:8090/addMember")
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .param("userName", "modify3")
-                .param("teamName","abc"))
+                .param("teamID","2"))
                 .andExpect(status().isOk())
                 .andReturn();
     }
@@ -94,7 +94,7 @@ public class TeamControllerTest {
         MvcResult result1 = mockMvc.perform(post("http://localhost:8090/deleteMember")
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .param("userName", "modify3")
-                .param("teamName","abc"))
+                .param("teamID","2"))
                 .andExpect(status().isOk())
                 .andReturn();
     }
