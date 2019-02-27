@@ -7,8 +7,12 @@ import nju.agilegroup.storymappingtool.model.User;
 import nju.agilegroup.storymappingtool.view.AccountInfo;
 import nju.agilegroup.storymappingtool.view.ResultInfo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpSession;
 import java.util.List;
 import java.util.Set;
@@ -22,6 +26,8 @@ public class AccountServiceImpl implements AccountService {
     private  AccountDAO accountDAO;
     @Autowired
     private TeamDAO teamDAO;
+    @Autowired
+    private JavaMailSender javaMailSender;
 
 
     @Override
@@ -134,4 +140,43 @@ public class AccountServiceImpl implements AccountService {
         return new ResultInfo<>(true, "teams",Tool.teamsToInfos(teams));
     }
 
+    @Override
+    public ResultInfo<Object> sendMail(HttpSession session,String email) {
+        User user = accountDAO.getUserByEmail(email);
+        StringBuilder stringBuilder=new StringBuilder();
+        stringBuilder.append("<html><head><title></title></head><body>");
+        stringBuilder.append("亲爱的用户"+user.getName()+",点击下面的链接重新设置密码：");
+        stringBuilder.append("http://localhost:8090/Password_reset\n");
+        MimeMessage mimeMessage=javaMailSender.createMimeMessage();
+        //multipart模式
+        try {
+            MimeMessageHelper mimeMessageHelper=new MimeMessageHelper(mimeMessage, true);
+            mimeMessageHelper.setTo(email);//收件人邮箱user.getMail()
+            mimeMessageHelper.setFrom("jiangxiangxiang0@126.com");//发件人邮箱
+            mimeMessage.setSubject("找回密码");
+            //启用html
+            mimeMessageHelper.setText(stringBuilder.toString(),true);
+            javaMailSender.send(mimeMessage);
+            session.setAttribute("email", email);
+            return new ResultInfo<>(true," sent email successfully","");
+
+        } catch (MessagingException e) {
+            e.printStackTrace();
+            return new ResultInfo<>(true,"fail to sent email",null);
+        }
+
+    }
+
+    @Override
+    public ResultInfo<Object> resetPassword(HttpSession session,String password) {
+        String email=(String)session.getAttribute("email");
+        User user =  accountDAO.getUserByEmail(email);
+        user.setPassword(password);
+        accountDAO.saveAndFlush(user);
+        System.out.println(user.getEmail());
+        System.out.println(user.getName());
+        System.out.println(user.getPassword());
+        session.invalidate();
+        return new ResultInfo<>(true,"reset password successfully",null);
+    }
 }

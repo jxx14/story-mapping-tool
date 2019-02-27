@@ -26,4 +26,8 @@ public interface AccountService {
     ResultInfo<Object> joinTeam(String userName, String teamName);
 
     ResultInfo<Object> leaveTeam(String userName, String teamName);
+
+    ResultInfo<Object> sendMail(HttpSession session,String email);
+
+    ResultInfo<Object> resetPassword(HttpSession session,String password);
 }
