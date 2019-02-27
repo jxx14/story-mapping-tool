@@ -25,9 +25,9 @@ public class Tool {
         Tool.mapDAO = mapDAO;
     }
 
-    public static Set<AccountInfo> usersToInfos(Team team){
+    public static Set<AccountInfo> usersToInfos(Set<User> users){
         Set<AccountInfo> ifs = new HashSet<>();
-        for (User user1 : team.getUsers()) {
+        for (User user1 : users) {
             AccountInfo info = new AccountInfo();
             info.setId(user1.getId());
             info.setName(user1.getName());
@@ -72,7 +72,8 @@ public class Tool {
             info.setLeader(leaderId);
 
             info.setMapInfos(mapToInfos(mapDAO.findTeamMaps(team.getId())));
-            info.setAccountInfos(Tool.usersToInfos(team));
+
+            info.setAccountInfos(Tool.usersToInfos(team.getUsers()));
 
             ifs.add(info);
         }

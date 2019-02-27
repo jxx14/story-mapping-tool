@@ -67,5 +67,16 @@ public class AccountController {
     }
 
 
+    //重设密码
+    @RequestMapping("/resetPassword")
+    public ResultInfo<Object> resetPassword(@RequestParam String email,@RequestParam String password) {
+        return accountService.resetPassword(email,password);
+    }
 
+
+    //得到所有用户的信息
+    @RequestMapping("/getUsers")
+    public ResultInfo<Object> getUsers() {
+        return accountService.getUsers();
+    }
 }

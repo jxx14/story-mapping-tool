@@ -7,9 +7,14 @@ import nju.agilegroup.storymappingtool.model.User;
 import nju.agilegroup.storymappingtool.view.AccountInfo;
 import nju.agilegroup.storymappingtool.view.ResultInfo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpSession;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -122,7 +127,8 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public ResultInfo<Object> getTeamMembers(HttpSession session, int id) {
         Team team = teamDAO.getTeamById(id);
-        return new ResultInfo<>(true, "teamMembers",Tool.usersToInfos(team));
+        Set<User> users = team.getUsers();
+        return new ResultInfo<>(true, "teamMembers",Tool.usersToInfos(users));
     }
 
     @Override
@@ -134,4 +140,18 @@ public class AccountServiceImpl implements AccountService {
         return new ResultInfo<>(true, "teams",Tool.teamsToInfos(teams));
     }
 
+
+    @Override
+    public ResultInfo<Object> resetPassword(String email,String password) {
+        User user =  accountDAO.getUserByEmail(email);
+        user.setPassword(password);
+        accountDAO.saveAndFlush(user);
+        return new ResultInfo<>(true,"reset password successfully",null);
+    }
+
+    @Override
+    public ResultInfo<Object> getUsers() {
+        Set<User> users = new HashSet<>(accountDAO.findAll());
+        return new ResultInfo<>(true,"all users", Tool.usersToInfos(users));
+    }
 }
