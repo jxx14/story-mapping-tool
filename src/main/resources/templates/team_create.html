@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html  xmlns:th="http://www.thymeleaf.org" lang="en-US">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Team Creation</title>
+    <link rel="stylesheet" th:href="@{css/global.css}"/>
+    <link rel="stylesheet" th:href="@{css/bootstrap.min.css}"/>
+    <link rel="stylesheet" th:href="@{css/form-page.css}"/>
+
+    <script th:src="@{js/jquery-3.2.1.min.js}"></script>
+    <script th:src="@{js/jquerysession.js}"></script>
+</head>
+<body>
+
+<nav class="navbar navbar-default navbar-fixed-top navbar-inverse" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            　　　　 　　<a class="navbar-brand" href="user">User Story Mapping Tool</a>
+        </div>
+        <div class="collapse navbar-collapse navbar-right" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav">
+                <li><a href="javascript:logout();">logout</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<form class="container form-container" id="teamContainer">
+    <h4 class="title">New a Team</h4>
+    <div class="input-container">
+        <input type="text" name="name" class="form-control text-input text" placeholder="Input the name of the team">
+        <span class="help-block has-error" id="nameCheckMessage"></span>
+        <textarea name="description" class="form-control text-input description" placeholder="Input the description of the team"></textarea>
+        <span class="help-block has-error" id="descCheckMessage"></span>
+    </div>
+
+    <div class="button-container">
+        <button type="submit" class="btn btn-primary button">New</button>
+        <a class="btn btn-default button" href="/user">Cancel</a>
+    </div>
+</form>
+
+<div id="tip"></div>
+
+<script th:src="@{js/bootstrap.min.js}"></script>
+<script th:src="@{js/bootstrapValidator.min.js}"></script>
+<script th:src="@{js/util.js}"></script>
+<script th:src="@{js/account.js}"></script>
+
+<script>
+    $(function () {
+        $('#teamContainer').bootstrapValidator({
+            fields: {
+                name: {
+                    container: '#nameCheckMessage',
+                    validators: {
+                        notEmpty: {
+                            message: "Name shouldn't be empty"
+
+                        }
+                    }
+                },
+                description: {
+                    container: '#descCheckMessage',
+                    validators: {
+                        notEmpty: {
+                            message: "Description shouldn't be empty"
+                        }
+                    }
+                }
+            }
+        })
+        .on('success.form.bv', function(e) {
+            e.preventDefault();
+
+            const form = $(e.target);
+            const validator = form.data('bootstrapValidator');
+            const name = validator.getFieldElements("name").val();
+            const description = validator.getFieldElements("description").val();
+
+            $.ajax({
+                url: '/addTeam',
+                type: 'post',
+                contentType: 'application/json',
+                data: JSON.stringify({
+                    name: name,
+                    description: description
+                }),
+                success: function (result) {
+                    if (result.success) {
+                        showTip($('#tip'), 'Create a new team successfully', '#5DD259');
+                    } else {
+                        showTip($('#tip'), result.message);
+                    }
+                },
+                error: function (message) {
+                    showTip($('#tip'), message);
+                }
+            });
+        });
+    });
+</script>
+
+</body>
+</html>

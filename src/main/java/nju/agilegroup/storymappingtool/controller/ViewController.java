@@ -22,6 +22,11 @@ public class ViewController {
         return "map_create";
     }
 
+    @RequestMapping(value = "/team-create")
+    public String getTeamCreateView(){
+        return "team_create";
+    }
+
     @RequestMapping(value = "/login")
     public String getLoginView(){
         return "login";

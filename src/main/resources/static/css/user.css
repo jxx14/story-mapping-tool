@@ -57,7 +57,12 @@
     margin: 0;
 }
 
+.team-title {
+    width: 40%;
+}
+
 .team-container .team-info {
+    display: inline-block;
     position: relative;
     width: 40%;
     margin: 2rem 8% 0 0;
