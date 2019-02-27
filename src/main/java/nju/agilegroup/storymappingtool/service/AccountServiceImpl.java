@@ -84,27 +84,6 @@ public class AccountServiceImpl implements AccountService {
 
     }
 
-    @Override
-    public ResultInfo<Object> joinTeam(String userName, String teamName) {
-        Team team = teamDAO.getTeamByName(teamName);
-        User user = accountDAO.getUserByName(userName);
-
-        user.getTeams().add(team);
-        accountDAO.saveAndFlush(user);
-
-        return new ResultInfo<>(true, "join team successfully",Tool.teamsToInfos(user.getTeams()));
-    }
-
-
-    @Override
-    public ResultInfo<Object> leaveTeam(String userName, String teamName) {
-        Team team = teamDAO.getTeamByName(teamName);
-        User user = accountDAO.getUserByName(userName);
-        user.getTeams().remove(team);
-        accountDAO.saveAndFlush(user);
-
-        return new ResultInfo<>(true, "leave team successfully", Tool.teamsToInfos(user.getTeams()));
-    }
 
     @Override
     public ResultInfo<Object> getUserInfo(HttpSession session) {

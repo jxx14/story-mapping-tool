@@ -215,26 +215,4 @@ public class AccountTest {
                .andReturn();
    }
 
-    @Test
-    public void testJoinTeam()throws Exception{
-        MvcResult result1 = mockMvc.perform(post("http://localhost:8090/joinTeam")
-                .contentType(MediaType.APPLICATION_JSON_UTF8)
-                .param("userName", "zhangsan")
-                .param("teamName","abc"))
-                .andExpect(status().isOk())
-                .andReturn();
-    }
-
-    @Test
-    public void testLeaveTeam()throws Exception{
-        MvcResult result1 = mockMvc.perform(post("http://localhost:8090/leaveTeam")
-                .contentType(MediaType.APPLICATION_JSON_UTF8)
-                .param("userName", "zhangsan")
-                .param("teamName","abc"))
-                .andExpect(status().isOk())
-                .andReturn();
-    }
-
-
-
 }

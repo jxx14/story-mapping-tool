@@ -50,14 +50,14 @@ public class TeamController {
 
     //新增成员，data里最是新团队的成员列表
     @RequestMapping(value = "/addMember")
-    public ResultInfo<Object> addMember(@RequestParam String userName,@RequestParam String teamName) {
-        return teamService.addMember(userName,teamName);
+    public ResultInfo<Object> addMember(@RequestParam String userName,@RequestParam int teamID) {
+        return teamService.addMember(userName,teamID);
     }
 
     //删除成员,data里是最新团队成员列表
     @RequestMapping(value = "/deleteMember")
-    public ResultInfo<Object> deleteMember(@RequestParam String userName,@RequestParam String teamName) {
-        return teamService.deleteMember(userName,teamName);
+    public ResultInfo<Object> deleteMember(@RequestParam String userName,@RequestParam int teamID) {
+        return teamService.deleteMember(userName,teamID);
     }
 
 }

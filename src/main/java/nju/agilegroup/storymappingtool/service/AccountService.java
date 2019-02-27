@@ -23,10 +23,6 @@ public interface AccountService {
 
     ResultInfo<Object> getTeams(HttpSession session);
 
-    ResultInfo<Object> joinTeam(String userName, String teamName);
-
-    ResultInfo<Object> leaveTeam(String userName, String teamName);
-
     ResultInfo<Object> resetPassword(String email,String password);
 
     ResultInfo<Object> getUsers();

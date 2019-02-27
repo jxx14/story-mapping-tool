@@ -59,8 +59,8 @@ public class TeamServiceImpl implements TeamService{
     }
 
     @Override
-    public ResultInfo<Object> addMember(String userName, String teamName) {
-        Team team = teamDAO.getTeamByName(teamName);
+    public ResultInfo<Object> addMember(String userName, int teamID) {
+        Team team = teamDAO.getTeamById(teamID);
         User user = accountDAO.getUserByName(userName);
 
         team.getUsers().add(user);
@@ -71,8 +71,8 @@ public class TeamServiceImpl implements TeamService{
 
 
     @Override
-    public ResultInfo<Object> deleteMember(String userName, String teamName) {
-        Team team = teamDAO.getTeamByName(teamName);
+    public ResultInfo<Object> deleteMember(String userName,int teamID) {
+        Team team = teamDAO.getTeamById(teamID);
         User user = accountDAO.getUserByName(userName);
 
         team.getUsers().remove(user);
