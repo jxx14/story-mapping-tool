@@ -29,26 +29,6 @@
     margin-bottom: 1.5rem;
 }
 
-.item {
-    display: flex;
-    display: -webkit-flex;
-    align-items: flex-start;
-    margin-top: 1rem;
-}
-
-.item img {
-    width: 2rem;
-}
-
-.item span {
-    margin-left: 1rem;
-}
-
-.item button {
-    margin-left: 2.2rem;
-    margin-top: 1.2rem;
-}
-
 .team-container {
     margin-top: 3.6rem;
 }

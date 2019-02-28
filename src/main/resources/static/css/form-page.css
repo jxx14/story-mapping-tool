@@ -38,11 +38,24 @@
 .button-container {
     display: flex;
     justify-content: center;
-    margin-top: 2rem;
+    margin-top: 4rem;
 }
 
 .button {
     margin: 0 2rem 2rem 0;
     width: 8rem;
 }
+
+
+.card {
+    border-color: #dbdad8;
+    border-style: solid;
+    border-width: 1px;
+
+    display: inline-block;
+    width: 21%;
+    margin: 4rem 3% 2rem 0;
+    padding: 1rem;
+}
+
 

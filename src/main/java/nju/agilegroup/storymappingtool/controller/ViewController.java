@@ -27,6 +27,11 @@ public class ViewController {
         return "team_create";
     }
 
+    @RequestMapping(value = "/member-invite")
+    public String getMemberInviteView(){
+        return "member_invite";
+    }
+
     @RequestMapping(value = "/login")
     public String getLoginView(){
         return "login";

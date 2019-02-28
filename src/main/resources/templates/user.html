@@ -99,8 +99,8 @@
                                 Edit<b class="caret"></b>
                             </a>
                             <ul class="dropdown-menu">
-                                <li><a href="map-create?leaderId={{team.leader}}&teamId={{team.id}}">New a map</a></li>
-                                <!--<li><a data-toggle="tab">Invite a member</a></li>-->
+                                <li><a href="/map-create?leaderId={{team.leader}}&teamId={{team.id}}">New a map</a></li>
+                                <li><a href="javascript:toNewMemberPage({{team.memberDetail}}, {{team.id}})">Invite a member</a></li>
                             </ul>
                         </li>
                     </ul>
@@ -157,6 +157,7 @@
                                 members += accounts[accounts.length - 1].name;
                             }
                             team['members'] = members;
+                            team['memberDetail'] = accounts;
                         }
 
                         let myTeams = [];
@@ -196,6 +197,12 @@
 
     function toNewTeamPage() {
         window.location = '/team-create';
+    }
+
+    function toNewMemberPage(memberDetail, teamId) {
+        $.session.set("members", JSON.stringify(memberDetail));
+        $.session.set("teamId", teamId);
+        window.location = '/member-invite';
     }
 
     function makeInfoModifiable() {
