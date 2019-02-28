@@ -32,6 +32,11 @@ public class ViewController {
         return "member_invite";
     }
 
+    @RequestMapping(value = "/member-remove")
+    public String getMemberRemoveView(){
+        return "member_remove";
+    }
+
     @RequestMapping(value = "/login")
     public String getLoginView(){
         return "login";
