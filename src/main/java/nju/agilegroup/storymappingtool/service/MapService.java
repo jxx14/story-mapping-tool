@@ -12,4 +12,6 @@ public interface MapService {
     ResultInfo<Object> createMap(HttpSession session, MapInfo mapInfo);
 
     ResultInfo<Object> modifyMap(HttpSession session, MapInfo mapInfo);
+
+    ResultInfo<Object> deleteMap(HttpSession session, int id);
 }

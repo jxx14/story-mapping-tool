@@ -58,4 +58,11 @@ public class MapController {
         HttpSession session = request.getSession();
         return mapService.modifyMap(session, map);
     }
+
+    @RequestMapping(value = "/deleteMap")
+    public ResultInfo<Object> deleteMap(HttpServletRequest request, @RequestParam int mapId){
+        HttpSession session = request.getSession();
+        return mapService.deleteMap(session, mapId);
+
+    }
 }

@@ -27,4 +27,9 @@ public interface StoryCardDAO extends JpaRepository<StoryCard, Integer>{
     @Transactional
     @Query(value = "update story_card set releases = (releases-1) where releases > ?1 and story_map_id = ?2", nativeQuery = true)
     int updateRelease(int release, int mapId);
+
+    @Modifying
+    @Transactional
+    @Query(value = "delete from story_card where story_map_id = ?1", nativeQuery = true)
+    void deleteByMapId(int mapId);
 }

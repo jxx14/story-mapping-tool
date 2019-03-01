@@ -27,11 +27,11 @@ public class StoryMap {
     @Column(name = "release_num")
     private int release;
 
-    @ManyToOne(optional = false, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(optional = false, fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @JoinColumn(name = "creator_id")
     private User user;
 
-    @ManyToOne(optional = false, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(optional = false, fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @JoinColumn(name = "team_id")
     private Team team;
 
