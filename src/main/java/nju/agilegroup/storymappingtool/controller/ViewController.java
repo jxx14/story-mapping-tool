@@ -17,6 +17,11 @@ public class ViewController {
         return "user";
     }
 
+    @RequestMapping(value = "/map-list")
+    public String getMapListView() {
+        return "map_list";
+    }
+
     @RequestMapping(value = "/map-create")
     public String getMapCreateView() {
         return "map_create";

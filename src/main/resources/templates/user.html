@@ -57,7 +57,7 @@
         </div>
 
         <div class="col-md-9 col-sm-8">
-            <div class="row team-container">
+            <div class="row card-container">
                 <div class="title-container team-title">
                     <h3>My Team</h3>
                     <h3><button class="btn btn-default" onclick="toNewTeamPage()">New</button></h3>
@@ -67,7 +67,7 @@
                 <div id="myTeamList"></div>
             </div>
 
-            <div class="row team-container">
+            <div class="row card-container">
                 <h3>Join Team</h3>
                 <div class="bar"></div>
                 <hr>
@@ -86,7 +86,7 @@
 
 <script id="teamListTpl" type="text/html">
     {{each teamList team}}
-        <div class="team-info">
+        <div class="card-info">
             <div class="title-container">
                 <div class="item">
                     <img src="../icons/star.svg" alt="" title="team name">
@@ -121,11 +121,7 @@
             </div>
             <div class="item">
                 <img src="../icons/map.svg" alt="" title="story mappings">
-                <div class="map-list">
-                    {{each team.mapInfos map}}
-                        <a href="javascript:showMap({{map.id}})">{{map.name}}</a>
-                    {{/each}}
-                </div>
+                <span><a href="/map-list?teamId={{team.id}}">User Story Maps</a></span>
             </div>
         </div>
     {{/each}}
@@ -190,11 +186,6 @@
             showTip($('#tip'), result);
         }
     });
-
-    function showMap(mapId) {
-        $.session.set("mapId", mapId);
-        window.location = "/storymap";
-    }
 
     function toNewTeamPage() {
         window.location = '/team-create';
