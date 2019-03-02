@@ -51,7 +51,7 @@ public class CardControllerTest {
         map1.put("name", "test");
         map1.put("content", "");
         map1.put("creatorId", 1);
-        map1.put("mapId", 10);
+        map1.put("mapId", 40);
         map1.put("position", 100);
         MvcResult result = mockMvc.perform(post("/createActivity")
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
@@ -66,9 +66,9 @@ public class CardControllerTest {
         map1.put("name", "test");
         map1.put("content", "");
         map1.put("creatorId", 1);
-        map1.put("mapId", 10);
+        map1.put("mapId", 40);
         map1.put("position", 100);
-        map1.put("parent", 30);
+        map1.put("parent", 117);
         MvcResult result = mockMvc.perform(post("/createTask")
                .contentType(MediaType.APPLICATION_JSON_UTF8)
                .content(JSONObject.toJSONString(map1)))
@@ -82,9 +82,9 @@ public class CardControllerTest {
         map1.put("name", "test");
         map1.put("content", "");
         map1.put("creatorId", 1);
-        map1.put("mapId", 10);
+        map1.put("mapId", 40);
         map1.put("position", 100);
-        map1.put("parent", 29);
+        map1.put("parent", 146);
         map1.put("worktime", 5);
         map1.put("status", 0);
         map1.put("release", 1);
@@ -98,7 +98,7 @@ public class CardControllerTest {
    @Test
     public void modifyActivityCard() throws Exception{
         Map<String, Object> map1 = new HashMap<>();
-        map1.put("id", 30);
+        map1.put("id", 117);
         map1.put("name", "test");
         map1.put("content", "");
         map1.put("creatorId", 1);
@@ -114,7 +114,7 @@ public class CardControllerTest {
     @Test
     public void modifyTaskCard() throws Exception{
         Map<String, Object> map1 = new HashMap<>();
-        map1.put("id", 29);
+        map1.put("id", 146);
         map1.put("name", "test");
         map1.put("content", "");
         map1.put("creatorId", 1);
@@ -132,7 +132,7 @@ public class CardControllerTest {
     @Test
     public void modifyStoryCard() throws Exception {
         Map<String, Object> map1 = new HashMap<>();
-        map1.put("id", 27);
+        map1.put("id", 101);
         map1.put("name", "test");
         map1.put("content", "");
         map1.put("creatorId", 1);
@@ -161,7 +161,7 @@ public class CardControllerTest {
     @Test
     public void modifyRole() throws Exception{
          Map<String, Object> map1 = new HashMap<>();
-         map1.put("mapId", 10);
+         map1.put("mapId", 11);
          map1.put("name", "test");
          map1.put("avatar", "1");
          map1.put("creatorId", 1);
