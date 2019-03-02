@@ -23,6 +23,12 @@
     padding-left: 3rem;
 }
 
+.input-container .email {
+    background: url("../icons/email.svg") no-repeat 0.7rem center;
+    background-size: 1.5rem;
+    padding-left: 3rem;
+}
+
 .input-container .password {
     background: url("../icons/lock.svg") no-repeat 0.7rem center;
     background-size: 1.5rem;

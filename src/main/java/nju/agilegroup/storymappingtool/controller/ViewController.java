@@ -51,4 +51,9 @@ public class ViewController {
     public String getRegisterView(){
         return "register";
     }
+
+    @RequestMapping(value = "/password-reset")
+    public String getPasswordResetView(){
+        return "password_reset";
+    }
 }
