@@ -1,8 +1,6 @@
 package nju.agilegroup.storymappingtool.service;
 
-import nju.agilegroup.storymappingtool.dao.AccountDAO;
-import nju.agilegroup.storymappingtool.dao.MapDAO;
-import nju.agilegroup.storymappingtool.dao.TeamDAO;
+import nju.agilegroup.storymappingtool.dao.*;
 import nju.agilegroup.storymappingtool.model.StoryMap;
 import nju.agilegroup.storymappingtool.model.Team;
 import nju.agilegroup.storymappingtool.model.User;
@@ -26,12 +24,18 @@ public class MapServiceImpl implements MapService{
     private final MapDAO mapDAO;
     private final TeamDAO teamDAO;
     private final AccountDAO accountDAO;
+    private final ActivityCardDAO activityCardDAO;
+    private final TaskCardDAO taskCardDAO;
+    private final StoryCardDAO storyCardDAO;
 
     @Autowired
-    public MapServiceImpl(MapDAO mapDAO, TeamDAO teamDAO, AccountDAO accountDAO){
+    public MapServiceImpl(MapDAO mapDAO, TeamDAO teamDAO, AccountDAO accountDAO, ActivityCardDAO activityCardDAO, TaskCardDAO taskCardDAO, StoryCardDAO storyCardDAO){
         this.mapDAO = mapDAO;
         this.teamDAO = teamDAO;
         this.accountDAO = accountDAO;
+        this.activityCardDAO = activityCardDAO;
+        this.taskCardDAO = taskCardDAO;
+        this.storyCardDAO = storyCardDAO;
     }
 
     @Override
@@ -103,6 +107,20 @@ public class MapServiceImpl implements MapService{
         }
 
         return new ResultInfo<>(false, "保存失败", "错误信息");
+    }
+
+    @Override
+    public ResultInfo<Object> deleteMap(HttpSession session, int id) {
+        try{
+            storyCardDAO.deleteByMapId(id);
+            taskCardDAO.deleteByMapId(id);
+            activityCardDAO.deleteByMapId(id);
+            mapDAO.delete(id);
+            return new ResultInfo<>(true, "success", "删除成功");
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+       return new ResultInfo<>(false, "删除失败", "");
     }
 
     private MapInfo mapToInfo(StoryMap map){

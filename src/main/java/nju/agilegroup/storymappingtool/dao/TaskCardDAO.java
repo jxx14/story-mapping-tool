@@ -20,4 +20,9 @@ public interface TaskCardDAO extends JpaRepository<TaskCard, Integer> {
     @Transactional
     @Query(value = "delete from task_card where activity_id = ?1", nativeQuery = true)
     void deleteByActivity(int activityId);
+
+    @Modifying
+    @Transactional
+    @Query(value = "delete from task_card where story_map_id = ?1", nativeQuery = true)
+    void deleteByMapId(int mapId);
 }
