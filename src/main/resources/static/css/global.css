@@ -24,14 +24,14 @@
 }
 
 .card-container {
-    margin-top: 3.6rem;
+    display: flex;
+    flex-wrap: wrap;
 }
 
 .card-container .card-info {
     display: inline-block;
-    position: relative;
-    width: 40%;
-    margin: 2rem 8% 0 0;
+    width: 30%;
+    margin: 2rem 2rem 0 0;
     padding: 1rem;
     border-color: #dbdad8;
     border-style: solid;
@@ -41,7 +41,5 @@
 .title-container {
     display: flex;
     justify-content: space-between;
-    align-items: flex-start;
-    padding-right: 1rem;
-    margin-bottom: 1.5rem;
+    align-items: flex-end;
 }

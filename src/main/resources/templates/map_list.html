@@ -59,7 +59,7 @@
                         Edit<b class="caret"></b>
                     </a>
                     <ul class="dropdown-menu">
-                        <li><a href="#">Modify</a></li>
+                        <li><a href="javascript:makeInfoModifiable({{map.id}})">Modify</a></li>
                         <li><a href='#'>Remove</a></li>
                     </ul>
                 </li>
@@ -80,7 +80,12 @@
         </div>
         <div class="item">
             <img src="../icons/description.svg" alt="" title="description">
-            <span>{{map.description}}</span>
+            <span id="{{map.id}}-description">{{map.description}}</span>
+            <input id="{{map.id}}-oldDescription" type="text" value="{{map.description}}" hidden="hidden">
+            <input id="{{map.id}}-mapInfo" type="text" value="{{map}}" hidden="hidden">
+        </div>
+        <div class="item" style="display: none;" id="{{map.id}}-modifyButton">
+            <button class="btn btn-default" onclick="submitModify({{map.id}})">Modify</button>
         </div>
     </div>
     {{/each}}
@@ -94,7 +99,6 @@
         method: 'get',
         data: {'teamId': params['teamId']},
         success : function (result) {
-            console.log(result);
             if (result.success) {
                 $('#mapContainer').html(template(
                     'mapListTpl', {mapList: result.data}
@@ -115,67 +119,51 @@
         window.location = "/storymap";
     }
 
-    function toNewTeamPage() {
-        window.location = '/team-create';
+    function makeInfoModifiable(mapId) {
+        const description = $('#' + mapId + '-description');
+
+        const style = 'padding: 6px 12px; border-radius: 4px; color: #555; background-color: #fff;';
+        const id = mapId + '-newDescription';
+        const textArea = '<textarea style="' + style + '" placeholder="Input a new description" id="' + id + '">';
+        $('#' + mapId + '-oldDescription').val(description.val());
+        // description.html(textArea);
+        document.getElementById(mapId + '-description').innerHTML = textArea;
+        $('#' + mapId + '-modifyButton').show();
     }
 
-    function toNewMemberPage(memberDetail, teamId) {
-        $.session.set("members", JSON.stringify(memberDetail));
-        $.session.set("teamId", teamId);
-        window.location = '/member-invite';
-    }
-
-    function toRemoveMemberPage(memberDetail, leader, teamId) {
-        $.session.set("members", JSON.stringify(memberDetail));
-        $.session.set("teamId", teamId);
-        $.session.set("leader", leader);
-        window.location = '/member-remove';
-    }
-
-    function makeInfoModifiable() {
-        const name = $('#userName');
-
-        $('#oldName').val(name.text());
-        name.html('<input type="text" placeholder="Input a new name" id="newName">');
-        $('#prepareModify').hide();
-        $('#confirmModify').show();
-    }
-
-    function submitModify() {
-        const newName = $('#newName').val();
-        const oldName = $('#oldName').val();
+    function submitModify(mapId) {
+        const newDescription = $('#' + mapId + '-newDescription').val();
+        const oldDescription = $('#' + mapId + '-oldDescription').val();
+        let mapInfo = JSON.parse($('#' + mapId + '-mapInfo').val());
+        mapInfo['description'] = newDescription;
 
         $.ajax({
-            url: '/modifyUserInfo',
+            url: '/modifyMap',
             method: 'post',
             contentType: 'application/json',
-            data: JSON.stringify({
-                'name': newName,
-                'email': $('#userEmail').text()
-            }),
+            data: JSON.stringify(mapInfo),
             success: function (result) {
                 if (result.success) {
-                    renderUserInfo(newName);
-                    showTip($('#tip'), result.message, '#5DD259');
+                    renderUserInfo(mapId, newDescription);
+                    showTip($('#tip'), 'Successfully modify the map', '#5DD259');
                 } else {
                     showTip($('#tip'), result.message);
-                    renderUserInfo(oldName);
+                    renderUserInfo(mapId, oldDescription);
                 }
             },
             error: function (result) {
                 showTip($('#tip'), result);
-                renderUserInfo(oldName);
+                renderUserInfo(mapId, oldDescription);
             }
         });
     }
 
-    function renderUserInfo(name) {
-        const nameElement = $('#userName');
-        nameElement.html();
-        nameElement.text(name);
+    function renderUserInfo(mapId, description) {
+        const descElement = $('#' + mapId + '-description');
+        descElement.html();
+        descElement.text(description);
 
-        $('#confirmModify').hide();
-        $('#prepareModify').show();
+        $('#' + mapId + '-modifyButton').hide();
     }
 </script>
 
