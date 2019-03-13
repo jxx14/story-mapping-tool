@@ -121,7 +121,7 @@ public class CardControllerTest {
         map1.put("mapId", 10);
         map1.put("position", 100);
         map1.put("parent", 30);
-        MvcResult result = mockMvc.perform(post("modifyTask")
+        MvcResult result = mockMvc.perform(post("/modifyTask")
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .content(JSONObject.toJSONString(map1)))
                 .andReturn();
@@ -162,7 +162,7 @@ public class CardControllerTest {
     public void modifyRole() throws Exception{
          Map<String, Object> map1 = new HashMap<>();
          map1.put("mapId", 11);
-         map1.put("name", "test");
+         map1.put("name", "test(测试专用请勿删除)");
          map1.put("avatar", "1");
          map1.put("creatorId", 1);
          map1.put("id", 10);
@@ -171,5 +171,34 @@ public class CardControllerTest {
                  .content(JSONObject.toJSONString(map1)))
                  .andExpect(status().isOk())
                  .andReturn();
+    }
+
+    @Test
+    public void roleToActivity() throws Exception {
+        Map<String, Object> map1 = new HashMap<>();
+        map1.put("mapId", 11);
+        map1.put("name", "test");
+        map1.put("avatar", "1");
+        map1.put("creatorId", 1);
+        MvcResult result1 = mockMvc.perform(post("/addRoleToActivity?activity=117")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(JSONObject.toJSONString(map1)))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        Map<String, Object> map2 = new HashMap<>();
+        map1.put("id", 11);
+        MvcResult result = mockMvc.perform(post("/removeRoleFromActivity?activity=117")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(JSONObject.toJSONString(map1)))
+                .andExpect(status().isOk())
+                .andReturn();
+    }
+
+    @Test
+    public void testDelete() throws Exception{
+        MvcResult result = mockMvc.perform(get("/deleteStory?id=0")).andReturn();
+        result = mockMvc.perform(get("/deleteActivity?id=0")).andReturn();
+        result = mockMvc.perform(get("/deleteTask?id=0")).andReturn();
     }
 }

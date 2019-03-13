@@ -56,4 +56,25 @@ public class MapTest {
                 .andReturn();
         System.out.println(result.getResponse().getContentAsString());
     }
+
+    @Test
+    public void test3() throws Exception{
+        MvcResult result = mockMvc.perform(get("/deleteMap?mapId=79")).andReturn();
+        System.out.println(result.getResponse().getContentAsString());
+    }
+
+    @Test
+    public void test4() throws Exception{
+        Map<String, Object> map1 = new HashMap<>();
+        map1.put("id", 78);
+        map1.put("name", "test");
+        map1.put("description", "");
+        map1.put("creator", 30);
+        map1.put("team", 49);
+        MvcResult result = mockMvc.perform(post("/modifyMap")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(JSONObject.toJSONString(map1)))
+                .andReturn();
+        System.out.println(result.getResponse().getContentAsString());
+    }
 }

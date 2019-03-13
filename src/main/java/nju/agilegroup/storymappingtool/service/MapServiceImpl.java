@@ -118,7 +118,7 @@ public class MapServiceImpl implements MapService{
             mapDAO.delete(id);
             return new ResultInfo<>(true, "success", "删除成功");
         } catch (Exception e){
-            e.printStackTrace();
+//            e.printStackTrace();
         }
        return new ResultInfo<>(false, "删除失败", "");
     }
