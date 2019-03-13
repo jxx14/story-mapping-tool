@@ -200,5 +200,6 @@ public class CardControllerTest {
         MvcResult result = mockMvc.perform(get("/deleteStory?id=0")).andReturn();
         result = mockMvc.perform(get("/deleteActivity?id=0")).andReturn();
         result = mockMvc.perform(get("/deleteTask?id=0")).andReturn();
+        result = mockMvc.perform(get("/deleteRelease?id=0&release=1")).andReturn();
     }
 }

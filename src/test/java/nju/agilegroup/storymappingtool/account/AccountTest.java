@@ -18,6 +18,7 @@ import org.springframework.web.context.WebApplicationContext;
 import java.util.HashMap;
 import java.util.Map;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -215,4 +216,8 @@ public class AccountTest {
                .andReturn();
    }
 
+    @Test
+    public void testGetUsers()throws Exception{
+        MvcResult result = mockMvc.perform(get("/getUsers")).andReturn();
+    }
 }
