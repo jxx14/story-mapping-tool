@@ -344,6 +344,8 @@ public class CardServiceImpl implements CardService{
         storyCardDAO.updateRelease(release, mapId);
 
         StoryMap map = mapDAO.findOne(mapId);
+        if(map == null)
+            return new ResultInfo<>(true, "fail", "地图不存在");
         map.setRelease(map.getRelease()-1);
         if(map.getRelease() < 0)
             map.setRelease(0);
