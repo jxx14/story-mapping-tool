@@ -218,8 +218,8 @@ public class CardServiceImpl implements CardService{
         if(card == null)
             return new ResultInfo<>(false, "fail", NO_CARD);
 
-        taskCardDAO.delete(id);
         storyCardDAO.deleteByTask(id);
+        taskCardDAO.delete(id);
         return new ResultInfo<>(true, SUCCESS, "删除成功");
     }
 
