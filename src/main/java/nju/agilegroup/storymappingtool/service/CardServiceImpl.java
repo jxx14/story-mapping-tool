@@ -167,12 +167,13 @@ public class CardServiceImpl implements CardService{
             return new ResultInfo<>(false, "fail", NO_CARD);
 
         //需要删除下面的任务卡和活动卡，先查找要删除的task，然后根据task删掉story
-        activityCardDAO.delete(id);
+
         List<TaskCard> tasks = taskCardDAO.findByActivityId(id);
         for(int i=0; i<tasks.size(); i++){
             storyCardDAO.deleteByTask(tasks.get(i).getId());
         }
         taskCardDAO.deleteByActivity(id);
+        activityCardDAO.delete(id);
         return new ResultInfo<>(true, SUCCESS, "删除成功");
     }
 
