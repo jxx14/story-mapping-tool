@@ -40,12 +40,12 @@
             <ul class="nav navbar-nav">
                 <li><div id="nav_user_li">Username</div></li>
             </ul>
-            <form class="navbar-form navbar-left" style="margin-left: 20%;">
+            <div class="navbar-form navbar-left" style="margin-left: 20%;">
                 <div class="form-group">
-                    <input type="text" class="form-control" placeholder="Story名称" id="storyName">
+                    <input type="text" class="form-control" placeholder="StoryName" id="storyName">
                 </div>
                 <button type="button" class="btn btn-default" id="storySearch_button">Search</button>
-            </form>
+            </div>
             <ul class="nav navbar-nav navbar-right">
                 <li><div id="nav_logout_li">Logout</div></li>
             </ul>
@@ -148,13 +148,13 @@
                 </div>
                 <div class="modal-body">
                     <div>
-                        <label class="control-label" style="margin-top: 5px;width: 20%;margin-left: 5%;display: inline-block;">角色名称</label>
+                        <label class="control-label" style="margin-top: 5px;width: 20%;margin-left: 5%;display: inline-block;">Name</label>
                         <div style="width:70%;display: inline-block;">
-                            <input type="text" class="form-control" id="personNameInput" placeholder="角色1">
+                            <input type="text" class="form-control" id="personNameInput" placeholder="rolename">
                         </div>
                     </div>
                     <div style="margin-top: 25px;">
-                        <label class="control-label" style="margin-top: 5px;width: 20%;margin-left: 5%;display: inline-block;">角色头像</label>
+                        <label class="control-label" style="margin-top: 5px;width: 20%;margin-left: 5%;display: inline-block;">Portrait</label>
                         <div id="portraitsDiv" style="width:70%;display: inline-block;">
                             <input type="radio" name="roleOption" value="1" style="margin-left: 10px;"/><img th:src="@{portraits/1.png}" class="modal_role_img"/>
                             <input type="radio" name="roleOption" value="2" style="margin-left: 10px;"/><img th:src="@{portraits/2.png}" class="modal_role_img"/>
@@ -165,8 +165,8 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-                    <button type="button" class="btn btn-primary" id="modal_addRole_button">添加</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="modal_addRole_button">Add</button>
                 </div>
             </div><!-- /.modal-content -->
         </div><!-- /.modal-dialog -->
@@ -182,13 +182,13 @@
                 <div class="modal-body">
                     <div class="modal_content" style="min-height: 150px;margin-top: 10px;">
                         <div>
-                            <label class="control-label" style="margin-top: 5px;width: 20%;margin-left: 5%;display: inline-block;">角色名称</label>
+                            <label class="control-label" style="margin-top: 5px;width: 20%;margin-left: 5%;display: inline-block;">Name</label>
                             <div style="width:70%;display: inline-block;">
                                 <input type="text" class="form-control" id="personNameInput_m">
                             </div>
                         </div>
                         <div style="margin-top: 25px;">
-                            <label class="control-label" style="margin-top: 5px;width: 20%;margin-left: 5%;display: inline-block;">角色头像</label>
+                            <label class="control-label" style="margin-top: 5px;width: 20%;margin-left: 5%;display: inline-block;">Portrait</label>
                             <div style="width:70%;display: inline-block;">
                                 <input type="radio" name="roleOption2" value="1" style="margin-left: 10px;"/><img th:src="@{portraits/1.png}" class="modal_role_img"/>
                                 <input type="radio" name="roleOption2" value="2" style="margin-left: 10px;"/><img th:src="@{portraits/2.png}" class="modal_role_img"/>
@@ -204,8 +204,8 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" id="modal_modifyRole_button">save changes</button>
-                    <button type="button" class="btn btn-default" data-dismiss="modal">close</button>
+                    <button type="button" class="btn btn-primary" id="modal_modifyRole_button">Save changes</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                 </div>
             </div><!-- /.modal-content -->
         </div><!-- /.modal-dialog -->

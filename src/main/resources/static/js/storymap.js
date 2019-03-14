@@ -26,30 +26,17 @@ $(function(){
     $('#nav_user_li').html(username);
 
     $('#storySearch_button').click(function () {
-        var sname = $('#storyName').val();
-        var sList = $('.story_card');
-        for (var i = 0;i<sList.length;i++){
-            var scard = sList.eq(i);
-            if($(scard).find('.activity_textDiv').html()==sname){
-                $(scard).addClass('find_story_card');
-                $(scard).find('.story_estimation').addClass('find_estimation');
-                storyHighlight = true;
-                $('html, body').animate({
-                    scrollTop: $(scard).offset().top
-                }, 300);
-                break;
-            }
+        searchCard();
+    });
+
+    $('#storyName').keyup(function (event) {
+        if(event.keyCode ==13){
+            searchCard();
         }
     });
 
     $('#container').click(function () {
-        if(storyHighlight){
-            $('.story_card').each(function () {
-                $(this).removeClass('find_story_card');
-                $(this).find('.story_estimation').removeClass('find_estimation');
-            });
-            storyHighlight = false;
-        }
+        removeCradHighlight();
     });
     
     $('.add_backlog').on("click",function () {
@@ -132,6 +119,35 @@ $(function(){
     addReleaseDiv();
     removeReleaseDiv();
 });
+
+function searchCard() {
+    removeCradHighlight();
+
+    var sname = $('#storyName').val();
+    var sList = $('.story_card');
+    for (var i = 0;i<sList.length;i++){
+        var scard = sList.eq(i);
+        if($(scard).find('.activity_textDiv').html()==sname){
+            $(scard).addClass('find_story_card');
+            $(scard).find('.story_estimation').addClass('find_estimation');
+            storyHighlight = true;
+            $('html, body').animate({
+                scrollTop: $(scard).offset().top-100
+            }, 300);
+            break;
+        }
+    }
+}
+
+function removeCradHighlight() {
+    if(storyHighlight){
+        $('.story_card').each(function () {
+            $(this).removeClass('find_story_card');
+            $(this).find('.story_estimation').removeClass('find_estimation');
+        });
+        storyHighlight = false;
+    }
+}
 
 function personCardBind() {
     $('body').on("mouseover",'.person_card',function () {
