@@ -36,7 +36,7 @@ $(function(){
     });
 
     $('#container').click(function () {
-        removeCradHighlight();
+        removeCardHighlight();
     });
     
     $('.add_backlog').on("click",function () {
@@ -121,13 +121,14 @@ $(function(){
 });
 
 function searchCard() {
-    removeCradHighlight();
+    removeCardHighlight();
 
     var sname = $('#storyName').val();
     var sList = $('.story_card');
     for (var i = 0;i<sList.length;i++){
         var scard = sList.eq(i);
-        if($(scard).find('.activity_textDiv').html()==sname){
+
+        if($(scard).find('.activity_textDiv').html().toString().trim()==sname.trim()){
             $(scard).addClass('find_story_card');
             $(scard).find('.story_estimation').addClass('find_estimation');
             storyHighlight = true;
@@ -139,7 +140,7 @@ function searchCard() {
     }
 }
 
-function removeCradHighlight() {
+function removeCardHighlight() {
     if(storyHighlight){
         $('.story_card').each(function () {
             $(this).removeClass('find_story_card');
