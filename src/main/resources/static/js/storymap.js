@@ -223,7 +223,7 @@ function removePersonCard() {
 function modifyPersonCard() {
     $('body').on("dblclick",'.person_card',function () {
         var imgpath = $(this).find('.person_img').attr('src');
-        var opval = parseInt(imgpath.split('/')[1].substring(0));
+        var opval = parseInt((imgpath.split('/')[2]).toString().split('.')[0]);
         var pname = $(this).attr('data-name');
         var pid = $(this).attr('data-pid');
         var creator = $(this).attr('data-creator');
