@@ -94,7 +94,7 @@ public class MapServiceImpl implements MapService{
             map.setDescription(mapInfo.getDescription());
         if(mapInfo.getRelease() != 0) {
             map.setRelease(mapInfo.getRelease());
-            if(mapInfo.getRelease() == -1)
+            if(mapInfo.getRelease() <= -1)
                 map.setRelease(0);
         }
 

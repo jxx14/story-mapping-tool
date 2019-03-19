@@ -40,8 +40,11 @@ public class CardControllerTest {
 
     @Test
     public void getMap() throws Exception{
-           MvcResult result = mockMvc.perform(post("/getMapCards?mapId=1"))
+        MvcResult result = mockMvc.perform(post("/getMapCards?mapId=1"))
                    .andReturn();
+        System.out.println(result.getResponse().getContentAsString());
+        result = mockMvc.perform(post("/getMapCards?mapId=0"))
+                .andReturn();
         System.out.println(result.getResponse().getContentAsString());
     }
 
@@ -140,7 +143,7 @@ public class CardControllerTest {
         map1.put("position", 100);
         map1.put("parent", 29);
         map1.put("worktime", 5);
-        map1.put("status", 0);
+        map1.put("status", 2);
         map1.put("release", 1);
         MvcResult result = mockMvc.perform(post("/modifyStory")
                  .contentType(MediaType.APPLICATION_JSON_UTF8)
@@ -198,8 +201,12 @@ public class CardControllerTest {
     @Test
     public void testDelete() throws Exception{
         MvcResult result = mockMvc.perform(get("/deleteStory?id=0")).andReturn();
+        result = mockMvc.perform(get("/deleteActivity?id=204")).andReturn();
+        result = mockMvc.perform(get("/deleteTask?id=247")).andReturn();
+        result = mockMvc.perform(get("/deleteStory?id=204")).andReturn();
         result = mockMvc.perform(get("/deleteActivity?id=0")).andReturn();
         result = mockMvc.perform(get("/deleteTask?id=0")).andReturn();
+        result = mockMvc.perform(get("/deleteRelease?id=101&release=1")).andReturn();
         result = mockMvc.perform(get("/deleteRelease?id=0&release=1")).andReturn();
     }
 }

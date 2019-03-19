@@ -335,7 +335,7 @@ public class CardServiceImpl implements CardService{
 
         ActivityCard card = activityCardDAO.findOne(activiyId);
         List<Role> roles = roleDAO.findByActivtiyId(activiyId);
-        return new ResultInfo<>(true, "success", activityCardToInfo(card, roles));
+        return new ResultInfo<>(true, SUCCESS, activityCardToInfo(card, roles));
     }
 
     @Override

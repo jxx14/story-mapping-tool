@@ -61,6 +61,8 @@ public class MapTest {
     public void test3() throws Exception{
         MvcResult result = mockMvc.perform(get("/deleteMap?mapId=79")).andReturn();
         System.out.println(result.getResponse().getContentAsString());
+        result = mockMvc.perform(get("/deleteMap?mapId=113")).andReturn();
+        System.out.println(result.getResponse().getContentAsString());
     }
 
     @Test
@@ -71,6 +73,7 @@ public class MapTest {
         map1.put("description", "");
         map1.put("creator", 30);
         map1.put("team", 49);
+        map1.put("release", -1);
         MvcResult result = mockMvc.perform(post("/modifyMap")
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .content(JSONObject.toJSONString(map1)))
